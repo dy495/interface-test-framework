@@ -51,6 +51,6 @@ public class RejectVoucher extends AbstractVoucher {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPageBean applyPage = findBeanByField(scene, ApplyPageBean.class, "name", voucherName);
         Long id = applyPage.getId();
-        ApplyApprovalScene.builder().id(id).status(status).build().execute(visitor, true);
+        ApplyApprovalScene.builder().id(id).status(status).build().visitor(visitor).execute();
     }
 }

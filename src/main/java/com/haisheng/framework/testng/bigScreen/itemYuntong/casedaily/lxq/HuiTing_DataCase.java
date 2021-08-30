@@ -94,7 +94,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {//这个枚举0 要改
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             if (arr1.size() > 0) {
                 JSONObject obj = arr1.getJSONObject(0);
                 String list_receptor_name = obj.getString("receptor_name");
@@ -104,7 +104,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                 String list_customer_phone = obj.getString("customer_phone");
                 Long id = obj.getLong("id");
 
-                JSONObject detailObj = VoiceDetailScene.builder().id(id).build().execute(visitor);
+                JSONObject detailObj = VoiceDetailScene.builder().id(id).build().visitor(visitor).execute();
                 String detail_receptor_name = detailObj.getString("receptor_name");
                 String detail_reception_time = detailObj.getString("start_time").substring(0, 10);
 //                String detail_reception_duration = detailObj.getString("reception_duration");
@@ -132,12 +132,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
-                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().execute(visitor);
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().visitor(visitor).execute();
                     int average_score = detailObj.getInteger("average_score");
                     int score = 0;
                     JSONArray scores = detailObj.getJSONArray("scores");
@@ -163,12 +163,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
-                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().execute(visitor);
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().visitor(visitor).execute();
                     List lable = new ArrayList<>();
                     JSONArray link_label_list = detailObj.getJSONArray("link_label_list");
                     for (int j = 0; j < link_label_list.size(); j++) { //取出 link_label_list 中每一个置灰的标签
@@ -200,12 +200,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
-                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().execute(visitor);
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().visitor(visitor).execute();
                     //展示的各环节分数
                     HashMap<String, String> showscore = new HashMap<>();
                     JSONArray scores = detailObj.getJSONArray("scores");
@@ -253,31 +253,31 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value"); //各敏感词类别
 
                 int lablecount = 0; // 标签数量
-                JSONArray lablearray = SensitiveWordsLabelListScene.builder().sensitiveWordsType(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray lablearray = SensitiveWordsLabelListScene.builder().sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < lablearray.size(); j++) {
                     lablecount += lablearray.getJSONObject(j).getInteger("count");
                 }
 
                 int listcount = 0; //列表中每个记录涉及到敏感词的数量
-                int total = SensitiveBehaviorPageScene.builder().page(1).size(1).sensitiveWordsType(evaluate_status).build().execute(visitor).getInteger("total");
+                int total = SensitiveBehaviorPageScene.builder().page(1).size(1).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getInteger("total");
                 if (total <= 100) {
-                    JSONArray listarray = SensitiveBehaviorPageScene.builder().page(1).size(100).sensitiveWordsType(evaluate_status).build().execute(visitor).getJSONArray("list");
+                    JSONArray listarray = SensitiveBehaviorPageScene.builder().page(1).size(100).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                     for (int k = 0; k < listarray.size(); k++) {
                         Long id = listarray.getJSONObject(k).getLong("id");
-                        listcount += SensitiveBehaviorDetailScene.builder().id(id).build().execute(visitor).getJSONArray("sensitive_words").size();
+                        listcount += SensitiveBehaviorDetailScene.builder().id(id).build().visitor(visitor).execute().getJSONArray("sensitive_words").size();
                     }
                 } else {
                     for (int j = 1; j < total / 100 + 1; j++) {
-                        JSONArray listarray = SensitiveBehaviorPageScene.builder().page(j).size(100).sensitiveWordsType(evaluate_status).build().execute(visitor).getJSONArray("list");
+                        JSONArray listarray = SensitiveBehaviorPageScene.builder().page(j).size(100).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                         for (int k = 0; k < listarray.size(); k++) {
                             Long id = listarray.getJSONObject(k).getLong("id");
-                            listcount += SensitiveBehaviorDetailScene.builder().id(id).build().execute(visitor).getJSONArray("sensitive_words").size();
+                            listcount += SensitiveBehaviorDetailScene.builder().id(id).build().visitor(visitor).execute().getJSONArray("sensitive_words").size();
                         }
                     }
                 }

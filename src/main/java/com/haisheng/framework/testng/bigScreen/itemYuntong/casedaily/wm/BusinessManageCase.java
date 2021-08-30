@@ -104,7 +104,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
-                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().execute(visitor, false);
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().visitor(visitor).getResponse();
             JSONObject response1 = scene.visitor(visitor).execute();
             int newTotal = response1.getInteger("total");
             Preconditions.checkArgument(newTotal == total, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);

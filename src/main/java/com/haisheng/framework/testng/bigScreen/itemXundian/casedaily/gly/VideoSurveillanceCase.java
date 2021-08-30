@@ -77,19 +77,19 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int num = 0;
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true).getJSONObject("total_status");
+            JSONObject response = scene.visitor(visitor).execute().getJSONObject("total_status");
             //获取视频监控中的摄像头总数量
             String[] deviceArray = response.getString("device").split("/");
             int deviceSum = Integer.parseInt(deviceArray[1]);
             //设备管理中的列表条数
             IScene scene1 = DevicePageScene.builder().page(1).size(10).type("CAMERA").build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             //摄像头的总数量
 //           int cameraSum=response1.getInteger("total");
             //计算type为【WEB_CAMERA】的条数
             int pages = response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String type = list.getJSONObject(i).getString("type");
                     if (type.equals("WEB_CAMERA") || type.equals("UNIVIEW_PLATFORM") || type.equals("AI_CAMERA")) {
@@ -115,7 +115,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int num = 0;
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //获取视频监控中的运行中的摄像头数量
             String[] deviceArray = response.getJSONObject("total_status").getString("device").split("/");
             int deviceSum = Integer.parseInt(deviceArray[0]);
@@ -143,7 +143,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int num = 0;
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //获取视频监控中的运行中的摄像头数量
             String[] deviceArray = response.getJSONObject("total_status").getString("device").split("/");
             int deviceSum = Integer.parseInt(deviceArray[1]);
@@ -170,7 +170,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
         try {
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //获取视频监控中的运行中的摄像头数量
             String[] deviceArray = response.getJSONObject("total_status").getString("device").split("/");
             int deviceSum = Integer.parseInt(deviceArray[1]);
@@ -179,21 +179,21 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int notRunNum = deviceSum - deviceIng;
 
             //【设备管理中】视频流错误的设备数量
-            int streamErrorNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STREAM_ERROR.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
+            int streamErrorNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STREAM_ERROR.getDeviceStatus()).build().visitor(visitor).execute().getInteger("total");
             //【设备管理中】掉线的设备数量
-            int offLineNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.OFFLINE.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
+            int offLineNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.OFFLINE.getDeviceStatus()).build().visitor(visitor).execute().getInteger("total");
             //【设备管理中】已停止的设备数量
-            int stoppedNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STOPPED.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
+            int stoppedNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STOPPED.getDeviceStatus()).build().visitor(visitor).execute().getInteger("total");
             //【设备管理中】部署中的设备数量
-            int deploymentNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.DEPLOYMENT_ING.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
+            int deploymentNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.DEPLOYMENT_ING.getDeviceStatus()).build().visitor(visitor).execute().getInteger("total");
             //【设备管理中】未部署的设备数量
             int unDeploymentNum = 0;
             //设备管理中的筛选符合条件的未部署的设备数量
             IScene scene1 = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.UN_DEPLOYMENT.getDeviceStatus()).build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.UN_DEPLOYMENT.getDeviceStatus()).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.UN_DEPLOYMENT.getDeviceStatus()).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String type = list.getJSONObject(i).getString("type");
                     if (type.equals("WEB_CAMERA") || type.equals("UNIVIEW_PLATFORM") || type.equals("AI_CAMERA")) {
@@ -221,7 +221,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int num = 0;
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //获取视频监控中的运行中的摄像头数量
             String[] deviceArray = response.getJSONObject("total_status").getString("device").split("/");
             //视频监控中设备数量的总数
@@ -231,7 +231,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
 
             //获取不可用门店的列表,计算不可用的设备的数量
             IScene scene1 = AllDeviceListScene.builder().available(0).build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             JSONArray list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray deviceList = list.getJSONObject(i).getJSONArray("device_list");
@@ -255,7 +255,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
         try {
             //获取视频监控中门店的列表
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //遍历列表的在线摄像头的数量
             JSONArray list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -284,7 +284,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int notRunNum = 0;
             //获取门店的列表,计算不可用的设备的数量
             IScene scene1 = AllDeviceListScene.builder().available(0).build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             JSONArray list1 = response1.getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 JSONArray deviceList = list1.getJSONObject(i).getJSONArray("device_list");
@@ -292,7 +292,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             }
             //获取门店的列表,计算总设备的数量
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             JSONArray list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray deviceList = list.getJSONObject(i).getJSONArray("device_list");
@@ -300,7 +300,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             }
             //获取门店的列表,计算总设备的数量
             IScene scene2 = AllDeviceListScene.builder().available(1).build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             JSONArray list2 = response2.getJSONArray("list");
             for (int i = 0; i < list2.size(); i++) {
                 JSONArray deviceList = list2.getJSONObject(i).getJSONArray("device_list");
@@ -327,13 +327,13 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int notRunNum = 0;
             //获取门店的列表,计算总设备的数量
             IScene scene2 = AllDeviceListScene.builder().build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             JSONArray list2 = response2.getJSONArray("list");
             allNum = list2.size();
 
             //获取设备不在线和在线的的门店数量
             IScene scene1 = AllDeviceListScene.builder().build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             JSONArray list1 = response1.getJSONArray("list");
             for (int i = 0; i < list1.size(); i++) {
                 String[] deviceStatus = list1.getJSONObject(i).getString("device_status").split("/");
@@ -363,13 +363,13 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int collectionNum = 0;
             //获取门店的列表,计算总设备的数量
             IScene scene2 = AllDeviceListScene.builder().build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             JSONArray list2 = response2.getJSONArray("list");
             allNum = list2.size();
 
             //获取设备不在线和在线的的门店数量
             IScene scene1 = ShopDeviceListScene.builder().build();
-            JSONObject response1 = visitor.invokeApi(scene1, true);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             JSONArray list1 = response1.getJSONArray("list");
             collectionNum = list1.size();
             Preconditions.checkArgument(allNum >= collectionNum, "视频监控的设备上的总数是：" + allNum + "  视频监控中的收藏门店的数量为：" + collectionNum);
@@ -392,7 +392,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int notRunNum = 0;
             //获取门店的列表,计算总设备的数量
             IScene scene = AllDeviceListScene.builder().build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             JSONArray list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray deviceList = list.getJSONObject(i).getJSONArray("device_list");

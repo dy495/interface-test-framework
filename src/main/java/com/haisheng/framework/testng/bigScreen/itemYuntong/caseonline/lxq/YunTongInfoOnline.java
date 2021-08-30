@@ -74,13 +74,13 @@ public class YunTongInfoOnline {
     public String getLogo() {
         visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-        return CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().execute(visitor).getString("pic_path");
+        return CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().visitor(visitor).execute().getString("pic_path");
     }
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n) {
         String name = "" + (int) (Math.random() * Math.pow(10, n));
-        return BrandAddScene.builder().name(name).logoPath(getLogo()).build().execute(visitor).getLong("id");
+        return BrandAddScene.builder().name(name).logoPath(getLogo()).build().visitor(visitor).execute().getLong("id");
     }
 
     //创建某品牌下的车系，返回车系id
@@ -89,11 +89,11 @@ public class YunTongInfoOnline {
         String manufacturer = "自动化" + System.currentTimeMillis();
         String name = "" + (int) (Math.random() * Math.pow(10, n));
         String online_time = dt.getHistoryDate(0);
-        CarStyleAddScene.builder().brandId(id).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor);
+        CarStyleAddScene.builder().brandId(id).manufacturer(manufacturer).name(name).onlineTime(online_time).build().visitor(visitor).execute();
 
         //获取车系id
 
-        return CarStylePageScene.builder().brandId(id).name(name).page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        return CarStylePageScene.builder().brandId(id).name(name).page(1).size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
     //创建展厅客户，返回客户id
@@ -103,12 +103,12 @@ public class YunTongInfoOnline {
         String phone = "138" + (int) ((Math.random() * 9 + 1) * 1000) + "7777";
         String type = "CORPORATION";
         String sex = "0";
-        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-        String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
-        PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor);
+        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("style_id");
+        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("model_id");
+        String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("sales_id");
+        PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().visitor(visitor).execute();
 
-        return PreSaleCustomerPageScene.builder().page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("customer_id");
+        return PreSaleCustomerPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("customer_id");
 
     }
 
@@ -116,7 +116,7 @@ public class YunTongInfoOnline {
     //接待之后评价"： 评价满分high/最低分low/中间分数mid
     public final JSONArray evaluateInfo(Long recId, String type) {
         JSONArray evaluate_info_list = new JSONArray();
-        JSONArray optarr = PreSalesRecpEvaluateOpt.builder().reception_id(recId).build().execute(visitor).getJSONArray("list");
+        JSONArray optarr = PreSalesRecpEvaluateOpt.builder().reception_id(recId).build().visitor(visitor).execute().getJSONArray("list");
         for (int i = 0; i < optarr.size(); i++) {
             JSONObject asubmit = new JSONObject();
             int score = 0;
@@ -149,14 +149,14 @@ public class YunTongInfoOnline {
         visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         String phone = "1380110" + (int) ((Math.random() * 9 + 1) * 1000);//手机号
         String name = "小紫" + dt.getHistoryDate(0);
-        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(oneshopid).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().execute(visitor);
+        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(oneshopid).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("style_id");
+        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("model_id");
+        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().visitor(visitor).execute();
         //获取接待id
-        Long recId = PreSalesReceptionPageScene.builder().phone(phone).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long recId = PreSalesReceptionPageScene.builder().phone(phone).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
         if (done) {
             //完成接待
-            FinishReceptionScene.builder().id(recId).shopId(oneshopid).build().execute(visitor);
+            FinishReceptionScene.builder().id(recId).shopId(oneshopid).build().visitor(visitor).execute();
         }
         return recId;
     }

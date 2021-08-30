@@ -80,10 +80,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = EventTotalScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = EventTotalScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = EventTotalScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Long shopId = list.getJSONObject(i).getLong("shop_id");
                     String shopName = list.getJSONObject(i).getString("shop_name");
@@ -110,15 +110,15 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取列表的信息
-            JSONArray list1 = EventTotalScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list1 = EventTotalScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list");
             if (list1.size() > 0) {
                 //获取第一行的shopId
                 String shopName = list1.getJSONObject(0).getString("shop_name");
-                JSONObject response1 = EventTotalScene.builder().page(1).size(10).shopName(shopName).build().execute(visitor, true);
+                JSONObject response1 = EventTotalScene.builder().page(1).size(10).shopName(shopName).build().visitor(visitor).execute();
                 int pages = response1.getInteger("pages");
                 System.err.println(pages);
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = EventTotalScene.builder().page(page).size(10).shopName(shopName).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = EventTotalScene.builder().page(page).size(10).shopName(shopName).build().visitor(visitor).execute().getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String shopName1 = list.getJSONObject(i).getString("shop_name");
                         System.out.println("筛选栏中填写的门店的shopId为：" + shopName + "  。列表中的shopId为：" + shopName1);
@@ -142,10 +142,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         try {
             //门店的风控告警详情
             IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String triggerTime = list.getJSONObject(i).getString("trigger_time");
                     String triggerRule = list.getJSONObject(i).getString("trigger_rule");
@@ -229,7 +229,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取门店告警列表第一行的参数
-            JSONObject respond = ListScene.builder().page(1).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject respond = ListScene.builder().page(1).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long eventId = respond.getLong("id");
             String triggerTime = respond.getString("trigger_time");
             String triggerRuleName = respond.getString("trigger_rule_name");
@@ -238,7 +238,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             if (respond.containsKey("reviewer")) {
                 //门店的风控告警详情
                 IScene scene = AlarmDetailScene.builder().eventId(eventId).build();
-                JSONObject response = visitor.invokeApi(scene, true);
+                JSONObject response = scene.visitor(visitor).execute();
                 String timeDetail = response.getString("time");
                 String ruleDetail = response.getString("rule");
                 String eventStateDetail = response.getString("event_state");
@@ -259,7 +259,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 //门店的风控告警详情
                 IScene scene = AlarmDetailScene.builder().eventId(eventId).build();
-                JSONObject response = visitor.invokeApi(scene, true);
+                JSONObject response = scene.visitor(visitor).execute();
                 String timeDetail = response.getString("time");
                 String ruleDetail = response.getString("rule");
                 String eventStateDetail = response.getString("event_state");
@@ -293,10 +293,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         try {
             //智慧巡店页面
             IScene scene = EventTotalScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = EventTotalScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = EventTotalScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Long shopId1 = list.getJSONObject(i).getLong("shop_id");
                     //触发事件数
@@ -309,17 +309,17 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
                     int urgentTotal = list.getJSONObject(i).getInteger("urgent_total");
 
                     //进入对应的门店的告警事件页面
-                    JSONObject response1 = ListScene.builder().page(1).size(10).shopId(shopId1).build().execute(visitor, true);
+                    JSONObject response1 = ListScene.builder().page(1).size(10).shopId(shopId1).build().visitor(visitor).execute();
                     //触发事件数
                     int total = response1.getInteger("total");
                     //已确认的事件数
-                    int processed = ListScene.builder().page(1).size(10).eventState(EventStateEnum.ALARM_CONFIRMED.getEventState()).shopId(shopId1).build().execute(visitor, true).getInteger("total");
+                    int processed = ListScene.builder().page(1).size(10).eventState(EventStateEnum.ALARM_CONFIRMED.getEventState()).shopId(shopId1).build().visitor(visitor).execute().getInteger("total");
                     //无需处理事件
-                    int noNeed = ListScene.builder().page(1).size(10).eventState(EventStateEnum.NO_NEED_HANDLE.getEventState()).shopId(shopId1).build().execute(visitor, true).getInteger("total");
+                    int noNeed = ListScene.builder().page(1).size(10).eventState(EventStateEnum.NO_NEED_HANDLE.getEventState()).shopId(shopId1).build().visitor(visitor).execute().getInteger("total");
                     //待确认事件数
-                    int pending = ListScene.builder().page(1).size(10).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).shopId(shopId1).build().execute(visitor, true).getInteger("total");
+                    int pending = ListScene.builder().page(1).size(10).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).shopId(shopId1).build().visitor(visitor).execute().getInteger("total");
                     //紧急事件数--规则为口罩的事件数
-                    int urgent = ListScene.builder().page(1).size(10).triggerRule(TriggerRuleEnum.MASK_MONITOR.getTriggerRule()).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).shopId(shopId1).build().execute(visitor, true).getInteger("total");
+                    int urgent = ListScene.builder().page(1).size(10).triggerRule(TriggerRuleEnum.MASK_MONITOR.getTriggerRule()).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).shopId(shopId1).build().visitor(visitor).execute().getInteger("total");
 
                     Preconditions.checkArgument(eventTotal == total, "门店列表触发的事件数：" + eventTotal + " 门店告警列表中触发事件数为： " + total);
                     Preconditions.checkArgument(processed + noNeed == processedTotal, "门店列表已处理事件数：" + processedTotal + " 门店告警列表中已处理事件数为： " + processed);
@@ -346,10 +346,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         try {
             //智慧巡店页面
             IScene scene = EventTotalScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = EventTotalScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = EventTotalScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     //触发事件数
                     int eventTotal = list.getJSONObject(i).getInteger("event_total");
@@ -378,10 +378,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         try {
             //智慧巡店页面
             IScene scene = EventTotalScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = EventTotalScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = EventTotalScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     //待确认事件数
                     int pendingTotal = list.getJSONObject(i).getInteger("pending_total");
@@ -410,17 +410,17 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             int id = 0;
             //门店列表页面-触发规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int eventTotalBefore = shopBeforeList.getJSONObject(0).getInteger("event_total");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
             int urgentTotalBefore = shopBeforeList.getJSONObject(0).getInteger("urgent_total");
             //门店事件页面
             IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String triggerTime = list.getJSONObject(i).getString("trigger_time").substring(0, 13);
                     String triggerRule = list.getJSONObject(i).getString("trigger_rule");
@@ -441,7 +441,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-触发规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int eventTotalAfter = shopAfterList.getJSONObject(0).getInteger("event_total");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
@@ -489,7 +489,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             int id = 0;
             //门店列表页面-触发规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int eventTotalBefore = shopBeforeList.getJSONObject(0).getInteger("event_total");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
@@ -497,10 +497,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
 
             //门店事件页面
             IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String triggerTime = list.getJSONObject(i).getString("trigger_time").substring(0, 13);
                     String triggerRule = list.getJSONObject(i).getString("trigger_rule");
@@ -521,7 +521,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-触发规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int eventTotalAfter = shopAfterList.getJSONObject(0).getInteger("event_total");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
@@ -572,7 +572,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             int idUniform = 0;
             //门店列表页面-触发规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int eventTotalBefore = shopBeforeList.getJSONObject(0).getInteger("event_total");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
@@ -580,10 +580,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
 
             //门店事件页面
             IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String triggerTime = list.getJSONObject(i).getString("trigger_time").substring(0, 13);
                     String triggerRule = list.getJSONObject(i).getString("trigger_rule");
@@ -609,7 +609,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-触发规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int eventTotalAfter = shopAfterList.getJSONObject(0).getInteger("event_total");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
@@ -674,7 +674,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             int id = 0;
             //门店列表页面-触发规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int eventTotalBefore = shopBeforeList.getJSONObject(0).getInteger("event_total");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
@@ -682,10 +682,10 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
 
             //门店事件页面
             IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String triggerTime = list.getJSONObject(i).getString("trigger_time").substring(0, 13);
                     String triggerRule = list.getJSONObject(i).getString("trigger_rule");
@@ -706,7 +706,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-触发规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int eventTotalAfter = shopAfterList.getJSONObject(0).getInteger("event_total");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
@@ -752,7 +752,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
             //确认规则
@@ -760,7 +760,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             System.out.println("code:" + code);
             //门店列表页面-确认规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
 
@@ -787,7 +787,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
             int urgentTotalBefore = shopBeforeList.getJSONObject(0).getInteger("urgent_total");
@@ -797,7 +797,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             System.out.println("code:" + code);
             //门店列表页面-确认规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
             int urgentTotalAfter = shopAfterList.getJSONObject(0).getInteger("urgent_total");
@@ -825,7 +825,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
             //取消规则
@@ -833,7 +833,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             System.out.println("code:" + code);
             //门店列表页面-确认规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
 
@@ -861,7 +861,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
+            JSONArray shopBeforeList = sceneShopBefore.visitor(visitor).execute().getJSONArray("list");
             int processedTotalBefore = shopBeforeList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalBefore = shopBeforeList.getJSONObject(0).getInteger("pending_total");
             int urgentTotalBefore = shopBeforeList.getJSONObject(0).getInteger("urgent_total");
@@ -871,7 +871,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             System.out.println("code:" + code);
             //门店列表页面-确认规则之后
             IScene sceneShopAfter = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
-            JSONArray shopAfterList = visitor.invokeApi(sceneShopAfter, true).getJSONArray("list");
+            JSONArray shopAfterList = sceneShopAfter.visitor(visitor).execute().getJSONArray("list");
             int processedTotalAfter = shopAfterList.getJSONObject(0).getInteger("processed_total");
             int pendingTotalAfter = shopAfterList.getJSONObject(0).getInteger("pending_total");
             int urgentTotalAfter = shopAfterList.getJSONObject(0).getInteger("urgent_total");

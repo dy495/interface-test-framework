@@ -89,11 +89,9 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + CommonUtil.getRandom(9)).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().modify(point, content);
-            String code = scene.execute(visitor, false).getString("code");
-            Preconditions.checkArgument(Objects.equals(expect, code), description + ",预期结果code=" + expect + "，实际结果code=" + code);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+            Integer code = scene.visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(Objects.equals(expect, String.valueOf(code)), description + ",预期结果code=" + expect + "，实际结果code=" + code);
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动创建接待,所有异常情况");
@@ -106,48 +104,44 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             String phone = "15" + CommonUtil.getRandom(9);
             Map<String, String> first = util.createCustomerCommon("一次接待", "1", phone, util.mcCarId(), "2066-12-21");
-            AppFinishReceptionScene.builder().id(first.get("id")).shopId(first.get("shopId")).build().execute(visitor);
+            AppFinishReceptionScene.builder().id(first.get("id")).shopId(first.get("shopId")).build().visitor(visitor).execute();
             Map<String, String> second = util.createCustomerCommon("二次接待", "1", phone, util.mcCarId(), "2066-12-21");
-            AppFinishReceptionScene.builder().id(second.get("id")).shopId(second.get("shopId")).build().execute(visitor);
-            String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().execute(visitor, false).getString("message");
+            AppFinishReceptionScene.builder().id(second.get("id")).shopId(second.get("shopId")).build().visitor(visitor).execute();
+            String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().visitor(visitor).getResponse().getMessage();
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
             Preconditions.checkArgument(Objects.equals("该客户当天已接待2次！不能再进行接待！", message), "同一个手机号当天接待三次,message:" + message);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手机号接待次数：同一个手机号当天接待最多两次");
         }
     }
 
-    @Test(dataProvider = "evaluateRemark",dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "evaluateRemark", dataProviderClass = DataCenter.class)
     public void flowUpContent(String description, String remark, String expect) {
         try {
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
-            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().execute(visitor);
+            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().visitor(visitor).execute();
             commonConfig.setShopId(null);
             commonConfig.setRoleId(null);
             JSONArray evaluateInfoList = new JSONArray();
-            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().execute(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
-            PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().execute(visitor, false);
+            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).execute().getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
+            PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).getResponse();
             commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId());
             commonConfig.setRoleId(YT_RECEPTION_DAILY.getRoleId());
-            JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Integer flowUpId = firstFlow.getInteger("id");
             String phone = firstFlow.getJSONObject("pre_reception_offline_evaluate").getString("customer_phone");
-            String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().execute(visitor, false).getString("code");
-            Integer id = EvaluatePageV4Scene.builder().page(1).size(10).evaluateType(4).customerPhone(phone).build().execute(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
-            String remarkContent = EvaluateDetailV4Scene.builder().id(id).build().execute(visitor, true).getString("remark_content");
-            Preconditions.checkArgument(Objects.equals(expect, code), description + ",预期结果code=" + expect + ",实际结果code=" + code);
+            Integer code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().visitor(visitor).getResponse().getCode();
+            Integer id = EvaluatePageV4Scene.builder().page(1).size(10).evaluateType(4).customerPhone(phone).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getInteger("id");
+            String remarkContent = EvaluateDetailV4Scene.builder().id(id).build().visitor(visitor).execute().getString("remark_content");
+            Preconditions.checkArgument(Objects.equals(expect, String.valueOf(code)), description + ",预期结果code=" + expect + ",实际结果code=" + code);
             if (Objects.equals(expect, "1000")) {
                 Preconditions.checkArgument(Objects.equals(remark, remarkContent), "跟进内容不一致。APP填写跟进内容:" + remark + ";PC跟进内容:" + remarkContent);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("销售接待差评,跟进内容校验");

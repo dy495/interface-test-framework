@@ -76,8 +76,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 
     public void customerConfig() {
         String phone = "15" + CommonUtil.getRandom(9);
-        AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().execute(visitor);//创建销售接待
-        JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true);
+        AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().visitor(visitor).execute();//创建销售接待
+        JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute();
         List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
         Long id = newCustomer.get(0).getLong("id");
         Long shopId = newCustomer.get(0).getLong("shop_id");
@@ -96,12 +96,12 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             }
             AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build();
             //            int beforeSum = detail.invoke(visitor, true).getJSONArray("remarks").size();
-            String code = CustomerRemarkScene.builder().id(newId).shopId(newShopId).remark(remark).build().execute(visitor, false).getString("code");
-            JSONArray remarks = detail.execute(visitor, true).getJSONArray("remarks");
+            Integer code = CustomerRemarkScene.builder().id(newId).shopId(newShopId).remark(remark).build().visitor(visitor).getResponse().getCode();
+            JSONArray remarks = detail.visitor(visitor).execute().getJSONArray("remarks");
             //            int afterSum = remarks.size();
             String addedRemark = remarks.getJSONObject(0).getString("remark");
-            Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
-            if (Objects.equals("1000", code)) {
+            Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
+            if (Objects.equals("1000", String.valueOf(code))) {
                 Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，pc输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError | Exception e) {
@@ -115,10 +115,10 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     public void test03BuyCar(String description, String expect, String vin) {
         try {
             if (newId != null && newCustomerId != null) {
-                String code = BuyCarScene.builder().carModel(20895L).carStyle(2527L).id(newId).shopId(newShopId).vin(vin).build().execute(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期code:" + expect + "实际code=" + code);
+                Integer code = BuyCarScene.builder().carModel(20895L).carStyle(2527L).id(newId).shopId(newShopId).vin(vin).build().visitor(visitor).getResponse().getCode();
+                Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期code:" + expect + "实际code=" + code);
                 if (Objects.equals(expect, "1000") && vin.length() != 0) {
-                    String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
+                    String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
                     Preconditions.checkArgument(Objects.equals(chassisCode, vin.toUpperCase()), "详情中底盘号不一致,输入:" + vin + "实际:" + chassisCode);
                 }
             }
@@ -140,16 +140,16 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         };
     }
 
-    @Test(dataProvider = "remark",dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "remark", dataProviderClass = DataCenter.class)
     public void test04AppRemark(String description, String remark, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
                 customerConfig();
             }
-            String code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().execute(visitor, false).getString("code");
-            String addedRemark = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build().execute(visitor, true).getJSONArray("remarks").getJSONObject(0).getString("remark");
-            Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
-            if (Objects.equals("1000", code)) {
+            Integer code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().visitor(visitor).getResponse().getCode();
+            String addedRemark = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build().visitor(visitor).execute().getJSONArray("remarks").getJSONObject(0).getString("remark");
+            Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
+            if (Objects.equals("1000", String.valueOf(code))) {
                 Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，app输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError | Exception e) {
@@ -192,8 +192,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             if (newId == null || newCustomerId == null) {
                 customerConfig();
             }
-            String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字"+dt.getHistoryDate(0)).customerPhone("13"+CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point,content).execute(visitor, false).getString("message");
-            Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
+            String message = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字" + dt.getHistoryDate(0)).customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point, content).visitor(visitor).getResponse().getMessage();
+            Preconditions.checkArgument(Objects.equals(message, expect), description + "，期待结果=" + expect + "实际结果=" + message);
             sleep(3);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -233,8 +233,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     public void test09PcComplete() {
         try {
             if (newId != null && newCustomerId != null) {
-                FinishReceptionScene.builder().id(newId).shopId(newShopId).build().execute(visitor);
-                Boolean isFinish = PreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
+                FinishReceptionScene.builder().id(newId).shopId(newShopId).build().visitor(visitor).execute();
+                Boolean isFinish = PreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
                 Preconditions.checkArgument(isFinish, "完成接待操作失败，接待id=" + newId);
             }
         } catch (AssertionError | Exception e) {

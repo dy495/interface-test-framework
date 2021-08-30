@@ -93,13 +93,13 @@ public abstract class BaseGenerator implements IGenerator {
      * @return bean
      */
     public <T> T findBeanByField(IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         int size = scene instanceof PackageFormPageScene ? 50 : SIZE;
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             if (clazz != null) {

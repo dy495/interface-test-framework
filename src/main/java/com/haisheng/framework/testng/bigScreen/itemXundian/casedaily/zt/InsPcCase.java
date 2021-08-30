@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -1025,9 +1026,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     .picList(piclist)
                     .picType("ONE_BIG")
                     .build();
-            JSONObject response = visitor.invokeApi(scene, false);
-            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
-            Long id = response.getJSONObject("data").getLong("id");
+            Response response = scene.visitor(visitor).getResponse();
+            Preconditions.checkArgument(response.getCode() == 1000, "状态码期待1000，实际" + response.getCode());
+            Long id = response.getData().getLong("id");
             JSONObject res1 = md.article_status_change(id);
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
@@ -1060,9 +1061,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     .picList(piclist)
                     .picType("THREE")
                     .build();
-            JSONObject response = visitor.invokeApi(scene, false);
-            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
-            Long id = response.getJSONObject("data").getLong("id");
+            Response response = scene.visitor(visitor).getResponse();
+            Preconditions.checkArgument(response.getCode() == 1000, "状态码期待1000，实际" + response.getCode());
+            Long id = response.getData().getLong("id");
             JSONObject res1 = md.article_status_change(id);
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
@@ -1093,9 +1094,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     .picList(piclist)
                     .picType("ONE_LEFT")
                     .build();
-            JSONObject response = visitor.invokeApi(scene, false);
-            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
-            Long id = response.getJSONObject("data").getLong("id");
+            Response response = scene.visitor(visitor).getResponse();
+            Preconditions.checkArgument(response.getCode() == 1000, "状态码期待1000，实际" + response.getCode());
+            Long id = response.getData().getLong("id");
             JSONObject res1 = md.article_status_change(id);
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);

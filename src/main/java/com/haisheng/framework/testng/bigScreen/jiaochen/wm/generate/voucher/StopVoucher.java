@@ -46,6 +46,6 @@ public class StopVoucher extends AbstractVoucher {
      */
     public void changeProvideStatus(Long voucherId) {
         IScene scene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 }

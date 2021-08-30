@@ -832,7 +832,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取视频监控中进行中设备列表
-            JSONArray list = AllDeviceListScene.builder().available(1).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().available(1).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 if (device_list.size() > 0) {
@@ -855,7 +855,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取视频监控中进行中设备列表
-            JSONArray list = AllDeviceListScene.builder().available(0).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().available(0).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 if (device_list.size() > 0) {
@@ -877,7 +877,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void collectionShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = ShopDeviceListScene.builder().build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = ShopDeviceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 boolean collected = list.getJSONObject(i).getBoolean("collected");
                 String subject_name = list.getJSONObject(i).getString("subject_name");
@@ -894,13 +894,13 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void addCollectedShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = AllDeviceListScene.builder().build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 boolean collected = list.getJSONObject(i).getBoolean("collected");
                 if (!collected) {
                     Long subject_id = list.getJSONObject(i).getLong("subject_id");
                     String subject_name = list.getJSONObject(i).getString("subject_name");
-                    String message = AddScene.builder().id(subject_id).build().execute(visitor, false).getString("message");
+                    String message = AddScene.builder().id(subject_id).build().visitor(visitor).getResponse().getMessage();
                     Preconditions.checkArgument(message.equals("success"), "收藏门店失败,门店名称" + subject_name);
                 }
             }
@@ -915,11 +915,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void cancelCollectionShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = ShopDeviceListScene.builder().build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = ShopDeviceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long subject_id = list.getJSONObject(i).getLong("subject_id");
                 String subject_name = list.getJSONObject(i).getString("subject_name");
-                String message = CancelScene.builder().id(subject_id).build().execute(visitor, false).getString("message");
+                String message = CancelScene.builder().id(subject_id).build().visitor(visitor).getResponse().getMessage();
                 Preconditions.checkArgument(message.equals("success"), "取消收藏门店失败，门店名称" + subject_name);
             }
         } catch (AssertionError | Exception e) {
@@ -932,10 +932,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void authAllDeviceList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = AllDeviceListScene.builder().build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String subject_name = list.getJSONObject(i).getString("subject_name");
-                JSONArray shop_list = AllDeviceListScene.builder().shopName(subject_name).build().execute(visitor, true).getJSONArray("list");
+                JSONArray shop_list = AllDeviceListScene.builder().shopName(subject_name).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < shop_list.size(); j++) {
                     String shop_name = shop_list.getJSONObject(j).getString("subject_name");
                     Preconditions.checkArgument(shop_name.equals(subject_name), "筛选框输入门店名称" + subject_name + "列表展示出的门店名称" + shop_name);
@@ -951,7 +951,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void deviceLive() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = AllDeviceListScene.builder().build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 Long shopId = list.getJSONObject(i).getLong("subject_id");
@@ -960,7 +960,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                     int available = device_list.getJSONObject(j).getInteger("available");
                     String device_id = device_list.getJSONObject(j).getString("device_id");
                     if (available == 1) {
-                        String message = LiveScene.builder().deviceId(device_id).shopId(shopId).build().execute(visitor, false).getString("message");
+                        String message = LiveScene.builder().deviceId(device_id).shopId(shopId).build().visitor(visitor).getResponse().getMessage();
                         Preconditions.checkArgument(message.equals("success"), "播放视频失败，设备id" + device_id + "门店名称" + shopName);
                     }
                 }

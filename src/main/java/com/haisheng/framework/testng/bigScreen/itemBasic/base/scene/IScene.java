@@ -60,25 +60,6 @@ public interface IScene {
     /**
      * 访问接口
      *
-     * @param visitor   产品
-     * @param checkCode 是否校验返回值code
-     * @return 接口返回值
-     */
-    JSONObject execute(VisitorProxy visitor, boolean checkCode);
-
-    /**
-     * 访问接口
-     *
-     * @param visitor 产品
-     * @return 接口返回值
-     */
-    default JSONObject execute(VisitorProxy visitor) {
-        return execute(visitor, true);
-    }
-
-    /**
-     * 访问接口
-     *
      * @return 返回值
      */
     JSONObject execute();
@@ -86,11 +67,8 @@ public interface IScene {
     /**
      * 上传文件
      *
-     * @param visitor 产品
      * @return 接口返回值
      */
-    JSONObject upload(VisitorProxy visitor);
-
     JSONObject upload();
 
     /**
@@ -100,6 +78,9 @@ public interface IScene {
      * @return IScene
      */
     IScene remove(String... keys);
+
+
+    <T> IScene modify(String key, T value);
 
     /**
      * 获取键列表

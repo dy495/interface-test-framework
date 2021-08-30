@@ -113,7 +113,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
             Long[] integrals = {0L, null, 100001L};
             Arrays.stream(integrals).forEach(integral -> {
-                String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral).build().execute(visitor, false).getString("message");
+                String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral).build().visitor(visitor).getResponse().getMessage();
                 String err = integral == null ? "积分变更类型不能为空" : "变更积分取值范围[1,100000]";
                 CommonUtil.checkResult("增加积分" + integral, err, message);
             });
@@ -133,7 +133,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(data != null, "没找到剩余积分<100000的客户");
             Long integral = data.getLong("integral");
             Long id = data.getLong("id");
-            String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral + 1).build().execute(visitor, false).getString("message");
+            String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral + 1).build().visitor(visitor).getResponse().getMessage();
             String err = "积分不足";
             CommonUtil.checkResult("增加积分" + integral, err, message);
         } catch (Exception | AssertionError e) {
@@ -237,7 +237,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                 int id = e.getInteger("id");
                 AtomicInteger s = new AtomicInteger();
                 IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build();
-                JSONObject response = visitor.invokeApi(exchangeStockScene);
+                JSONObject response = exchangeStockScene.visitor(visitor).execute();
                 String goodsName = response.getString("goods_name");
                 int goodsStock = response.getInteger("goods_stock");
                 IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id(String.valueOf(id)).build();
@@ -443,7 +443,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //创建积分兑换
             String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
                     .exchangeNum(String.valueOf(exchangeNum)).isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
-                    .exchangeEndTime(exchangeEndTime).build().execute(visitor, false).getString("message");
+                    .exchangeEndTime(exchangeEndTime).build().visitor(visitor).getResponse().getMessage();
             String err = "卡券【" + voucherPage.getVoucherName() + "】库存不足";
             CommonUtil.checkResult("可兑换数量为" + exchangeNum, err, message);
         } catch (Exception | AssertionError e) {
@@ -467,7 +467,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                 //创建积分兑换
                 String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice(exchangePrice)
                         .exchangeNum(String.valueOf(exchangeNum)).isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
-                        .exchangeEndTime(exchangeEndTime).build().execute(visitor, false).getString("message");
+                        .exchangeEndTime(exchangeEndTime).build().visitor(visitor).getResponse().getMessage();
                 String err = StringUtils.isEmpty(exchangePrice) ? "兑换价格不能为空" : Double.parseDouble(exchangePrice) < 0 ? "兑换价格必须大于等于0" : "请求入参类型不正确";
                 CommonUtil.checkResult("兑换价为" + exchangePrice, err, message);
             });
@@ -488,7 +488,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherPage(voucherId).getVoucherName();
             String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
                     .exchangeNum("1").isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
-                    .exchangeEndTime(exchangeEndTime).build().execute(visitor, false).getString("message");
+                    .exchangeEndTime(exchangeEndTime).build().visitor(visitor).getResponse().getMessage();
             String err = "卡券【" + voucherName + "】库存不足";
             CommonUtil.checkResult("创建时包含无库存的卡券", err, message);
         } catch (Exception | AssertionError e) {
@@ -555,13 +555,13 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             String[] strings = {"1000000000", "99.99", null, "", "-11", "0"};
             Arrays.stream(strings).forEach(num -> {
                 String addMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(num).id(specificationDetail.getLong("id"))
-                        .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().execute(visitor, false).getString("message");
+                        .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().visitor(visitor).getResponse().getMessage();
                 String err = StringUtils.isEmpty(num) ? "改变库存数量不能为空" : Double.parseDouble(num) >= 1000000000 ? "库存改变数量不能超过100000000" :
                         Double.parseDouble(num) <= 0 ? "库存变动数量需大于等于1" : "请求入参类型不正确";
                 CommonUtil.checkResult(goodsName + "修改库存" + num, err, addMessage);
                 CommonUtil.logger(num);
                 String minusMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(num).id(specificationDetail.getLong("id"))
-                        .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().execute(visitor, false).getString("message");
+                        .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().visitor(visitor).getResponse().getMessage();
                 CommonUtil.checkResult(goodsName + "修改库存" + num, err, minusMessage);
                 CommonUtil.logger(num);
             });
@@ -581,7 +581,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = exchangePageList.stream().map(ExchangePage::getId).findFirst().orElse(0L);
             String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().visitor(visitor).execute().getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().visitor(visitor).execute().getJSONArray("specification_detail_list").getJSONObject(0);
-            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id")).goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().execute(visitor, false).getString("message");
+            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id")).goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().visitor(visitor).getResponse().getMessage();
             String err = "减少库存量需小于等于当前库存量";
             CommonUtil.checkResult(goodsName + "减少库存" + (specificationDetail.getInteger("num") + 1), err, message);
         } catch (Exception | AssertionError e) {
@@ -605,7 +605,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             long num = surplusInventory >= goodsStock ? surplusInventory - goodsStock + 1 : goodsStock - surplusInventory;
             //增加库存
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(String.valueOf(num)).id(id)
-                    .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor, false).getString("message");
+                    .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().visitor(visitor).getResponse().getMessage();
             String err = "积分商品库存不能超过商品可用库存";
             CommonUtil.checkResult(goodsName + "增加库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
@@ -627,7 +627,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             String goodsName = exchangeGoodsStockResponse.getString("goods_name");
             long num = goodsStock + 1;
             //增加库存
-            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(num)).id(id).goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor, false).getString("message");
+            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(num)).id(id).goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().visitor(visitor).getResponse().getMessage();
             String err = "减少库存量需小于等于当前库存量";
             CommonUtil.checkResult(goodsName + "减少库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
@@ -863,7 +863,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //创建积分兑换
             ExchangePage exchangePage = util.createExchangeRealGoods(1);
             id = exchangePage.getId();
-            String message = DeleteExchangeGoodsScene.builder().id(id).build().execute(visitor, false).getString("message");
+            String message = DeleteExchangeGoodsScene.builder().id(id).build().visitor(visitor).getResponse().getMessage();
             String err = "积分商品正在售卖中，不可删除";
             CommonUtil.checkResult("置顶某一删除未关闭的积分兑换", err, message);
         } catch (Exception | AssertionError e) {
@@ -988,7 +988,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             VoucherFormVoucherPageBean fourVoucherPage = util.flushVoucherPage(thirdVoucherPage);
             CommonUtil.checkResult("占用卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, fourVoucherPage.getAllowUseInventory());
             //再开启积分兑换
-            String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().execute(visitor, false).getString("message");
+            String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().visitor(visitor).getResponse().getMessage();
             String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
             CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
             //取消卡券的购买
@@ -999,7 +999,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             Preconditions.checkArgument(exchangePage != null, "闭虚拟兑换商品不存在");
-            ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().execute(visitor, false);
+            ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().visitor(visitor).getResponse();
             DeleteExchangeGoodsScene.builder().id(exchangePage.getId()).build().visitor(visitor).execute();
             saveData("积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败");
         }
@@ -1035,7 +1035,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().execute(visitor, false);
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().visitor(visitor).getResponse();
             DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().visitor(visitor).execute();
             saveData("积分兑换--积分兑换--创建积分兑换，兑换一个，再关闭积分兑换");
         }

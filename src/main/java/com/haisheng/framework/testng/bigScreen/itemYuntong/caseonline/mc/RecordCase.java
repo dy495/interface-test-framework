@@ -116,12 +116,12 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             JSONObject res1 = util.checkDelete(); //删除之前校验
             Integer total1 = res1.getInteger("total");  //之前总删除条数
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-            String logo = CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().execute(visitor).getString("pic_path");
+            String logo = CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().visitor(visitor).execute().getString("pic_path");
             String name = "测试删除记录";
-            BrandAddScene.builder().name(name).logoPath(logo).build().execute(visitor);
+            BrandAddScene.builder().name(name).logoPath(logo).build().visitor(visitor).execute();
             //获取创建的品牌id
-            Long id = BrandPageScene.builder().page(1).size(10).name(name).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            BrandDeleteScene.builder().id(id).build().execute(visitor);
+            Long id = BrandPageScene.builder().page(1).size(10).name(name).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
+            BrandDeleteScene.builder().id(id).build().visitor(visitor).execute();
             JSONObject res2 = util.checkDelete();  // 删除之后校验
             Integer total2 = res2.getInteger("total");  //之后总删除条数
             String type = res2.getJSONArray("list").getJSONObject(0).getString("operation_content");  //删除的品牌名

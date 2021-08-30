@@ -26,7 +26,7 @@ public class WaitingVoucher extends AbstractVoucher {
         if (scene == null) {
             new SupporterUtil(visitor).createVoucher(10, VoucherTypeEnum.COMMODITY_EXCHANGE);
         } else {
-            visitor.invokeApi(scene);
+            scene.visitor(visitor).execute();
         }
         logger("CREATE WAITING FINISH");
     }

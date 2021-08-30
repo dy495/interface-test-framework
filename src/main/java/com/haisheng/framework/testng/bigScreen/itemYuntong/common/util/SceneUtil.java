@@ -501,7 +501,7 @@ public class SceneUtil extends BasicUtil {
     public Map<String, String> createCustomerCommon(String name, String sex, String phone, String carId, String buyTime) {
         Map<String, String> customer = new HashMap<>();
         AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().visitor(visitor).execute();//创建销售接待
-        JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().execute(visitor, true);
+        JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().visitor(visitor).execute();
         List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> Objects.equals(phone, obj.getString("customer_phone"))).collect(Collectors.toList());
         String id = newCustomer.get(0).getString("id");
         String shopId = pageInfo.getJSONArray("list").getJSONObject(0).getString("shop_id");

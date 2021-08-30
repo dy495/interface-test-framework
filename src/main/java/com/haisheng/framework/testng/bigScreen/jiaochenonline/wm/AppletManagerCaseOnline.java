@@ -608,7 +608,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().visitor(visitor).execute().getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
             AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
             //兑换积分
-            String message = AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().execute(visitor, false).getString("message");
+            String message = AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().visitor(visitor).getResponse().getMessage();
             String err = "商品库存不足";
             CommonUtil.checkResult("兑换库存不足的商品", err, message);
         } catch (Exception | AssertionError e) {
@@ -636,7 +636,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             util.loginApplet(APPLET_USER_ONE);
             Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().visitor(visitor).execute().getLong("id");
             //兑换积分
-            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor, false).getString("message");
+            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().visitor(visitor).getResponse().getMessage();
             String err = "商品库存不足";
             CommonUtil.checkResult("兑换无库存的虚拟商品", err, message);
         } catch (Exception | AssertionError e) {

@@ -77,18 +77,18 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
     @Test
     public void flowUp1() {
         try {
-            Integer total1 = AppFlowUpPageScene.builder().size(10).build().execute(visitor, true).getInteger("total");
+            Integer total1 = AppFlowUpPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
             Map<String, String> customer = util.createCustomerCommon("自动差评者", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
-            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().execute(visitor);
+            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().visitor(visitor).execute();
             commonConfig.setShopId(null);
             commonConfig.setRoleId(null);
             JSONArray evaluateInfoList = new JSONArray();
-            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().execute(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
-            String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().execute(visitor, false).getString("message");
+            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).execute().getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
+            String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).getResponse().getMessage();
             if (Objects.equals(message, "success")) {
                 commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId());
                 commonConfig.setRoleId(YT_RECEPTION_DAILY.getRoleId());
-                Integer total2 = AppFlowUpPageScene.builder().size(10).build().execute(visitor, true).getInteger("total");
+                Integer total2 = AppFlowUpPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(total2 == total1 + 1, "app跟进列表总数：" + total1 + "销售接待差评，app跟进列表总数：" + total2);
             }
         } catch (AssertionError e) {
@@ -111,10 +111,10 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
     @Test
     public void flowUp2() {
         try {
-            String[] follows1 = AppTodayTaskScene.builder().build().execute(visitor, true).getString("pre_follow").split("/");
-            Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getInteger("id");
-            AppFlowUpRemarkScene.builder().followId(flowUpId).remark("自动完成跟进备注。。。1azCVB").build().execute(visitor);
-            String[] follows2 = AppTodayTaskScene.builder().build().execute(visitor, true).getString("pre_follow").split("/");
+            String[] follows1 = AppTodayTaskScene.builder().build().visitor(visitor).execute().getString("pre_follow").split("/");
+            Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getInteger("id");
+            AppFlowUpRemarkScene.builder().followId(flowUpId).remark("自动完成跟进备注。。。1azCVB").build().visitor(visitor).execute();
+            String[] follows2 = AppTodayTaskScene.builder().build().visitor(visitor).execute().getString("pre_follow").split("/");
             int followZi1 = Integer.parseInt(follows1[0]);
             int followZi2 = Integer.parseInt(follows2[0]);
             int followMu1 = Integer.parseInt(follows1[1]);

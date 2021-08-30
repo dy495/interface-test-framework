@@ -77,7 +77,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
             int count = util.getAppletCarList().size();
             Long carId = util.createCar(plateNumber, Long.parseLong(pp.carModelId)).getId();
             int addCount = util.getAppletCarList().size();
-            AppletCarDeleteScene.builder().id(carId).build().execute(visitor);
+            AppletCarDeleteScene.builder().id(carId).build().visitor(visitor).execute();
             int deleteCount = util.getAppletCarList().size();
             checkArgument((addCount - count) == 1, "增加车辆，我的车辆列表没加1");
             checkArgument((addCount - deleteCount) == 1, "删除车辆，我的车辆列表没-1");
@@ -99,7 +99,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
             int count = util.getAppletCarList().size();
             Long carId = util.createCar(plateNumber, Long.parseLong(pp.carModelId)).getId();
             int addCount = util.getAppletCarList().size();
-            AppletCarDeleteScene.builder().id(carId).build().execute(visitor);
+            AppletCarDeleteScene.builder().id(carId).build().visitor(visitor).execute();
             int deleteCount = util.getAppletCarList().size();
             checkArgument((addCount - count) == 1, "增加车辆，我的车辆列表没加1");
             checkArgument((addCount - deleteCount) == 1, "删除车辆，我的车辆列表没-1");
@@ -160,7 +160,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            ids.forEach(id -> AppletCarDeleteScene.builder().id(id).build().execute(visitor));
+            ids.forEach(id -> AppletCarDeleteScene.builder().id(id).build().visitor(visitor).execute());
             saveData("小程序我的车辆，增加6辆");
         }
     }
@@ -172,7 +172,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
     @Test
     public void myCar_system_5() {
         try {
-            JSONArray list = AppletPlateNumberProvinceListScene.builder().build().execute(visitor).getJSONArray("list");
+            JSONArray list = AppletPlateNumberProvinceListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             checkArgument(list.size() == 31, "车牌号省份不是31");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -215,7 +215,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            AppletCarEditScene.builder().id(id).plateNumber(finalPlatNumber).modelId(Long.parseLong(pp.carModelId)).build().execute(visitor);
+            AppletCarEditScene.builder().id(id).plateNumber(finalPlatNumber).modelId(Long.parseLong(pp.carModelId)).build().visitor(visitor).execute();
             saveData("编辑车辆");
         }
     }

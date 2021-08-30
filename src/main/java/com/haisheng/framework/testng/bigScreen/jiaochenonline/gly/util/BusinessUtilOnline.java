@@ -224,11 +224,11 @@ public class BusinessUtilOnline extends BasicUtil {
     public List<Long> getWaitingWorkingVoucherIds() {
         List<Long> voucherIds = new ArrayList<>();
         IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
-        JSONObject response = visitor.invokeApi(scene);
+        JSONObject response = scene.visitor(visitor).execute();
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("id");
                 String voucherStatusName = list.getJSONObject(i).getString("voucher_status_name");
@@ -246,11 +246,11 @@ public class BusinessUtilOnline extends BasicUtil {
     public List<Long> getVoucherIds() {
         List<Long> voucherIds = new ArrayList<>();
         IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
-        JSONObject response = visitor.invokeApi(scene);
+        JSONObject response = scene.visitor(visitor).execute();
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("id");
                 String voucherStatus = list.getJSONObject(i).getString("audit_status_name");
@@ -339,7 +339,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public Long createFissionActivity(Long voucherId) {
         IScene scene = createFissionActivityScene(voucherId);
-        return visitor.invokeApi(scene).getLong("id");
+        return scene.visitor(visitor).execute().getLong("id");
     }
 
     /**
@@ -405,7 +405,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public Long createRecruitActivity(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         IScene scene = createRecruitActivityScene(voucherId, successReward, rewardReceiveType, isNeedApproval);
-        return visitor.invokeApi(scene).getLong("id");
+        return scene.visitor(visitor).execute().getLong("id");
     }
 
     /**
@@ -415,7 +415,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public Long createRecruitActivity() {
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         IScene scene = createRecruitActivityScene(voucherId, true, 0, true, getEndDate(), getEndDate());
-        return visitor.invokeApi(scene).getLong("id");
+        return scene.visitor(visitor).execute().getLong("id");
     }
 
 
@@ -704,7 +704,7 @@ public class BusinessUtilOnline extends BasicUtil {
                 .rewardVouchers(registerObject)
                 .voucherValid(voucherValid)
                 .build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -716,7 +716,7 @@ public class BusinessUtilOnline extends BasicUtil {
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/卡券图.jpg";
         String picture = new ImageUtil().getImageBinary(path);
         IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
-        return visitor.invokeApi(scene).getString("pic_path");
+        return scene.visitor(visitor).execute().getString("pic_path");
     }
 
     /**
@@ -738,7 +738,7 @@ public class BusinessUtilOnline extends BasicUtil {
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
         IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
-        return visitor.invokeApi(scene).getString("pic_path");
+        return scene.visitor(visitor).execute().getString("pic_path");
     }
 
     /**
@@ -746,11 +746,11 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getSurplusInventory(Long id) {
         IScene scene1 = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene1).getInteger("pages");
+        int pages = scene1.visitor(visitor).execute().getInteger("pages");
         String surplusInventory = "";
         for (int page = 1; page <= pages; page++) {
             IScene scene2 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
+            JSONArray list = scene2.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("voucher_id");
                 if (voucherId.equals(id)) {
@@ -767,7 +767,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getPrice(Long id) {
         IScene scene = VoucherDetailScene.builder().id(id).build();
-        return visitor.invokeApi(scene).getString("par_value");
+        return scene.visitor(visitor).execute().getString("par_value");
     }
 
 
@@ -776,7 +776,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getCost(Long id) {
         IScene scene = VoucherDetailScene.builder().id(id).build();
-        return visitor.invokeApi(scene).getString("cost");
+        return scene.visitor(visitor).execute().getString("cost");
     }
 
     //--------------------------------活动列表中活动状态--------------------------------------------
@@ -787,10 +787,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getRecruitActivityWaitingApproval() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(2)).findFirst().orElse(null);
             if (obj != null) {
@@ -807,10 +807,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getFissionActivityWaitingApproval() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(1)).findFirst().orElse(null);
             if (obj != null) {
@@ -841,10 +841,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getFissionActivityWorking() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(1)).findFirst().orElse(null);
             if (obj != null) {
@@ -859,10 +859,10 @@ public class BusinessUtilOnline extends BasicUtil {
 
     public ManagePageBean getActivity(ActivityStatusEnum status, Integer activityType) {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             Stream<JSONObject> stream = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(status.getId()));
             stream = activityType != null ? stream.filter(e -> e.getInteger("activity_type").equals(activityType)) : stream;
             JSONObject obj = stream.findFirst().orElse(null);
@@ -879,10 +879,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getRecruitActivityWorking() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(2)).findFirst().orElse(null);
             if (obj != null) {
@@ -904,10 +904,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.execute(visitor).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String statusName = list.getJSONObject(i).getString("status_name");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -944,10 +944,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 if (status == ActivityStatusEnum.REJECT.getId()) {
@@ -973,10 +973,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1003,10 +1003,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1035,10 +1035,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
+        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1064,10 +1064,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
+        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1092,10 +1092,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 if (status == ActivityStatusEnum.CANCELED.getId()) {
@@ -1124,10 +1124,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1157,10 +1157,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1192,10 +1192,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
+        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 if (status == ActivityStatusEnum.REVOKE.getId()) {
@@ -1221,10 +1221,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
+        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1266,10 +1266,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1299,10 +1299,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1333,10 +1333,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1375,10 +1375,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -1432,11 +1432,11 @@ public class BusinessUtilOnline extends BasicUtil {
     public List<Long> registerAppletIds(Long activityId) {
         List<Long> ids = new ArrayList<>();
         IScene scene = ManageRegisterPageScene.builder().page(1).size(100).status(1).activityId(activityId).build();
-        JSONObject response = visitor.invokeApi(scene);
+        JSONObject response = scene.visitor(visitor).execute();
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ManageRegisterPageScene.builder().page(page).size(10).status(1).activityId(activityId).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long id = list.getJSONObject(i).getLong("id");
                 ids.add(id);
@@ -1450,7 +1450,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getDelActivity(Long id) {
         IScene scene = ManageDeleteScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1458,7 +1458,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getRevokeActivity(Long id) {
         IScene scene = ManageRevokeScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1466,7 +1466,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getCancelActivity(Long id) {
         IScene scene = ManageCancelScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1474,7 +1474,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getPromotionActivity(Long id) {
         IScene scene = ManagePromotionScene.builder().id(id).build();
-        return visitor.invokeApi(scene).getString("applet_code_url");
+        return scene.visitor(visitor).execute().getString("applet_code_url");
     }
 
     /**
@@ -1483,7 +1483,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getApprovalPassed(Long... id) {
         List<Long> ids = Arrays.asList(id);
         IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1492,7 +1492,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getApprovalReject(Long... id) {
         List<Long> ids = Arrays.asList(id);
         IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.REJECT.getId()).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1501,7 +1501,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getRegisterApprovalPassed(Long activityId, Long... id) {
         List<Long> ids = Arrays.asList(id);
         IScene scene = ManageRegisterApprovalScene.builder().activityId(activityId).ids(ids).status(101).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1510,14 +1510,14 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getRegisterApprovalReject(Long activityId, Long... id) {
         List<Long> ids = Arrays.asList(id);
         IScene scene = ManageRegisterApprovalScene.builder().activityId(activityId).ids(ids).status(201).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
      * 小程序-活动报名-取消报名
      */
     public void activityCancelScene(Long id) {
-        AppointmentActivityCancelScene.builder().id(id).build().execute(visitor);
+        AppointmentActivityCancelScene.builder().id(id).build().visitor(visitor).execute();
     }
 
     /**
@@ -1529,7 +1529,7 @@ public class BusinessUtilOnline extends BasicUtil {
         String status = "";
         do {
             IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getInteger("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1549,7 +1549,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public JSONObject appointmentActivityTitleNew() {
-        return AppletArticleListScene.builder().lastValue(null).size(10).build().execute(visitor);
+        return AppletArticleListScene.builder().lastValue(null).size(10).build().visitor(visitor).execute();
     }
 
     /**
@@ -1565,7 +1565,7 @@ public class BusinessUtilOnline extends BasicUtil {
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             lastValue = response.getJSONObject("last_value");
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1586,7 +1586,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 调整记录列表
      */
     public JSONObject changeRecordPage(Long activityId) {
-        return ManageChangeRecordScene.builder().page(1).size(10).id(activityId).build().execute(visitor);
+        return ManageChangeRecordScene.builder().page(1).size(10).id(activityId).build().visitor(visitor).execute();
     }
 
     /**
@@ -1594,7 +1594,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONArray getRecruitActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return visitor.invokeApi(scene).getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers");
+        return scene.visitor(visitor).execute().getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers");
     }
 
     /**
@@ -1602,7 +1602,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getRecruitActivityDetailDate(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return visitor.invokeApi(scene).getJSONObject("recruit_activity_info");
+        return scene.visitor(visitor).execute().getJSONObject("recruit_activity_info");
     }
 
     /**
@@ -1610,7 +1610,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getRecruitActivityDetailDate1(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return visitor.invokeApi(scene);
+        return scene.visitor(visitor).execute();
     }
 
     /**
@@ -1618,14 +1618,14 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getFissionActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
+        return scene.visitor(visitor).execute().getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
     }
 
     /**
      * 招募活动裂变详情页返回值
      */
     public JSONObject getFissionActivityDetailDate1(Long activityId) {
-        return ManageDetailScene.builder().id(activityId).build().execute(visitor);
+        return ManageDetailScene.builder().id(activityId).build().visitor(visitor).execute();
     }
 
     /**
@@ -1633,21 +1633,21 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getFissionActivityDetailData(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
+        return scene.visitor(visitor).execute().getJSONObject("fission_voucher_info");
     }
 
     /**
      * 报名数据-返回值（data）
      */
     public JSONObject getRegisterData(Long activityId) {
-        return ManageRegisterDataScene.builder().activityId(activityId).build().execute(visitor);
+        return ManageRegisterDataScene.builder().activityId(activityId).build().visitor(visitor).execute();
     }
 
     /**
      * 报名列表-返回值（data）
      */
     public JSONObject getRegisterPage(Long activityId) {
-        return ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build().execute(visitor);
+        return ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build().visitor(visitor).execute();
     }
 
     /**
@@ -1670,11 +1670,11 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getActivityRespond(Long id) {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         JSONObject respondOne = null;
         for (int page = 1; page <= pages; page++) {
             IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
+            JSONArray list = scene2.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
                 if (activityId.equals(id)) {
@@ -1695,7 +1695,7 @@ public class BusinessUtilOnline extends BasicUtil {
         int num = 0;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getJSONObject("last_value");
             System.err.println(lastValue);
             list = response1.getJSONArray("list");
@@ -1715,11 +1715,11 @@ public class BusinessUtilOnline extends BasicUtil {
         int pages = pageRes.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
-            JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
+            JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String customerPhone = list.getJSONObject(i).getString("customer_phone");
                 IScene scene1 = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
-                JSONArray list1 = visitor.invokeApi(scene1).getJSONArray("list");
+                JSONArray list1 = scene1.visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
                     String customerPhone1 = list1.getJSONObject(i).getString("customer_phone");
                     if (customerPhone.equals(customerPhone1)) {
@@ -1789,7 +1789,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray list;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1801,7 +1801,7 @@ public class BusinessUtilOnline extends BasicUtil {
             }
         } while (list.size() == 10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 
     /**
@@ -1861,7 +1861,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray list;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1873,7 +1873,7 @@ public class BusinessUtilOnline extends BasicUtil {
             }
         } while (list.size() == 10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 
     /**
@@ -1891,7 +1891,7 @@ public class BusinessUtilOnline extends BasicUtil {
         //获取小程序推荐列表
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1903,7 +1903,7 @@ public class BusinessUtilOnline extends BasicUtil {
             }
         } while (list.size() == 10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 
     /**
@@ -1915,7 +1915,7 @@ public class BusinessUtilOnline extends BasicUtil {
         int num = 0;
         do {
             IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene);
+            JSONObject response1 = scene.visitor(visitor).execute();
             lastValue = response1.getInteger("last_value");
             list = response1.getJSONArray("list");
             num += list.size();
@@ -1956,11 +1956,11 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getActivityTitle(Long id) {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         String title = "";
         for (int page = 1; page <= pages; page++) {
             IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
+            JSONArray list = scene2.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
                 if (activityId.equals(id)) {
@@ -1987,7 +1987,7 @@ public class BusinessUtilOnline extends BasicUtil {
         Long id = appointmentActivityId(activityId);
         //查看小喇叭中的优惠券
         IScene scene2 = ArticleVoucherList.builder().id(id).build();
-        return visitor.invokeApi(scene2).getJSONArray("list").getJSONObject(0).getString("is_received");
+        return scene2.visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("is_received");
     }
 
     /**
@@ -1998,7 +1998,7 @@ public class BusinessUtilOnline extends BasicUtil {
         Long id = appointmentActivityId(activityId);
         //查看小喇叭中的优惠券
         IScene scene2 = ArticleVoucherList.builder().id(id).build();
-        return visitor.invokeApi(scene2);
+        return scene2.visitor(visitor).execute();
     }
 
     /**
@@ -2008,7 +2008,7 @@ public class BusinessUtilOnline extends BasicUtil {
         //定义主体的字段
         String subjectKey = "";
         //获取主题状态的列表
-        JSONArray list = SubjectListScene.builder().build().execute(visitor).getJSONArray("list");
+        JSONArray list = SubjectListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             String subjectValue = list.getJSONObject(i).getString("subject_value");
             if (subjectValue.equals(subjectName)) {
@@ -2068,7 +2068,7 @@ public class BusinessUtilOnline extends BasicUtil {
                 .picList(picList)
                 .actionPoint(1)
                 .build();
-        return visitor.invokeApi(scene).getLong("id");
+        return scene.visitor(visitor).execute().getLong("id");
     }
 
     /**
@@ -2091,7 +2091,7 @@ public class BusinessUtilOnline extends BasicUtil {
                 .picList(picList)
                 .actionPoint(1)
                 .build();
-        return visitor.invokeApi(scene).getLong("id");
+        return scene.visitor(visitor).execute().getLong("id");
     }
 
     /**
@@ -2099,11 +2099,11 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingWaitingApproval() {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.execute(visitor).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             scene.setPage(page);
             scene.setSize(10);
-            JSONArray list = scene.execute(visitor).getJSONArray("list");
+            JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2122,7 +2122,7 @@ public class BusinessUtilOnline extends BasicUtil {
         int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.REVOKE.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2138,10 +2138,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getContentMarketingReject() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.execute(visitor).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.REJECT.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2158,10 +2158,10 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingCancel() {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.CANCELED.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2179,7 +2179,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getContentMarketingRecover(Long id) {
         IScene scene = ManageRecoveryScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
 
@@ -2188,10 +2188,10 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingWorking() {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2210,10 +2210,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getContentMarketingWaitingStar() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.WAITING_START.getId()))
                     .filter(e -> e.getInteger("activity_type") == 3).findFirst().orElse(null);
             if (obj != null) {
@@ -2247,7 +2247,7 @@ public class BusinessUtilOnline extends BasicUtil {
                 .picList(picList)
                 .actionPoint(1)
                 .build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -2255,7 +2255,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getContentMarketingOffLine(Long id) {
         IScene scene = ManageOfflineScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -2263,7 +2263,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String getContentMarketingOnline(Long id) {
         IScene scene = ManageOnlineScene.builder().id(id).build();
-        return visitor.invokeApi(scene, false).getString("message");
+        return scene.visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -2273,10 +2273,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean geContentMarketingFinish() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.FINISH.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2293,10 +2293,10 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getContentMarketingOffLine() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(701))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2320,10 +2320,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -2358,10 +2358,10 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
+        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
@@ -2416,7 +2416,7 @@ public class BusinessUtilOnline extends BasicUtil {
                     .invitedVoucher(invitedVoucher)
                     .isCustomShareInfo(false)
                     .build();
-            activityId = visitor.invokeApi(scene).getLong("id");
+            activityId = scene.visitor(visitor).execute().getLong("id");
         } else {
             //创建卡券
             Long voucherId3 = supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
@@ -2445,7 +2445,7 @@ public class BusinessUtilOnline extends BasicUtil {
                     .invitedVoucher(invitedVoucher)
                     .isCustomShareInfo(false)
                     .build();
-            activityId = visitor.invokeApi(scene).getLong("id");
+            activityId = scene.visitor(visitor).execute().getLong("id");
         }
         return activityId;
     }

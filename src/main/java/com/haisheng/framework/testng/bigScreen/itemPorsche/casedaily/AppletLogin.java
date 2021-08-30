@@ -170,22 +170,15 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     private Response invokePorsche(VisitorProxy visitor) {
-        JSONObject response = AppletPorscheAMessageListScene.builder().lastValue(null).size(20).build().execute(visitor, false);
-        return getResponseInfo(response);
+        return AppletPorscheAMessageListScene.builder().lastValue(null).size(20).build().visitor(visitor).getResponse();
     }
 
     private Response invokeJC(VisitorProxy visitor) {
-        JSONObject response = AppletVoucherListScene.builder().type("GENERAL").size(20).build().execute(visitor, false);
-        return getResponseInfo(response);
+        return AppletVoucherListScene.builder().type("GENERAL").size(20).build().visitor(visitor).getResponse();
     }
 
     private Response invokeIns(VisitorProxy visitor) {
-        JSONObject response = AppletIntegralRecordScene.builder().lastValue(null).size(20).build().execute(visitor, false);
-        return getResponseInfo(response);
-    }
-
-    private Response getResponseInfo(JSONObject response) {
-        return JSONObject.toJavaObject(response, Response.class);
+        return AppletIntegralRecordScene.builder().lastValue(null).size(20).build().visitor(visitor).getResponse();
     }
 
     @DataProvider(name = "BSJ_APPLET_TOKENS_DAILY")

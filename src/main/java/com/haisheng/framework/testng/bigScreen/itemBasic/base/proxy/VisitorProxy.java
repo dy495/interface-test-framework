@@ -41,27 +41,8 @@ public class VisitorProxy extends TestCaseCommon {
     }
 
     /**
-     * 访问场景
-     *
-     * @param scene 场景
-     * @return 返回值
-     */
-    public JSONObject invokeApi(IScene scene) {
-        return invokeApi(scene, true);
-    }
-
-    /**
-     * 访问场景
-     *
-     * @param scene 场景
-     * @return 返回值
-     */
-    public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
-    }
-
-    /**
      * http请求方法调用
+     * 固定ip调用
      *
      * @param path        路径
      * @param requestBody 请求体
@@ -74,6 +55,7 @@ public class VisitorProxy extends TestCaseCommon {
 
     /**
      * http请求方法调用
+     * 动态ip调用
      *
      * @param host        域名
      * @param path        路径
@@ -147,34 +129,5 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public void setProduct(EnumTestProduct product) {
         this.product = product;
-    }
-
-    /**
-     * 新增处理插件
-     * 由于线上线下域名与路径不同，增加处理
-     *
-     * @param oldPath     旧的路径
-     * @param requestBody 旧的请求体
-     * @return 内部类数据
-     */
-    private InnerData transfer(String oldPath, JSONObject requestBody) {
-        InnerData innerData = new InnerData();
-        if (product.getIp().contains(EnumTestProduct.JC_ONLINE_ZH.getIp())) {
-            if (oldPath.contains("/account-platform/")) {
-                oldPath = oldPath.replace("/account-platform/", "/jiaochen/");
-                requestBody.remove("type");
-            } else {
-                oldPath = oldPath.contains("/car-platform/") ? oldPath.replace("/car-platform/", "/jiaochen/") : oldPath;
-            }
-        }
-        innerData.setPath(oldPath);
-        innerData.setRequestBody(requestBody);
-        return innerData;
-    }
-
-    @Data
-    static class InnerData implements Serializable {
-        private JSONObject requestBody;
-        private String path;
     }
 }

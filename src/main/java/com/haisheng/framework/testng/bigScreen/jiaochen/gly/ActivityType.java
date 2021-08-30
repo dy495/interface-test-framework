@@ -110,7 +110,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                     .shareVoucher(shareVoucher)
                     .invitedVoucher(invitedVoucher)
                     .build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "裂变活动1创建失败");
@@ -157,7 +157,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                     .shareVoucher(shareVoucher)
                     .invitedVoucher(invitedVoucher)
                     .build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "裂变活动2创建失败");
@@ -204,7 +204,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                     .shareVoucher(shareVoucher)
                     .invitedVoucher(invitedVoucher)
                     .build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "裂变活动3创建失败");
@@ -255,7 +255,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .shareVoucher(shareVoucher)
                         .invitedVoucher(invitedVoucher)
                         .build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
+                Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
                 Preconditions.checkArgument(activityId > 0, "裂变活动4创建失败");
@@ -337,7 +337,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                             .voucherValid(voucherValid);
                 }
                 IScene scene = builder.build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
+                Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
                 Preconditions.checkArgument(activityId > 0, "招募活动5创建失败");
@@ -414,7 +414,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动6创建失败");
@@ -491,7 +491,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动7创建失败");
@@ -568,7 +568,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动7创建失败");
@@ -645,7 +645,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动9创建失败");
@@ -722,7 +722,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动10创建失败");
@@ -799,7 +799,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动11创建失败");
@@ -854,7 +854,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .shareVoucher(shareVoucher)
                         .invitedVoucher(invitedVoucher)
                         .build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
+                Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
                 Preconditions.checkArgument(activityId > 0, "裂变活动12创建失败");
@@ -934,7 +934,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             //小程序报名活动(报名信息不填写)
@@ -1011,7 +1011,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                         .voucherValid(voucherValid);
             }
             IScene scene = builder.build();
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             //小程序报名

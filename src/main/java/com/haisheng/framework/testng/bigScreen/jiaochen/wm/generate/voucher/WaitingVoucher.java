@@ -26,7 +26,7 @@ public class WaitingVoucher extends AbstractVoucher {
         if (scene == null) {
             new SceneUtil(visitor).createVoucher(10, VoucherTypeEnum.CUSTOM);
         } else {
-            visitor.invokeApi(scene);
+            scene.visitor(visitor).execute();
         }
         logger("CREATE WAITING FINISH");
     }

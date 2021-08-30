@@ -9,17 +9,10 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 
 public class YunTongUtil extends TestCaseCommon {
-//    private static volatile YunTongUtil instance = null;
+    //    private static volatile YunTongUtil instance = null;
     private static String IpPort;
-    private static EnumTestProduct product;
-    private VisitorProxy visitor;
 
-    /**
-     * 单例
-     *
-     * @return YunTongUtil
-     */
-//    public static synchronized YunTongUtil getInstance(EnumTestProduce product) {
+    //    public static synchronized YunTongUtil getInstance(EnumTestProduce product) {
 //        if (instance == null) {
 //            instance = new YunTongUtil(product);
 //            IpPort = product.getAddress();
@@ -31,10 +24,8 @@ public class YunTongUtil extends TestCaseCommon {
 //        }
 //        return instance;
 //    }
-     public  YunTongUtil(EnumTestProduct product) {
-        this.product = product;
-        this.IpPort = product.getIp();
-        this.visitor = new VisitorProxy(product);
+    public YunTongUtil(EnumTestProduct product) {
+        IpPort = product.getIp();
     }
 
 
@@ -109,7 +100,7 @@ public class YunTongUtil extends TestCaseCommon {
     /**
      * 销售客户的门店名称和ID的列表
      */
-    public JSONObject userShopList(){
+    public JSONObject userShopList() {
         String url = "/pc/login-user/shop-list";
         JSONObject json = new JSONObject();
         return invokeApi(url, json);
@@ -118,7 +109,7 @@ public class YunTongUtil extends TestCaseCommon {
     /**
      * 销售客户的车系列表
      */
-    public JSONObject preSaleStyleList(){
+    public JSONObject preSaleStyleList() {
         String url = "/pc/customer-manage/pre-sale-customer/style-list";
         JSONObject json = new JSONObject();
         return invokeApi(url, json);
@@ -156,7 +147,7 @@ public class YunTongUtil extends TestCaseCommon {
 
     /**
      * @description :销售接待记录
-     *  @author: gly
+     * @author: gly
      **/
     public JSONObject salesReceptionPage(String page, String size, String pram, String result) {
         String url = "/car-platform/pc/pre-sales-reception/page";
@@ -171,7 +162,7 @@ public class YunTongUtil extends TestCaseCommon {
 
     /**
      * @description :销售接待记录--时间
-     *  @author: gly
+     * @author: gly
      **/
     public JSONObject salesReceptionPageTime(String page, String size, String reception_start, String reception_end) {
         String url = "/jiaochen/pc/pre-sales-reception/page";
@@ -183,15 +174,6 @@ public class YunTongUtil extends TestCaseCommon {
 
         return invokeApi(url, json);
     }
-
-
-
-
-
-
-
-
-
 
 
 }

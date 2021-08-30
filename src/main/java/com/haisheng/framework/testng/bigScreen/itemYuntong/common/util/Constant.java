@@ -10,15 +10,15 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_ReceptionManageFilter")
-    public static Object[][]receptionManageFilter_pram() {
+    public static Object[][] receptionManageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
                 {"reception_sale_id", "reception_sale_name"},
-                {"customer_name","customer_name"},
-                {"reception_status","reception_status"},
-                {"customer_phone","customer_phone"},
-                {"reception_type","reception_type"},
-                {"shop_id","shop_id"},
+                {"customer_name", "customer_name"},
+                {"reception_status", "reception_status"},
+                {"customer_phone", "customer_phone"},
+                {"reception_type", "reception_type"},
+                {"shop_id", "shop_id"},
         };
     }
 
@@ -32,7 +32,7 @@ public class Constant {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"customer_phone", "customer_phone"},
-                {"sale_name","sale_name"},
+                {"sale_name", "sale_name"},
         };
     }
 
@@ -45,11 +45,11 @@ public class Constant {
     public static Object[][] afterSleCustomerManage_pram() {
         return new String[][]{
                 {"vehicle_chassis_code", "vehicle_chassis_code"},
-                {"customer_name","repair_customer_name"},
-                {"customer_phone","repair_customer_phone"},
-                {"registration_status","registration_status_name"},
-                {"brand_id","brand_name"},
-                {"shop_id","shop_id"},
+                {"customer_name", "repair_customer_name"},
+                {"customer_phone", "repair_customer_phone"},
+                {"registration_status", "registration_status_name"},
+                {"brand_id", "brand_name"},
+                {"shop_id", "shop_id"},
 
 //                {"vehicle_chassis_code","vehicle_chassis_code"},
 //                {"shop_id","shop_id"},
@@ -66,8 +66,8 @@ public class Constant {
     @DataProvider(name = "SELECT_weChatSleCustomerManageFilter")
     public static Object[][] weChatSleCustomerManage_pram() {
         return new String[][]{
-                {"customer_phone","customer_phone"},
-                {"vip_type","vip_type_name"},
+                {"customer_phone", "customer_phone"},
+                {"vip_type", "vip_type_name"},
         };
     }
 
@@ -117,7 +117,7 @@ public class Constant {
                 {"manufacturer", "manufacturer"},
                 {"car_model", "model"},
                 {"year", "year"},
-                {"car_style","style_name"}
+                {"car_style", "style_name"}
         };
     }
 
@@ -127,13 +127,13 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_voucherFormFilter")
-    public static Object[][] voucherFormFilter_pram(){
+    public static Object[][] voucherFormFilter_pram() {
         return new String[][]{
                 {"subject_name", "subject_name"},
                 {"voucher_name", "voucher_name"},
                 {"creator_name", "creator_name"},
                 {"creator_account", "creator_account"},
-                {"voucher_status","voucher_status"},
+                {"voucher_status", "voucher_status"},
 //                {"voucher_type","voucher_name"}   返回字段中没有此字段
 
         };
@@ -145,7 +145,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_sendRecordFilter")
-    public static Object[][] sendRecordFilter_pram(){
+    public static Object[][] sendRecordFilter_pram() {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"sender", "sender"},
@@ -159,7 +159,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_verificationRecordFilter")
-    public static Object[][] verificationRecordFilter_pram(){
+    public static Object[][] verificationRecordFilter_pram() {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"customer_name", "customer_name"},
@@ -177,7 +177,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_verificationPeopleFilter")
-    public static Object[][] verificationPeopleFilter_pram(){
+    public static Object[][] verificationPeopleFilter_pram() {
         return new String[][]{
                 {"verification_person", "verification_person"},
                 {"verification_phone", "verification_phone"},
@@ -191,11 +191,11 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_packageFormFilter")
-    public static Object[][] packageFormFilter_pram(){
+    public static Object[][] packageFormFilter_pram() {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"creator", "creator"},
-                {"package_status","status"},
+                {"package_status", "status"},
                 {"shop_id", "shop_name"},
         };
     }
@@ -206,11 +206,11 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_buyPackageRecordFilter")
-    public static Object[][] buyPackageRecordFilter_pram(){
+    public static Object[][] buyPackageRecordFilter_pram() {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"send_type", "pay_type_name"},
-                {"sender","recommender"},
+                {"sender", "recommender"},
                 {"customer_phone", "customer_phone"},
 
         };
@@ -222,12 +222,12 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_messageFormFilter")
-    public static Object[][] messageFormFilter_pram(){
+    public static Object[][] messageFormFilter_pram() {
         return new String[][]{
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"message_type", "message_type_name"},
-                {"send_account","send_account"}
+                {"send_account", "send_account"}
 
         };
     }
@@ -238,7 +238,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_articleFilter")
-    public static Object[][] articleFilter_pram(){
+    public static Object[][] articleFilter_pram() {
         return new String[][]{
                 {"title", "title"},
 
@@ -251,7 +251,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_registerListFilter")
-    public static Object[][] registerListFilter_pram(){
+    public static Object[][] registerListFilter_pram() {
         return new String[][]{
                 {"title", "title"},
 
@@ -264,7 +264,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_approvalListFilter")
-    public static Object[][] approvalListFilter_pram(){
+    public static Object[][] approvalListFilter_pram() {
         return new String[][]{
                 {"customer_name", "participant_name"},
                 {"phone", "phone"},
@@ -278,7 +278,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_applyListFilter")
-    public static Object[][] applyListFilter_pram(){
+    public static Object[][] applyListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
                 {"apply_name", "apply_name"},
@@ -294,7 +294,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_shopListFilter")
-    public static Object[][] shopListFilter_pram(){
+    public static Object[][] shopListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
         };
@@ -306,19 +306,20 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_brandListFilter")
-    public static Object[][] brandListFilter_pram(){
+    public static Object[][] brandListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
-                {"first_letter","first_letter"}
+                {"first_letter", "first_letter"}
         };
     }
+
     /**
      * @description:车系列表-筛选栏
      * @author: gly
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_carStyleListFilter")
-    public static Object[][] carStyleListFilter_pram(){
+    public static Object[][] carStyleListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
         };
@@ -330,7 +331,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_carModelListFilter")
-    public static Object[][] carModelListFilter_pram(){
+    public static Object[][] carModelListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
                 {"year", "year"},
@@ -343,7 +344,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_roleListFilter")
-    public static Object[][] roleListFilter_pram(){
+    public static Object[][] roleListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
         };
@@ -355,7 +356,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_staffListFilter")
-    public static Object[][] satffListFilter_pram(){
+    public static Object[][] satffListFilter_pram() {
         return new String[][]{
                 {"name", "name"},
                 {"phone", "phone"},
@@ -370,7 +371,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_importListFilter")
-    public static Object[][] importListFilter_pram(){
+    public static Object[][] importListFilter_pram() {
         return new String[][]{
                 {"type", "type"},
                 {"user", "user_name"},
@@ -383,7 +384,7 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_exportListFilter")
-    public static Object[][] exportListFilter_pram(){
+    public static Object[][] exportListFilter_pram() {
         return new String[][]{
                 {"type", "type"},
                 {"user", "user_name"}
@@ -396,20 +397,21 @@ public class Constant {
      * @time: 2020-11-24
      */
     @DataProvider(name = "SELECT_pushMsgListFilter")
-    public static Object[][] pushMsgListFilter_pram(){
+    public static Object[][] pushMsgListFilter_pram() {
         return new String[][]{
                 {"customer_type", "customer_type"},
                 {"message_type", "message_type"},
 
         };
     }
+
     /**
      * @description:v2.0-洗车管理列表-筛选栏
      * @author: gly
      * @time: 2020-2-1
      */
     @DataProvider(name = "SELECT_washCarManagerFilter")
-    public static Object[][] washCarManagerListFilter_pram(){
+    public static Object[][] washCarManagerListFilter_pram() {
         return new String[][]{
                 {"customerName", "customer_name"},
                 {"customer_type", "customer_vip_type"},
@@ -427,7 +429,7 @@ public class Constant {
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_adjustNumberRecordFilter")
-    public static Object[][] adjustNumberRecordFilter_pram(){
+    public static Object[][] adjustNumberRecordFilter_pram() {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"customer_phone", "customer_phone"},
@@ -445,7 +447,7 @@ public class Constant {
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_voucherManageSendRecordFilter")
-    public static Object[][] voucherManageSendRecordFilter_pram(){
+    public static Object[][] voucherManageSendRecordFilter_pram() {
         return new String[][]{
                 {"receiver", "customer_name"},
                 {"receive_phone", "customer_phone"},
@@ -460,7 +462,7 @@ public class Constant {
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_voucherInvalidPageFilter")
-    public static Object[][] voucherInvalidPageFilter_pram(){
+    public static Object[][] voucherInvalidPageFilter_pram() {
         return new String[][]{
                 {"receiver", "customer_name"},
                 {"receive_phone", "customer_phone"},
@@ -470,13 +472,14 @@ public class Constant {
 
         };
     }
+
     /**
      * @description:v2.0-PC道路救援-筛选栏
      * @author: gly
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_rescuePageFilter")
-    public static Object[][] rescuePageFilter_pram(){
+    public static Object[][] rescuePageFilter_pram() {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"vip_type", "vip_type_name"},
@@ -494,7 +497,7 @@ public class Constant {
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_evaluatePageFilter")
-    public static Object[][] evaluatePageFilter_pram(){
+    public static Object[][] evaluatePageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
                 {"service_sale_id", "service_sale_name"},
@@ -511,7 +514,6 @@ public class Constant {
 //                {"evaluate_end", "evaluate_end"},
 
 
-
         };
     }
 
@@ -521,7 +523,7 @@ public class Constant {
      * @time: 2020-2-2
      */
     @DataProvider(name = "SELECT_storeCommodityPageFilter")
-    public static Object[][] storeCommodityPageFilter_pram(){
+    public static Object[][] storeCommodityPageFilter_pram() {
         return new String[][]{
                 {"commodity_name", "commodity_name"},
 //                {"start_create_date", "start_create_date"},
@@ -536,7 +538,7 @@ public class Constant {
      * @time: 2020-2-3
      */
     @DataProvider(name = "SELECT_storeOrderPageFilter")
-    public static Object[][] storeOrderPageFilter_pram(){
+    public static Object[][] storeOrderPageFilter_pram() {
         return new String[][]{
                 {"order_number", "order_number"},
                 {"commodity_name", "commodity_name"},
@@ -553,7 +555,7 @@ public class Constant {
      * @time: 2020-2-3
      */
     @DataProvider(name = "SELECT_storeSalesPageFilter")
-    public static Object[][] storeSalesPageFilter_pram(){
+    public static Object[][] storeSalesPageFilter_pram() {
         return new String[][]{
                 {"sales_phone", "sales_phone"},
                 {"shop_id", "shop_name"},
@@ -567,7 +569,7 @@ public class Constant {
      * @time: 2020-3-3
      */
     @DataProvider(name = "SELECT_activityManagePageFilter")
-    public static Object[][] activityManagePageFilter_pram(){
+    public static Object[][] activityManagePageFilter_pram() {
         return new String[][]{
                 {"creator_account", "creator_account"},
                 {"creator_name", "creator_name"},
@@ -583,7 +585,7 @@ public class Constant {
      * @time: 2020-2-3
      */
     @DataProvider(name = "SELECT_registerPageFilter")
-    public static Object[][] registerPageFilter_pram(){
+    public static Object[][] registerPageFilter_pram() {
         return new String[][]{
                 {"status", "status"},
 
@@ -596,7 +598,7 @@ public class Constant {
      * @time: 2020-3-16
      */
     @DataProvider(name = "SELECT_voucherManageAdditionalRecordFilter")
-    public static Object[][] voucherManageAdditionalRecordFilter_pram(){
+    public static Object[][] voucherManageAdditionalRecordFilter_pram() {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"sale_name", "operate_sale_name"},
@@ -611,7 +613,7 @@ public class Constant {
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_onlineExpertsPageListLRecordFilter")
-    public static Object[][] onlineExpertsPageListRecordFilter_pram(){
+    public static Object[][] onlineExpertsPageListRecordFilter_pram() {
         return new String[][]{
                 {"shop_id", "shop_name"},
                 {"follow_login_name", "follow_login_name"},
@@ -629,7 +631,7 @@ public class Constant {
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_dedicatedServicePageListLRecordFilter")
-    public static Object[][] dedicatedServicePageListRecordFilter_pram(){
+    public static Object[][] dedicatedServicePageListRecordFilter_pram() {
         return new String[][]{
                 {"shop_id", "shop_name"},
                 {"follow_login_name", "follow_login_name"},
@@ -643,28 +645,27 @@ public class Constant {
     }
 
     /**
-     * @description:v3.1销售客户接待列表
+     * @description: v3.1销售客户接待列表
      * @author: gly
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_preSalesReceptionPageRecordFilter")
-    public static Object[][] preSalesReceptionPageRecordFilter_pram(){
+    public static Object[][] preSalesReceptionPageRecordFilter_pram() {
         return new String[][]{
                 {"customer_name", "customer_name"},
-                {"phone", "customer_phone"},
-                {"pre_sale_account", "belong_sale_account"},
-                {"pre_sale_name", "belong_sale_name"},
-                {"shop_id", "shop_id"}
+                {"customer_phone", "customer_phone"},
+                {"sale_name", "sale_name"},
+                {"customer_type", "subject_type"},
         };
     }
 
     /**
-     * @description:v3.1销售客户接待列表
+     * @description: v3.1销售客户接待列表
      * @author: gly
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_lossCustomerPageRecordFilter")
-    public static Object[][] lossCustomerPageRecordFilter_pram(){
+    public static Object[][] lossCustomerPageRecordFilter_pram() {
         return new String[][]{
                 {"customer_name", "customer_phone"},
                 {"customer_name", "customer_name"},
@@ -678,7 +679,7 @@ public class Constant {
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_loginLogStaffRecordFilter")
-    public static Object[][] loginLogStaffRecordFilter_pram(){
+    public static Object[][] loginLogStaffRecordFilter_pram() {
         return new String[][]{
                 {"login_name", "login_name"},
                 {"login_account", "login_account"},
@@ -691,7 +692,7 @@ public class Constant {
      * @time: 2020-3-26
      */
     @DataProvider(name = "SELECT_ preSaleBuyCarPageFilter")
-    public static Object[][] preSaleBuyCarPageFilter_pram(){
+    public static Object[][] preSaleBuyCarPageFilter_pram() {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"phone", "customer_phone"},
@@ -702,11 +703,6 @@ public class Constant {
                 {"car_style_id", "intention_car_style_name"},
         };
     }
-
-
-
-
-
 
 
 }

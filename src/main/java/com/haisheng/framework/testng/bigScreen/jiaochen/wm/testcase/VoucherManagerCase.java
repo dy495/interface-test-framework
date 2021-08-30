@@ -1121,20 +1121,20 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ACCOUNT);
             List<VoucherInvalidPageBean> voucherInvalidPages = util.getVoucherInvalidList(voucherId);
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
-            int totalInvalid = visitor.invokeApi(voucherInfoScene).getInteger("total_invalid");
+            int totalInvalid = voucherInfoScene.visitor(visitor).execute().getInteger("total_invalid");
             //作废
             VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);
             Long recordId = voucherSendRecord.getId();
             String voucherCode = voucherSendRecord.getVoucherCode();
             IScene scene = InvalidCustomerVoucherScene.builder().id(recordId).invalidReason(EnumDesc.DESC_BETWEEN_10_15.getDesc()).build();
-            visitor.invokeApi(scene);
+            scene.visitor(visitor).execute();
             //作废后数据
             List<VoucherInvalidPageBean> newVoucherInvalidPages = util.getVoucherInvalidList(voucherId);
             CommonUtil.checkResult(voucherName + " 作废后作废记录列表数", voucherInvalidPages.size() + 1, newVoucherInvalidPages.size());
             CommonUtil.checkResult(voucherName + " 作废后作废人姓名", ACCOUNT.getName(), newVoucherInvalidPages.get(0).getInvalidName());
             CommonUtil.checkResult(voucherName + " 作废后作废人电话", ACCOUNT.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
             CommonUtil.checkResult(voucherName + " 作废后作废说明", EnumDesc.DESC_BETWEEN_10_15.getDesc(), newVoucherInvalidPages.get(0).getInvalidDescription());
-            CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_invalid"));
+            CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, voucherInfoScene.visitor(visitor).execute().getInteger("total_invalid"));
             util.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult(voucherName + " 作废后小程序我的卡券数量", voucherCherNum - 1, util.getAppletVoucherNum());
         } catch (Exception | AssertionError e) {
@@ -1195,9 +1195,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             util.loginPc(ACCOUNT);
-            int messageNum = visitor.invokeApi(PushMsgPageScene.builder().build()).getInteger("total");
-            IScene transferScene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build();
-            visitor.invokeApi(transferScene);
+            int messageNum = PushMsgPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build().visitor(visitor).execute();
             util.loginApplet(APPLET_USER_ONE);
             int newTransferVoucherNum = util.getAppletVoucherNum();
             int newTransferMessageNum = util.getAppletMessageNum();
@@ -1205,8 +1204,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //我的消息数量
             CommonUtil.checkResult("转移者我的消息数", transferMessageNum + 1, newTransferMessageNum);
             //我的消息内容
-            Long messageId = visitor.invokeApi(AppletMessageListScene.builder().size(20).build()).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject response = visitor.invokeApi(AppletMessageDetailScene.builder().id(messageId).build());
+            Long messageId = AppletMessageListScene.builder().size(20).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject response = AppletMessageDetailScene.builder().id(messageId).build().visitor(visitor).execute();
             String title = response.getString("title");
             String content = response.getString("content");
             CommonUtil.checkResult("消息名称", "系统消息", title);
@@ -1216,7 +1215,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
             //pc消息记录+1
             util.loginPc(ACCOUNT);
-            JSONObject messageResponse = visitor.invokeApi(PushMsgPageScene.builder().build());
+            JSONObject messageResponse = PushMsgPageScene.builder().build().visitor(visitor).execute();
             int newMessageNum = messageResponse.getInteger("total");
             CommonUtil.checkResult("消息记录数", messageNum + 1, newMessageNum);
             String messageContent = messageResponse.getJSONArray("list").getJSONObject(0).getString("content");
@@ -1240,7 +1239,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //转移
             util.loginPc(ACCOUNT);
             IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(voucherId)).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
             CommonUtil.checkResult("转移卡券 " + voucherName, err, message);
         } catch (Exception | AssertionError e) {
@@ -1262,7 +1261,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //转移
             util.loginPc(ACCOUNT);
             IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(voucherId)).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
             CommonUtil.checkResult("转移卡券 " + voucherName, err, message);
         } catch (Exception | AssertionError e) {

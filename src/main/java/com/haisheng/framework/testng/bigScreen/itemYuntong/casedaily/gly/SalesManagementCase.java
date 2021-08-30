@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.Constant;
@@ -15,23 +18,29 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.custo
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
 
 public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
+    private static final EnumAccount account = EnumAccount.YT_DAILY_YS;
     YunTongUtil yt = new YunTongUtil(product);
-    public VisitorProxy visitor = new VisitorProxy(product);
-    BusinessUtil businessUtil = new BusinessUtil(product);
+    private final VisitorProxy visitor = new VisitorProxy(product);
+    private final SceneUtil util = new SceneUtil(visitor);
+    BusinessUtil businessUtil = new BusinessUtil(visitor);
     SystemCase systemCase = new SystemCase();
 
 
@@ -43,15 +52,16 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "郭丽雅";
+        commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "YT-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.setShopId(product.getShopId()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
+        util.loginPc(account);
     }
 
     @AfterClass
@@ -69,35 +79,29 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
-
 
     /**
      * @date :2021-6-4
      * @deprecated 展厅客户列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true, description = "展厅客户列表-筛选栏单项搜索")
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, description = "展厅客户列表-筛选栏单项搜索")
     public void preSaleCustomerPage1(String pram, String output) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
-            if (response.getJSONArray("list").size() > 0) {
-                System.out.println(pram + "   " + output);
-                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                System.err.println(result);
-                JSONObject response1 = yt.preSalesCustomerPage("1", "10", pram, result);
-                int pages = response1.getInteger("pages");
-                for (int page = 1; page <= pages; page++) {
-                    JSONArray list = yt.preSalesCustomerPage(String.valueOf(page), "10", pram, result).getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++) {
-                        String Flag = list.getJSONObject(i).getString(output);
-                        System.out.println("销售客户接待列表按" + result + "查询，结果错误" + Flag);
-                        Preconditions.checkArgument(Flag.contains(result), "销售客户接待列表按" + result + "查询，结果错误" + Flag);
-                    }
-                }
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            JSONObject rsp = scene.visitor(visitor).execute();
+            if (rsp.getJSONArray("list").size() > 0) {
+                String outPutResult = rsp.getJSONArray("list").getJSONObject(0).getString(output);
+                scene = scene.modify(pram, outPutResult);
+                List<JSONObject> searchResultList = util.toJavaObjectList(scene, JSONObject.class);
+                searchResultList.forEach(e -> {
+                    String searchResult = e.getString(output);
+                    Preconditions.checkArgument(searchResult.contains(outPutResult), "销售客户接待列表按" + outPutResult + "查询，结果中包含错误结果" + searchResult);
+                });
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户接待列表-筛选栏单项搜索 ");
         }
@@ -107,23 +111,19 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 展厅客户列表-筛选栏时间搜索
      */
-    @Test(enabled = true, description = "展厅客户列表-筛选栏时间搜索")
+    @Test(description = "展厅客户列表-筛选栏时间搜索")
     public void preSaleCustomerPage2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime = dt.getHistoryDate(-30);
-            String endTime = dt.getHistoryDate(30);
-            JSONObject response = yt.preSalesCustomerPageTime("1", "10", startTime, endTime);
-            int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = yt.preSalesCustomerPageTime(String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String createDate = list.getJSONObject(i).containsKey("create_date") ? list.getJSONObject(i).getString("create_date").substring(0, 10) : startTime;
-                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + createDate);
-                }
-            }
+            String startTime = DateTimeUtil.addDayFormat(new Date(), -30);
+            String endTime = DateTimeUtil.addDayFormat(new Date(), 30);
+            IScene scene = PreSaleCustomerPageScene.builder().startTime(startTime).endTime(endTime).build();
+            List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
+            list.forEach(e -> {
+                String createDate = e.getString("create_date");
+                Preconditions.checkArgument(startTime.compareTo(createDate) < 0 && endTime.compareTo(createDate) > 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + createDate);
+            });
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData(" 销售接待列表-筛选栏时间搜索 ");
         }
@@ -134,12 +134,12 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "销售客户列表项校验")
     public void preSaleCustomerPage3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
-            int pages = response.getInteger("pages");
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            int pages = scene.visitor(visitor).execute().getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = yt.preSalesCustomerPage("1", "10", "", "").getJSONArray("list");
+                scene.setPage(page);
+                JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String shopName = list.getJSONObject(i).getString("shop_name");
                     String brandName = list.getJSONObject(i).getString("brand_name");
@@ -154,12 +154,11 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                     String createDate = list.getJSONObject(i).getString("create_date");
                     String saleName = list.getJSONObject(i).getString("sale_name");
                     String salePhone = list.getJSONObject(i).getString("sale_phone");
-                    Preconditions.checkArgument(shopName != null && brandName != null && subjectType != null && customerTypeName != null && registrationStatus != null && customerName != null && customerPhone != null && intentionCarModelName != null && sex != null && intentionCarStyleName != null && createDate != null && saleName != null && salePhone != null, "第" + pages + "页，第" + i + "行存列表项为空的数据");
+                    Preconditions.checkArgument(shopName != null && brandName != null && subjectType != null && customerTypeName != null && registrationStatus != null && customerName != null && customerPhone != null && intentionCarModelName != null && sex != null && intentionCarStyleName != null && createDate != null && saleName != null && salePhone != null, "第" + page + "页，第" + (i + 1) + "行存列表项为空的数据");
                 }
             }
-
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户列表项校验 ");
         }
@@ -171,7 +170,6 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "销售客户查看详情")
     public void preSaleCustomerPage4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
             int pages = response.getInteger("pages") > 20 ? 20 : response.getInteger("pages");
@@ -187,7 +185,8 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                     Long customerId = list.getJSONObject(i).getLong("customer_id");
                     //进入销售客户详情
                     IScene scene = PreSaleCustomerInfoScene.builder().customerId(customerId).shopId(shopId).build();
-                    JSONObject response1 = visitor.invokeApi(scene, true);
+                    scene.visitor(visitor).execute();
+                    JSONObject response1 = scene.visitor(visitor).execute();
                     String sexDetails = response1.getString("sex");
                     String saleNameDetails = response1.getString("sale_name");
                     String customerPhoneDetails = response1.getString("customer_phone");
@@ -203,7 +202,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户查看详情 ");
         }
@@ -213,9 +212,8 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
     /**
      * 成交客户筛选栏
      */
-    @Test(dataProvider = "SELECT_ preSaleBuyCarPageFilter", dataProviderClass = Constant.class, enabled = true, description = "成交客户筛选栏")
+    @Test(dataProvider = "SELECT_ preSaleBuyCarPageFilter", dataProviderClass = Constant.class, description = "成交客户筛选栏")
     public void preSaleCustomerPage5(String pram, String output) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesBuyCarPage("1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
@@ -263,7 +261,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户接待列表-筛选栏单项搜索 ");
         }
@@ -274,9 +272,8 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 成交记录-筛选栏时间搜索
      */
-    @Test(enabled = true, description = "成交记录-筛选栏时间搜索")
+    @Test(description = "成交记录-筛选栏时间搜索")
     public void preSaleCustomerPage6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String startTime = dt.getHistoryDate(-30);
             String endTime = dt.getHistoryDate(30);
@@ -290,7 +287,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData(" 成交记录-筛选栏时间搜索 ");
         }
@@ -301,7 +298,6 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "成交记录列表项校验")
     public void preSaleCustomerPage7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesBuyCarPage("1", "10", "", "");
             int pages = response.getInteger("pages");
@@ -325,7 +321,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("成交记录列表项校验 ");
         }
@@ -337,7 +333,6 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "展厅客户编辑客户信息")
     public void preSaleCustomerPage8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
             JSONArray list = response.getJSONArray("list");
@@ -360,7 +355,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                     .intentionCarModelId(intentionCarModelId)
                     .carStyleId(intentionCarStyleId)
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "编辑客户失败");
             //编辑后的列表信息
             JSONObject response1 = yt.preSalesCustomerPage("1", "10", "", "");
@@ -379,7 +374,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(intentionCarStyleId1.equals(intentionCarStyleId), "编辑后的意向车系为：" + intentionCarStyleId1 + "    编辑的意向车系为：" + intentionCarStyleId);
             Preconditions.checkArgument(intentionCarModelId1.equals(intentionCarModelId), "编辑后的意向车型为：" + intentionCarModelId1 + "    编辑的意向车型为：" + intentionCarModelId);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户查看详情 ");
         }
@@ -389,9 +384,8 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 销售客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true, description = "销售客户接待列表-筛选栏单项搜索")
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, description = "销售客户接待列表-筛选栏单项搜索")
     public void preSaleCustomerPage9(String pram, String output) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.salesReceptionPage("1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
@@ -410,7 +404,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户接待列表-筛选栏单项搜索 ");
         }
@@ -420,9 +414,8 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 销售接待列表-筛选栏时间搜索
      */
-    @Test(enabled = true, description = "销售接待列表-筛选栏时间搜索")
+    @Test(description = "销售接待列表-筛选栏时间搜索")
     public void preSaleCustomerPage10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String startTime = dt.getHistoryDate(-30);
             String endTime = dt.getHistoryDate(30);
@@ -439,7 +432,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData(" 销售接待列表-筛选栏时间搜索 ");
         }
@@ -455,26 +448,25 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1   ")
     public void preSaleCustomerPageCase1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //成交记录列表
             IScene scene = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //新建成交记录前的列表条数
             int totalBefore = response.getInteger("total");
             //展厅客户的列表
             IScene scene1 = PreSaleCustomerPageScene.builder().page(1).size(10).build();
-            JSONObject response2 = visitor.invokeApi(scene1, true);
+            JSONObject response2 = scene1.visitor(visitor).execute();
             //新建成交记录前的销售客户列表条数
             int totalBefore1 = response2.getInteger("total");
 
             //新建成交记录
             systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject response1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().execute(visitor, true);
+            JSONObject response1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().visitor(visitor).execute();
             int totalAfter = response1.getInteger("total");
             //新建成交记录后的销售客户列表条数
-            int totalAfter1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().execute(visitor, true).getInteger("total");
+            int totalAfter1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getInteger("total");
             //获取新建的成家记录的信息
             JSONObject object = response1.getJSONArray("list").getJSONObject(0);
             String customerName = object.getString("customer_name");
@@ -486,7 +478,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && ownerTypeId.equals("CORPORATION") && sex.equals("0"), "新建成交记录的信息与创建时填写的不一致");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1 ，销售客户+0");
         }
@@ -497,19 +489,18 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "新建成交记录,成交客户的手机号在销售客户的列表中存在，展厅客户中的购车记录+1")
     public void preSaleCustomerPageCase2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().page(1).size(10).customerPhone("13373166806").build();
-            JSONObject response = visitor.invokeApi(scene, true).getJSONArray("list").getJSONObject(0);
+            JSONObject response = scene.visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long shopId = response.getLong("shop_id");
             Long customerId = response.getLong("customer_id");
-            JSONObject respond = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().execute(visitor, true);
+            JSONObject respond = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().visitor(visitor).execute();
             //新建成交记录前客户详情中的购车记录条数
             int totalBefore = respond.getInteger("total");
             //新建成交记录
             systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject respond1 = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().execute(visitor, true);
+            JSONObject respond1 = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().visitor(visitor).execute();
             int totalAfter = respond1.getInteger("total");
             JSONObject object = respond1.getJSONArray("list").getJSONObject(0);
             String customerName = object.getString("customer_name");
@@ -519,7 +510,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalAfter == totalBefore + 1, "新建成交记录前的购车记录条数为：" + totalBefore + "   新建成交记录以后的购车记录条数为：" + totalAfter);
             Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && buyCarDate.contains(businessUtil.getDateNow()), "购车记录信息与新建购车记录时填写的信息不一致");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("新建成交记录,成交客户的手机号在销售客户的列表中存在，展厅客户中的购车记录+1");
         }
@@ -530,17 +521,16 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
     @Test(description = "新建潜客记录,潜客的手机号在列表中不存在，销售客户+1")
     public void preSaleCustomerPageCase3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //展厅客户的列表
             IScene scene = PreSaleCustomerPageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene, true);
+            JSONObject response = scene.visitor(visitor).execute();
             //新建潜客前的销售客户列表条数
             int totalBefore = response.getInteger("total");
             //新建潜客
             systemCase.newPotentialCustomer("自动化潜客" + businessUtil.randomNumber(), "1337316" + businessUtil.randomNumber(), "CORPORATION", "0", "", "true");
             //新建潜客后的列表条数
-            JSONObject response1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().execute(visitor, true);
+            JSONObject response1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().visitor(visitor).execute();
             int totalAfter = response1.getInteger("total");
             //获取新建的潜客的信息
             JSONObject object = response1.getJSONArray("list").getJSONObject(0);
@@ -552,7 +542,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && ownerTypeId.equals("CORPORATION") && sex.equals("0"), "新建潜客的信息与创建时填写的不一致");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("新建潜客记录,潜客的手机号在列表中不存在，销售客户+1");
         }

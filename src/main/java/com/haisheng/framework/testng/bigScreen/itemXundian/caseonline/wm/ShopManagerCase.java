@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 
 public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
-    private final static EnumTestProduct PRODUCE = EnumTestProduct.MD_ONLINE;
+    private final static EnumTestProduct PRODUCE = EnumTestProduct.XD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);

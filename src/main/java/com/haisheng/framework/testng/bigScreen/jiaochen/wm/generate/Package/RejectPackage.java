@@ -25,7 +25,7 @@ public class RejectPackage extends AbstractPackage {
         logger("CREATE REJECT START");
         Long packageId = new PackageGenerator.Builder().visitor(visitor).status(PackageStatusEnum.AUDITING).buildPackage().getPackageId();
         super.visitor = visitor;
-        AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().execute(visitor);
+        AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().visitor(visitor).execute();
         logger("CREATE REJECT FINISH");
     }
 

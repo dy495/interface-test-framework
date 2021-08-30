@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.EventStateEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.HandleScene;
@@ -30,10 +31,10 @@ public class BusinessUtil extends TestCaseCommon {
     public int getLeaveMarkBeforeNum(Long shopId, int eventId) {
         int leaveMarkBeforeNum = 0;
         IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).build();
-        JSONObject response = visitor.invokeApi(scene, true);
+        JSONObject response = scene.visitor(visitor).execute();
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int id = list.getJSONObject(i).getInteger("id");
                 if (eventId == id) {
@@ -53,8 +54,8 @@ public class BusinessUtil extends TestCaseCommon {
      */
     public int checkRiskAlarmHandle(Long eventId, String eventStatus) {
         IScene scene = HandleScene.builder().eventId(eventId).eventStatus(eventStatus).build();
-        JSONObject response = visitor.invokeApi(scene, false);
-        return response.getInteger("code");
+        Response response = scene.visitor(visitor).getResponse();
+        return response.getCode();
     }
 
     /**
@@ -63,14 +64,14 @@ public class BusinessUtil extends TestCaseCommon {
     public List<Long> waitingAlarmConfirm(Long shopId) {
         List<Long> ids = new ArrayList<>();
         IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-        JSONObject response = visitor.invokeApi(scene, true);
+        JSONObject response = scene.visitor(visitor).execute();
         int total = response.getInteger("total");
         if (total > 0) {
             System.out.println("--当前列表有待处理的事件：" + total);
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 IScene scene1 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-                JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+                JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");
                     ids.add(id);
@@ -82,7 +83,7 @@ public class BusinessUtil extends TestCaseCommon {
             su.maskEvent(shopId, false, "customerFalse", true);
             //获取当前列表的第一个的规则的id
             IScene scene2 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             Long id = response2.getJSONArray("list").getJSONObject(0).getLong("id");
             ids.add(id);
         }
@@ -96,14 +97,14 @@ public class BusinessUtil extends TestCaseCommon {
     public List<Long> waitingAlarmConfirmOnline(Long shopId) throws Exception {
         List<Long> ids = new ArrayList<>();
         IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-        JSONObject response = visitor.invokeApi(scene, true);
+        JSONObject response = scene.visitor(visitor).execute();
         int total = response.getInteger("total");
         if (total > 0) {
             System.out.println("--当前列表有待处理的事件：" + total);
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 IScene scene1 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-                JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+                JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");
                     ids.add(id);
@@ -119,7 +120,7 @@ public class BusinessUtil extends TestCaseCommon {
 //            mi.getPy(path,picPath);
             //获取当前列表的第一个的规则的id
             IScene scene2 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             Long id = response2.getJSONArray("list").getJSONObject(0).getLong("id");
             ids.add(id);
         }
@@ -133,14 +134,14 @@ public class BusinessUtil extends TestCaseCommon {
     public List<Long> waitingUrgentAlarmConfirm(Long shopId) {
         List<Long> ids = new ArrayList<>();
         IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-        JSONObject response = visitor.invokeApi(scene, true);
+        JSONObject response = scene.visitor(visitor).execute();
         int total = response.getInteger("total");
         if (total > 0) {
             System.out.println("--当前列表有待处理的事件：" + total);
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 IScene scene1 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-                JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+                JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Boolean isUrgent = list.getJSONObject(i).getBoolean("is_urgent");
                     if (isUrgent) {
@@ -157,7 +158,7 @@ public class BusinessUtil extends TestCaseCommon {
             su.maskEvent(shopId, false, "customerFalse", true);
             //获取当前列表的第一个的规则的id
             IScene scene2 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             Long id = response2.getJSONArray("list").getJSONObject(0).getLong("id");
             ids.add(id);
         }
@@ -171,14 +172,14 @@ public class BusinessUtil extends TestCaseCommon {
     public List<Long> waitingUrgentAlarmConfirmOnline(Long shopId) throws Exception {
         List<Long> ids = new ArrayList<>();
         IScene scene = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-        JSONObject response = visitor.invokeApi(scene, true);
+        JSONObject response = scene.visitor(visitor).execute();
         int total = response.getInteger("total");
         if (total > 0) {
             System.out.println("--当前列表有待处理的事件：" + total);
             int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 IScene scene1 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-                JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+                JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Boolean isUrgent = list.getJSONObject(i).getBoolean("is_urgent");
                     if (isUrgent) {
@@ -201,7 +202,7 @@ public class BusinessUtil extends TestCaseCommon {
             sleep(3);
             //获取当前列表的第一个的规则的id
             IScene scene2 = ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
-            JSONObject response2 = visitor.invokeApi(scene2, true);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             Long id = response2.getJSONArray("list").getJSONObject(0).getLong("id");
             ids.add(id);
         }

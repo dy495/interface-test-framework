@@ -46,6 +46,6 @@ public class RecallVoucher extends AbstractVoucher {
      */
     public void recallVoucher(Long voucherId) {
         IScene scene = RecallVoucherScene.builder().id(voucherId).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 }

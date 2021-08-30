@@ -128,10 +128,10 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
             JSONArray authList = obj.getJSONArray("auth_list");
             String description = "自动化测试给店长自动化用的角色";
             IScene scene = RolePageScene.builder().build();
-            Long total = scene.execute(visitor).getLong("total");
+            Long total = scene.visitor(visitor).execute().getLong("total");
             int code = RoleAddScene.builder().name(name).description(description).authList(authList).parentRoleId(parentId).build().visitor(visitor).getResponse().getCode();
             checkArgument(code == 1000, mess);
-            Long newTotal = scene.execute(visitor).getLong("total");
+            Long newTotal = scene.visitor(visitor).execute().getLong("total");
             IScene rolePageScene = RolePageScene.builder().name(name).build();
             id = util.toJavaObject(rolePageScene, JSONObject.class, "name", name).getInteger("id");
             Preconditions.checkArgument(newTotal - total == 1, "新增角色前列表数：" + total + " 新增角色后列表数：" + newTotal);
@@ -176,12 +176,12 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
     public void staff_manager_1() {
         try {
             String phone = util.getRandomPhone();
-            int total = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+            int total = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             util.getRandomRoleMap().forEach((roleId, roleName) -> {
                 JSONArray shopList = util.getShopIdArray();
                 String picPath = util.uploadFile();
-                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().execute(visitor);
-                int newTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().visitor(visitor).execute();
+                int newTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(newTotal == total + 1, "新增一个账号前列表数：" + total + " 新增一个账号后列表数：" + newTotal);
                 IScene scene = StaffPageScene.builder().phone(phone).build();
                 JSONObject object = util.toFirstJavaObject(scene, JSONObject.class);
@@ -198,9 +198,9 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(name.equals("克拉拉"));
                 Preconditions.checkArgument(staffPhone.equals(phone));
                 Preconditions.checkArgument(shop_list.equals(shopList));
-                int deleteTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+                int deleteTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
                 util.deleteStaff(phone);
-                int newDeleteTotal = com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene.builder().build().execute(visitor).getInteger("total");
+                int newDeleteTotal = com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(newDeleteTotal == deleteTotal - 1, "删除一个账号前列表数：" + deleteTotal + " 删除一个账号后列表数：" + newDeleteTotal);
             });
         } catch (AssertionError | Exception e) {
@@ -334,7 +334,7 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
     public void staff_manager_7() {
         try {
             IScene staffPageScene = StaffPageScene.builder().phone(account.getPhone()).build();
-            JSONObject response = staffPageScene.execute(visitor);
+            JSONObject response = staffPageScene.visitor(visitor).execute();
             int total = response.getInteger("total");
             JSONObject obj = response.getJSONArray("list").getJSONObject(0);
             JSONArray roleList = obj.getJSONArray("role_list");
@@ -342,14 +342,14 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
             String phone = obj.getString("phone");
             String createTime = obj.getString("create_time");
             String name = obj.getString("name");
-            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name + "-改").build().execute(visitor);
-            JSONObject newResponse = staffPageScene.execute(visitor);
+            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name + "-改").build().visitor(visitor).execute();
+            JSONObject newResponse = staffPageScene.visitor(visitor).execute();
             int newTotal = newResponse.getInteger("total");
             JSONObject newObj = newResponse.getJSONArray("list").getJSONObject(0);
             String newCreateTime = newObj.getString("create_time");
             Preconditions.checkArgument(createTime.equals(newCreateTime), "编辑前创建时间：" + createTime + " 编辑后创建时间：" + newCreateTime);
             Preconditions.checkArgument(total == newTotal, "编辑一个账号，账号列表的数量由:" + total + "变成了" + newTotal);
-            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name).build().execute(visitor);
+            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name).build().visitor(visitor).execute();
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -361,23 +361,23 @@ public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
     public void staff_manager_8() {
         String id = null;
         try {
-            JSONObject response = StaffPageScene.builder().phone(account.getPhone()).build().execute(visitor);
+            JSONObject response = StaffPageScene.builder().phone(account.getPhone()).build().visitor(visitor).execute();
             id = response.getJSONArray("list").getJSONObject(0).getString("id");
             //关闭账号
-            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StatusChangeScene.builder().id(id).status("DISABLE").build().execute(visitor);
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StatusChangeScene.builder().id(id).status("DISABLE").build().visitor(visitor).execute();
             int pcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
             int appCode = LoginApp.builder().phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(appCode == 1001, "账户禁用，app登陆预期为：1001" + "实际为：" + appCode);
             Preconditions.checkArgument(pcCode == 1001, "账户禁用，pc登陆预期为：1001" + "实际为：" + pcCode);
             //开启账号
-            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StatusChangeScene.builder().id(id).status("ENABLE").build().execute(visitor);
+            com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StatusChangeScene.builder().id(id).status("ENABLE").build().visitor(visitor).execute();
             int enablePcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(enablePcCode == 1000, "账户启用，pc登陆预期为：1000" + "实际为：" + enablePcCode);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             //开启账号
-            StatusChangeScene.builder().id(id).status("ENABLE").build().execute(visitor);
+            StatusChangeScene.builder().id(id).status("ENABLE").build().visitor(visitor).execute();
             saveData("禁用账户登录失败，开启登录成功");
         }
     }

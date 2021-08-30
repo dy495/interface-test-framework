@@ -63,7 +63,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
     @Test
     public void customerInfo() {
         visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
-        String id = GetQRCode.builder().build().execute(visitor, true).getString("qr_code_url");
+        String id = GetQRCode.builder().build().visitor(visitor).execute().getString("qr_code_url");
 //        GetBeforeQRCode.builder().build().invoke(visitor);
 //        InputInfoBySelf.builder().name("111").build().invoke(visitor);
     }

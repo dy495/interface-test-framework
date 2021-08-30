@@ -11,6 +11,7 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.*;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.*;
@@ -295,7 +296,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerUnmannedRisk() {
         try {
             //创建无人风控
-//            Long ruleId=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierUnmannedRuleAdd().getData().getLong("id");
 
             //交易ID
             String transId = pp.transId;
@@ -326,7 +327,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerMoreOrderRisk() {
         try {
             //创建一人多单风控规则(1个人1天内最多2单)
-//            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getData().getLong("id");
             String time = dt.getHistoryDate(0);
             String time1 = dt.getHHmm(0);
 
@@ -365,7 +366,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerMoreCarRisk() {
         try {
             //创建一人多车风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierCarRuleAdd("2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierCarRuleAdd("2").getData().getLong("id");
 
             //交易ID
             String transId = "QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
@@ -406,7 +407,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerMorePersonRisk() {
         try {
             //创建一人多单风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierMemberRuleAdd("2").getData().getLong("id");
             //指定门店
             //交易ID
             String transId = "QATest_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
@@ -443,7 +444,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerMorePersonRisk22() {
         try {
             //创建一人多单风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierMemberRuleAdd("2").getData().getLong("id");
             //指定门店
             //交易ID
             String transId = "QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
@@ -483,7 +484,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void getTriggerEmployeeOrderRisk() {
         try {
             //创建员工支付风控规则(一个员工一天最多2单)
-//            Long ruleId=cu.getCashierEmployeeRuleAdd("1","2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierEmployeeRuleAdd("1","2").getData().getLong("id");
             String time = dt.getHistoryDate(0);
             String time1 = dt.getHHmm(0);
 
@@ -521,10 +522,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风页面的接口
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     //校验列表的每一项
                     String shopName = list.getJSONObject(i).getString("shop_name");
@@ -552,14 +553,14 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯页面
             IScene scene1 = TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(TraceBackScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = TraceBackScene.builder().shopId(shopId).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String orderId = list.getJSONObject(i).getString("order_id");
                     String orderTime = list.getJSONObject(i).getString("order_time");
@@ -581,7 +582,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯-门店信息页面  todo--怎么创建门店，门店信息怎么查询呢？
 
@@ -600,19 +601,19 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯页面
             IScene scene1 = TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(TraceBackScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = TraceBackScene.builder().shopId(shopId).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String orderId = list.getJSONObject(i).getString("order_id");
                     //小票详情页
                     IScene scene2 = OrderDetailScene.builder().shopId(shopId).orderId(orderId).build();
-                    JSONObject response2 = visitor.invokeApi(scene2);
+                    JSONObject response2 = scene2.visitor(visitor).execute();
                     String shopName = response2.getString("shop_name");
                     String memberName = response2.getString("member_name");
                     String memberPhone = response2.getString("member_phone");
@@ -648,23 +649,23 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             Long id = response1.getJSONArray("list").getJSONObject(0).getLong("id");
             //收银风控事件中第一条的涉及订单
             IScene scene3 = RiskEventOrdersInvolvedPageScene.builder().id(id).page(1).size(10).build();
-            JSONObject response3 = visitor.invokeApi(scene3);
+            JSONObject response3 = scene3.visitor(visitor).execute();
             int pages = response3.getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String orderId = list.getJSONObject(i).getString("order_id");
                     //小票详情页
                     IScene scene2 = OrderDetailScene.builder().shopId(shopId).orderId(orderId).build();
-                    JSONObject response2 = visitor.invokeApi(scene2);
+                    JSONObject response2 = scene2.visitor(visitor).execute();
                     String shopName = response2.getString("shop_name");
                     String memberName = response2.getString("member_name");
                     String memberPhone = response2.getString("member_phone");
@@ -700,12 +701,12 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯-批量下载
             IScene scene1 = TraceBackBatchVideoScene.builder().shopId(shopId).startDate(cu.getDateTime(-1).substring(0, 10)).endDate(cu.getDateTime(-1).substring(0, 10)).build();
-            String code = visitor.invokeApi(scene1, false).getString("code");
-            Preconditions.checkArgument(code.equals("1000"), "批量下载失败");
+            Integer code = scene1.visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code.equals(1000), "批量下载失败");
 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -721,7 +722,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem6() {
         try {
             IScene scene = traceBackTips.builder().build();
-            String tip = visitor.invokeApi(scene).getString("tip");
+            String tip = scene.visitor(visitor).execute().getString("tip");
 
             Preconditions.checkArgument(tip.equals("您的账号可查看最近365天追溯视频（不包含今日）"), "收银追溯中的提示语不正确");
 
@@ -740,14 +741,14 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String eventName = list.getJSONObject(i).getString("event_name");
                     String orderId = list.getJSONObject(i).getString("order_id");
@@ -774,18 +775,18 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");
                     IScene scene2 = RiskEventOverviewScene.builder().id(id).build();
-                    JSONObject response2 = visitor.invokeApi(scene2);
+                    JSONObject response2 = scene2.visitor(visitor).execute();
                     System.out.println("--------" + response2);
                     String roleId = response2.getString("role_id");
                     String shopId1 = response2.getString("shop_id");
@@ -815,18 +816,18 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             Long id = response1.getJSONArray("list").getJSONObject(0).getLong("id");
             //收银风控事件中第一条的涉及订单
             IScene scene2 = RiskEventOrdersInvolvedPageScene.builder().id(id).page(1).size(10).build();
-            JSONObject response2 = visitor.invokeApi(scene2);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String orderId = list.getJSONObject(i).getString("order_id");
                     String shopId1 = list.getJSONObject(i).getString("shop_id");
@@ -852,21 +853,21 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             String id = response1.getJSONArray("list").getJSONObject(0).getString("id");
             //历史风控事件--即收银风控事件中按照门店和会员ID查询的结果
             IScene scene2 = RiskEventPageScene.builder().evenId(id).page(1).size(10).build();
-            JSONObject response2 = visitor.invokeApi(scene2);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             JSONArray list1 = response2.getJSONArray("list");
-            int pages = visitor.invokeApi(RiskEventPageScene.builder().evenId(id).page(1).size(10).build()).getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
+            int pages = RiskEventPageScene.builder().evenId(id).page(1).size(10).build().visitor(visitor).execute().getInteger("pages") > 10 ? 10 : response1.getInteger("pages");
             System.err.println("------" + pages);
             if (list1.size() > 0) {
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = visitor.invokeApi(RiskEventPageScene.builder().evenId(id).page(page).size(10).build()).getJSONArray("list");
+                    JSONArray list = RiskEventPageScene.builder().evenId(id).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                     System.err.println(list.size());
                     for (int i = 0; i < list.size(); i++) {
                         String orderId = list.getJSONObject(i).getString("order_id");
@@ -892,10 +893,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String name = list.getJSONObject(i).getString("name");
                     String type = list.getJSONObject(i).getString("type");
@@ -961,19 +962,19 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem14() {
         try {
             //一人多单/连续天数（一人1天最多3单）
-            Long id1 = cu.getCashierOrderRuleAdd("1", "3").getJSONObject("data").getLong("id");
+            Long id1 = cu.getCashierOrderRuleAdd("1", "3").getData().getLong("id");
 
             //无人风控
-            Long id2 = cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
+            Long id2 = cu.getCashierUnmannedRuleAdd().getData().getLong("id");
 
             //员工支付订单监控(一人1天最多1单)
-            Long id3 = cu.getCashierEmployeeRuleAdd("1", "1").getJSONObject("data").getLong("id");
+            Long id3 = cu.getCashierEmployeeRuleAdd("1", "1").getData().getLong("id");
 
             //一人多车
-            Long id4 = cu.getCashierCarRuleAdd("10").getJSONObject("data").getLong("id");
+            Long id4 = cu.getCashierCarRuleAdd("10").getData().getLong("id");
 
             //一车多人
-            Long id5 = cu.getCashierMemberRuleAdd("10").getJSONObject("data").getLong("id");
+            Long id5 = cu.getCashierMemberRuleAdd("10").getData().getLong("id");
 
             Preconditions.checkArgument(id1 > 0 && id2 > 0 && id3 > 0 && id4 > 0 && id5 > 0, "创建风控失收银风控失败");
         } catch (Exception | AssertionError e) {
@@ -1017,10 +1018,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String name = list.getJSONObject(i).getString("name");
                     String type = list.getJSONObject(i).getString("type_name");
@@ -1048,10 +1049,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控告警规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String name = list.getJSONObject(i).getString("name");
                     String type = list.getJSONObject(i).getString("type");
@@ -1081,7 +1082,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             String message2 = cu.getAlarmRuleAdd(false, null, RuleEnum.BLACK_LIST.getType(), pp.AlarmNameBlack);
             //获取风控告警规则第一条
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long id = response.getJSONArray("list").getJSONObject(0).getLong("id");
             System.out.println("----------" + id);
             //关闭风控告警规则
@@ -1106,7 +1107,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             String message1 = cu.getAlarmRuleAdd(true, 600000L, RuleEnum.FOCUS_LIST.getType(), pp.AlarmNameObserve);
             //获取风控告警规则第一条
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long id = response.getJSONArray("list").getJSONObject(0).getLong("id");
             System.out.println("----------" + id);
             //关闭风控告警规则
@@ -1131,7 +1132,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             String message1 = cu.getAlarmRuleAdd(true, 600000L, RuleEnum.CASHIER.getType(), pp.AlarmNameCashier);
             //获取风控告警规则第一条
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long id = response.getJSONArray("list").getJSONObject(0).getLong("id");
             System.out.println("----------" + id);
             //关闭风控告警规则
@@ -1153,10 +1154,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem22() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).type(RiskPersonnelTypeEnum.BLACK.getType()).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.BLACK.getType()).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.BLACK.getType()).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1184,10 +1185,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem23() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1215,10 +1216,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem24() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1245,16 +1246,16 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     @Test(description = "特殊人员筛选栏校验")
     public void authCashierPageSystem25() {
         try {
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
             if (list1.size() > 0) {
                 //获取第一行的会员姓名
-                String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
+                String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("name");
                 //会员姓名查询
                 IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
-                JSONObject response = visitor.invokeApi(scene);
+                JSONObject response = scene.visitor(visitor).execute();
                 int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String name1 = list.getJSONObject(i).getString("name");
@@ -1264,13 +1265,13 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                 }
 
                 //获取第一行的会员ID
-                String memberId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("member_id");
+                String memberId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("member_id");
                 //会员姓名查询
                 IScene scene1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
-                JSONObject response1 = visitor.invokeApi(scene1);
+                JSONObject response1 = scene1.visitor(visitor).execute();
                 int pages1 = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages1; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String memberId1 = list.getJSONObject(i).getString("member_id");
@@ -1280,13 +1281,13 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                 }
 
                 //获取第一行的人员ID
-                String customerId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("customer_id");
+                String customerId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("customer_id");
                 //会员姓名查询
                 IScene scene2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
-                JSONObject response2 = visitor.invokeApi(scene2);
+                JSONObject response2 = scene2.visitor(visitor).execute();
                 int pages2 = response2.getInteger("pages") > 3 ? 3 : response.getInteger("pages");
                 for (int page = 1; page <= pages2; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String customerId1 = list.getJSONObject(i).getString("customer_id");
@@ -1310,15 +1311,15 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem26() {
         try {
             //获取特殊人员列表第一行的人员ID
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
             if (list1.size() > 0) {
                 String customerId = list1.getJSONObject(0).getString("customer_id");
                 //操作日志的页面
                 IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackWhiteListOperatePageScene.builder().customerId(customerId).page(1).size(10).build();
-                JSONObject response = visitor.invokeApi(scene);
+                JSONObject response = scene.visitor(visitor).execute();
                 int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackWhiteListOperatePageScene.builder().page(page).size(10).customerId(customerId).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackWhiteListOperatePageScene.builder().page(page).size(10).customerId(customerId).build().visitor(visitor).execute().getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String operateName = list.getJSONObject(i).getString("operate_name");
@@ -1345,15 +1346,15 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem27() {
         try {
             //获取特殊人员列表第一行的人员ID
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().visitor(visitor).execute().getJSONArray("list");
             if (list1.size() > 0) {
                 String customerId = list1.getJSONObject(0).getString("customer_id");
                 //操作日志的页面
                 IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackListEventPageScene.builder().type(RiskPersonnelTypeEnum.FOCUS.getType()).customerId(customerId).page(1).size(10).build();
-                JSONObject response = visitor.invokeApi(scene);
+                JSONObject response = scene.visitor(visitor).execute();
                 int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackListEventPageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).customerId(customerId).build().execute(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackListEventPageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).customerId(customerId).build().visitor(visitor).execute().getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String riskRule = list.getJSONObject(i).getString("risk_rule");
@@ -1382,10 +1383,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem28() {
         try {
             IScene scene = DownloadPageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DownloadPageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskName = list.getJSONObject(i).getString("task_name");
@@ -1412,13 +1413,13 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem29() {
         try {
             //下载列表第一行的任务名称
-            String taskName1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_name");
+            String taskName1 = DownloadPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("task_name");
             //任务名称筛选
             IScene scene = DownloadPageScene.builder().page(1).taskName(taskName1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DownloadPageScene.builder().taskName(taskName1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().taskName(taskName1).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskName = list.getJSONObject(i).getString("task_name");
@@ -1427,13 +1428,13 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                 }
             }
             //下载列表第一行的任务类型
-            String taskType1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_type");
+            String taskType1 = DownloadPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("task_type");
             //任务类型筛选
             IScene scene1 = DownloadPageScene.builder().page(1).taskType(taskType1).size(10).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages1 = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages1; page++) {
-                JSONArray list = DownloadPageScene.builder().taskType(taskType1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().taskType(taskType1).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskType = list.getJSONObject(i).getString("task_type");
@@ -1445,10 +1446,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             String shopName1 = "中关村1号店";
             //相关门店筛选
             IScene scene2 = DownloadPageScene.builder().page(1).shopName(shopName1).size(10).build();
-            JSONObject response2 = visitor.invokeApi(scene2);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             int pages2 = response2.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list = DownloadPageScene.builder().shopName(shopName1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().shopName(shopName1).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String shopName = list.getJSONObject(i).getString("shop_name");
@@ -1458,13 +1459,13 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             }
 
             //下载列表第一行的申请人
-            String applicant1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("applicant");
+            String applicant1 = DownloadPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("applicant");
             //申请人筛选
             IScene scene3 = DownloadPageScene.builder().page(1).applicant(applicant1).size(10).build();
-            JSONObject response3 = visitor.invokeApi(scene3);
+            JSONObject response3 = scene3.visitor(visitor).execute();
             int pages3 = response3.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages3; page++) {
-                JSONArray list = DownloadPageScene.builder().applicant(applicant1).size(10).page(page).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().applicant(applicant1).size(10).page(page).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String applicant = list.getJSONObject(i).getString("applicant");
@@ -1487,15 +1488,15 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面-获取待处理第一条的ID
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             if (response1.getJSONArray("list").size() > 0) {
                 Long id = response1.getJSONArray("list").getJSONObject(0).getLong("id");
                 //处理收银风控事件为正常
-                String message = cu.getRiskEventHandle(id, 1, pp.remarks, null).getString("message");
+                String message = cu.getRiskEventHandle(id, 1, pp.remarks, null).getMessage();
                 Preconditions.checkArgument(message.equals("success"), "收银风控事件处理正常结果，处理失败");
             }
         } catch (Exception | AssertionError e) {
@@ -1512,10 +1513,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem31() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String customerId = list.getJSONObject(i).getString("customer_id");
@@ -1542,16 +1543,16 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem32() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             //获取第一列的姓名和员工ID
             String name = response.getJSONArray("list").getJSONObject(0).getString("out_staff_name");
             String id = response.getJSONArray("list").getJSONObject(0).getString("out_staff_id");
 
             IScene scene1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).outStaffName(name).build();
-            JSONObject response1 = visitor.invokeApi(scene1);
+            JSONObject response1 = scene1.visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffName(name).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffName(name).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String outStaffName = list.getJSONObject(i).getString("out_staff_name");
@@ -1562,10 +1563,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             }
 
             IScene scene2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).outStaffId(id).build();
-            JSONObject response2 = visitor.invokeApi(scene2);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             int pages2 = response2.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffId(id).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffId(id).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String outStaffId = list.getJSONObject(i).getString("out_staff_id");
@@ -1603,7 +1604,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则21个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1635,7 +1636,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则姓名为空个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1666,7 +1667,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("最少选择一个业务类型"), "风控规则业务类型为空个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1697,7 +1698,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .rule(rule)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("规则类型不能为空"), "风控规则规则为空个字创建成功");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -1727,7 +1728,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("系统繁忙，请稍后再试！！"), "风控规则适用门店为空个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1759,7 +1760,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则姓名21个字个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1791,7 +1792,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则姓名为空个字个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1822,7 +1823,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则类型不能为空"), "风控规则-规则为空个字个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1853,7 +1854,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .rule(rule)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals(""), "风控规则-适用门店为空创建成功");
         } catch (Exception | AssertionError e) {
@@ -1884,7 +1885,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("最少选择一个业务类型"), "风控规则-业务类型为空个字个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1918,7 +1919,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则姓名21个字个字创建成功");
         } catch (Exception | AssertionError e) {
@@ -1951,7 +1952,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则名称需要在1-20个字内"), "风控规则姓名为空创建成功");
         } catch (Exception | AssertionError e) {
@@ -1982,7 +1983,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .shopIds(shopIds)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("规则类型不能为空"), "风控规则-规则为空创建成功");
         } catch (Exception | AssertionError e) {
@@ -2014,7 +2015,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .rule(rule)
                     .businessType(businessTypeArray)  //首次检查类型
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals(""), "风控规则适用门店为空创建成功");
         } catch (Exception | AssertionError e) {
@@ -2047,7 +2048,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .rule(rule)
                     .shopIds(shopIds)
                     .build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
 
             Preconditions.checkArgument(message.equals("最少选择一个业务类型"), "风控规则业务类型为空创建成功");
         } catch (Exception | AssertionError e) {
@@ -2064,7 +2065,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem48() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierOrderRuleAdd("367", "3").getString("message");
+            String message = cu.getCashierOrderRuleAdd("367", "3").getMessage();
 
             Preconditions.checkArgument(message.equals("连续天数应为1～366"), "一人多单-连续天数367天 创建成功");
         } catch (Exception | AssertionError e) {
@@ -2081,7 +2082,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem49() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierOrderRuleAdd("1", "10001").getString("message");
+            String message = cu.getCashierOrderRuleAdd("1", "10001").getMessage();
 
             Preconditions.checkArgument(message.equals("订单上限笔数应为1～10000"), "一人多单-上限单数10001 创建成功");
         } catch (Exception | AssertionError e) {
@@ -2098,7 +2099,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem50() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierEmployeeRuleAdd("367", "3").getString("message");
+            String message = cu.getCashierEmployeeRuleAdd("367", "3").getMessage();
             Preconditions.checkArgument(message.equals("连续天数应为1～366"), "员工支付订单--连续天数367天 创建成功");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2114,7 +2115,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem51() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierEmployeeRuleAdd("1", "10001").getString("message");
+            String message = cu.getCashierEmployeeRuleAdd("1", "10001").getMessage();
 
             Preconditions.checkArgument(message.equals("订单上限笔数应为0～10000"), "员工支付订单--上限单数10001 创建成功");
         } catch (Exception | AssertionError e) {
@@ -2131,7 +2132,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem52() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierCarRuleAdd("1001").getString("message");
+            String message = cu.getCashierCarRuleAdd("1001").getMessage();
 
             Preconditions.checkArgument(message.equals("车辆上限应为1～1000"), "一人多车--上限单数1000 创建成功");
         } catch (Exception | AssertionError e) {
@@ -2148,7 +2149,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void authCashierPageSystem53() {
         try {
             //一人多单/连续天数
-            String message = cu.getCashierMemberRuleAdd("10001").getString("message");
+            String message = cu.getCashierMemberRuleAdd("10001").getMessage();
 
             Preconditions.checkArgument(message.equals("会员上限应为1～1000"), "一车多人--上限单数1000 创建成功");
         } catch (Exception | AssertionError e) {
@@ -2176,10 +2177,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void organizationChartSystem1() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 2; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -2217,9 +2218,9 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
 
             //列表中编辑过的角色是否已更新
             IScene scene2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
-            JSONObject response2 = visitor.invokeApi(scene2);
+            JSONObject response2 = scene2.visitor(visitor).execute();
             int pages = response2.getInteger("pages");
-            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().visitor(visitor).execute().getJSONArray("list");
             String name = list.getJSONObject(list.size() - 1).getString("name");
             System.out.println(name + "---------" + list);
             checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
@@ -2262,8 +2263,8 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .authList(authIds)
                     .description(pp.descriptionRole)
                     .build();
-            JSONObject response = visitor.invokeApi(scene, false);
-            checkArgument(response.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
+            Response response = scene.visitor(visitor).getResponse();
+            checkArgument(response.getMessage().equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
 
             //新增重复角色名称的角色
             IScene scene1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder()
@@ -2272,8 +2273,8 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .authList(authIds)
                     .description(pp.descriptionRole)
                     .build();
-            JSONObject response1 = visitor.invokeApi(scene1, false);
-            checkArgument(response1.getString("message").equals("新增角色失败当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功:超级管理员");
+            Response response1 = scene1.visitor(visitor).getResponse();
+            checkArgument(response1.getMessage().equals("新增角色失败当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功:超级管理员");
 
 
         } catch (AssertionError | Exception e) {
@@ -2299,8 +2300,8 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             authIds.add(235);
             //新增角色权限说明51个字的角色
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.roleName).parentRoleId(3515).authList(authIds).description(pp.descriptionRoleException).build();
-            JSONObject response = visitor.invokeApi(scene, false);
-            checkArgument(response.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功:" + pp.descriptionRoleException);
+            Response response = scene.visitor(visitor).getResponse();
+            checkArgument(response.getMessage().equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功:" + pp.descriptionRoleException);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2317,10 +2318,10 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void organizationChartSystem5() {
         try {
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String createTime = list.getJSONObject(i).getString("create_time");
@@ -2358,23 +2359,23 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
             Long roleId = cu.getEditAccountNumberReturn(staffId, pp.staffEditName, pp.ownerPhone);
             System.out.println("--------roleId-" + roleId);
             //获取账号管理页面的第一条的名字
-            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
+            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("name");
             System.out.println("---name-----" + name);
             Preconditions.checkArgument(name.equals(pp.staffEditName), "编辑账号失败");
 
             //删除角色，删除失败
             IScene scene3 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
-            String message3 = visitor.invokeApi(scene3, false).getString("message");
+            String message3 = scene3.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message3.equals("删除角色失败当前角色正在使用无法删除"), "删除角色:" + roleId + "成功了");
 
             //新建成功以后删除新建的账号
             IScene scene4 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.DeleteScene.builder().id(staffId).build();
-            String message4 = visitor.invokeApi(scene4, false).getString("message");
+            String message4 = scene4.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message4.equals("success"), "删除账号:" + staffId + "失败了");
 
             //删除角色，删除成功
             IScene scene5 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
-            String message5 = visitor.invokeApi(scene5, false).getString("message");
+            String message5 = scene5.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message5.equals("success"), "删除角色:" + roleId + "失败了");
 
         } catch (AssertionError | Exception e) {
@@ -2409,7 +2410,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .phone("13373166806")
                     .roleList(roleList)
                     .build();
-            String message = visitor.invokeApi(scene2, false).getString("message");
+            String message = scene2.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("名称需要在1-20个字内"), "账号名称51个字创建成功");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2443,7 +2444,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                         .phone(phoneArray[i])
                         .roleList(roleList)
                         .build();
-                String message = visitor.invokeApi(scene2, false).getString("message");
+                String message = scene2.visitor(visitor).getResponse().getMessage();
                 Preconditions.checkArgument(message.equals("手机号格式不正确请重新输入"), "手机号{10位。12位，中文。英文。标点符号，电话号码字段}创建成功");
 
             }
@@ -2483,7 +2484,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                     .phone("13373166806")
                     .roleList(roleList)
                     .build();
-            String message = visitor.invokeApi(scene2, false).getString("message");
+            String message = scene2.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("必须添加1-5个角色"), "创建账号的异常情况--添加6个角色成功");
 
         } catch (Exception | AssertionError e) {
@@ -2501,12 +2502,12 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             String id = "";
             //禁用固定密码的账号
-            String message = cu.getStaffStatusChange(id, "DISABLE").getString("message");
+            String message = cu.getStaffStatusChange(id, "DISABLE").getMessage();
             Preconditions.checkArgument(message.equals("success"), "禁用失败");
             //登录禁用的账号
             md.pcLogin("", "");
             //开启账号
-            String message2 = cu.getStaffStatusChange(id, "ENABLE").getString("message");
+            String message2 = cu.getStaffStatusChange(id, "ENABLE").getMessage();
             Preconditions.checkArgument(message2.equals("success"), "开启失败");
             //登录开启的账号
             md.pcLogin("", "");
@@ -2526,26 +2527,26 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopId2 = "";
-            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list");
+            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().visitor(visitor).execute().getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             Long shopId = list.getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getLong("shop_id");
             Long roleId = list.getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getLong("role_id");
             String phone = list.getJSONObject(0).containsKey("phone") ? list.getJSONObject(0).getString("phone") : "17319042580";
 
             //根据账号名称筛选
-            JSONObject response1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().execute(visitor, true);
+            JSONObject response1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().visitor(visitor).execute();
             int pages = response1.getInteger("pages") > 3 ? 3 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(page).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list1.size(); i++) {
                     Preconditions.checkArgument(name.equals(list1.getJSONObject(i).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
                 }
             }
             //根据phone筛选
-            JSONObject response2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().execute(visitor, true);
+            JSONObject response2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().visitor(visitor).execute();
             int pages2 = response2.getInteger("pages") > 3 ? 3 : response2.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().execute(visitor, true).getJSONArray("list");
+                JSONArray list2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < list2.size(); i++) {
                     Preconditions.checkArgument(phone.equals(list2.getJSONObject(0).getString("phone")), "根据phone" + phone + "进行筛选的结果和筛选条件不一致");
                 }
@@ -2601,12 +2602,12 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
+            JSONObject response = scene.visitor(visitor).execute();
             Long shopId = response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             System.out.println("------" + shopId);
             //收银风控事件页面
             IScene scene1 = RiskEventPageScene.builder().shopId(shopId).page(1).size(10).isExport(true).build();
-            String message = visitor.invokeApi(scene1, false).getString("message");
+            String message = scene1.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "收银风控事件导出失败");
 
         } catch (Exception | AssertionError e) {
@@ -2624,7 +2625,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(1).size(10).isExport(true).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "风控告警页面导出失败");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2641,7 +2642,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //白名单
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").isExport(true).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "特殊人员管理-风控白名单导出失败");
 
         } catch (Exception | AssertionError e) {
@@ -2659,7 +2660,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").isExport(true).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "特殊人员管理-风控黑名单导出失败");
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2676,7 +2677,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         try {
             //风控规则页面
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").isExport(true).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+            String message = scene.visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(message.equals("success"), "特殊人员管理-风控重点观察人员导出");
         } catch (Exception | AssertionError e) {
             collectMessage(e);

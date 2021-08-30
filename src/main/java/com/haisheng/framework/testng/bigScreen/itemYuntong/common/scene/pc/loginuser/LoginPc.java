@@ -24,4 +24,9 @@ public class LoginPc extends BaseScene {
     public String getPath() {
         return "/account-platform/login-pc";
     }
+
+    @Override
+    public String getIpPort() {
+        return super.getIpPort();
+    }
 }

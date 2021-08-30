@@ -11,24 +11,17 @@ import lombok.Getter;
 public enum EnumTestProduct {
 
     PORSCHE_DAILY("汽车-保时捷 日常 ", "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html", "http://dev.porsche.dealer-ydauto.winsenseos.cn", "22728", "BSJ", "", true),
-
     PORSCHE_ONLINE("汽车-保时捷 赢识线上 ", "https://servicewechat.com/wx0cf070e8eed63e90/5/page-frame.html", "http://porsche.dealer-ydauto.winsenseos.com", "12928", "BSJ", "", false),
-
     PORSCHE_ONLINE_CLIENT("汽车-保时捷 保时捷线上 ", "", "http://porsche.dealer-ydauto.winsenseos.com", "12732", "BSJ", "", false),
 
     XD_DAILY("门店 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "43072", "MD", "", true),
-
     XD_ONLINE("门店 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "14630", "MD", "", false),
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", "", true),
-
     INS_ONLINE("门店-INS 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "", "INS", "", false),
 
     FK_DAILY("风控 赢识日常 ", "http://39.105.17.58/page/shoprisk/cashriskcontrol/", "http://39.105.17.58", "43072", "FK", "4944", true),
-
     FK_ONLINE("风控 赢识线上 ", "http://39.105.77.122/page/shoprisk/cashriskcontrol/", "http://39.105.77.122", "13260", "FK", "3515", false),
-
-    MD_ONLINE("门店管理中心 监控 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "MD", null, true),
 
     YT_DAILY("汽车-运通 日常 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "YT", null, true),
 
@@ -50,11 +43,11 @@ public enum EnumTestProduct {
 
 
     MALL_DAILY("购物中心 日常 ", "", "http://dev.mall.store.winsenseos.cn", "55456", "MALL", "10107", true),
-    MALL_DAILY_SSO("购物中心 日常-登录ip ", "", "http://dev.sso.mall.store.winsenseos.cn", "55456", "MALL", "10107", true),
+    MALL_DAILY_SSO("购物中心 日常 ", "", "http://dev.sso.mall.store.winsenseos.cn", "55456", "MALL", "10107", true),
+
+
     MALL_ONLINE("购物中心 线上 ", "", "http://mall.store.winsenseos.com", "4283", "MALL", "12246", false),
-    MALL_ONLINE_SSO("购物中心 线上-登录ip ", "", "http://sso.mall.store.winsenseos.com", "4283", "MALL", "12246", false),
-
-
+    MALL_ONLINE_SSO("购物中心 线上 ", "", "http://sso.mall.store.winsenseos.com", "4283", "MALL", "12246", false),
 
     CMS_DAILY("管理后台 日常 ", "", "http://39.106.253.190", "", "CMS", "", true),
     CMS_ONLINE("管理后台 线上 ", "", "http://39.106.253.135", "", "CMS", "", false),

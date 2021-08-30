@@ -68,8 +68,8 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkContents(title, answer);
-                String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().execute(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code, expect), description + ",期待:" + expect + ", 结果code=" + code);
+                Integer code = EvaluateV4ConfigSubmitScene.builder().links(links).build().visitor(visitor).getResponse().getCode();
+                Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",期待:" + expect + ", 结果code=" + code);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -99,8 +99,8 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkTopicNum(topicList, answer);
-                String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().execute(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code, expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
+                Integer code = EvaluateV4ConfigSubmitScene.builder().links(links).build().visitor(visitor).getResponse().getCode();
+                Preconditions.checkArgument(Objects.equals(String.valueOf(code), expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

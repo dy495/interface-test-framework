@@ -39,6 +39,6 @@ public class InvalidVoucher extends AbstractVoucher {
      */
     public void invalidVoucher(Long voucherId) {
         IScene scene = InvalidVoucherScene.builder().id(voucherId).build();
-        visitor.invokeApi(scene);
+        scene.visitor(visitor).execute();
     }
 }

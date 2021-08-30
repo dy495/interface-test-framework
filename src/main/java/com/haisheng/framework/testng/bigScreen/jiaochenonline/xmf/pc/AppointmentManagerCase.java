@@ -122,7 +122,7 @@ public class AppointmentManagerCase extends TestCaseCommon implements TestCaseSt
     @Test(description = "pc接待搜索老车牌号展示项验证")
     public void pcReceipt() {
         try {
-            JSONObject response = ReceptionScene.builder().plateNumber(util.getPlatNumber(EnumAppletToken.JC_WM_DAILY.getPhone())).build().execute(visitor);
+            JSONObject response = ReceptionScene.builder().plateNumber(util.getPlatNumber(EnumAppletToken.JC_WM_DAILY.getPhone())).build().visitor(visitor).execute();
             String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
             JsonPathUtil.spiltString(response.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {

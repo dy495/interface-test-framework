@@ -57,7 +57,7 @@ public class SellOutVoucher extends AbstractVoucher {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPageBean applyPage = findBeanByField(scene, ApplyPageBean.class, "name", voucherName);
         Long id = applyPage.getId();
-        ApplyApprovalScene.builder().id(id).status("1").build().execute(visitor, true);
+        ApplyApprovalScene.builder().id(id).status("1").build().visitor(visitor).execute();
     }
 
     /**
@@ -67,10 +67,9 @@ public class SellOutVoucher extends AbstractVoucher {
      */
     private void buyTemporaryPackage(String voucherName) {
         JSONArray voucherList = getVoucherArray(voucherName);
-        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+        PurchaseTemporaryPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
                 .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
-                .subjectType(UseRangeEnum.CURRENT.name()).extendedInsuranceYear("1").extendedInsuranceCopies("1").type(0).build();
-        visitor.invokeApi(temporaryScene);
+                .subjectType(UseRangeEnum.CURRENT.name()).extendedInsuranceYear("1").extendedInsuranceCopies("1").type(0).build().visitor(visitor).execute();
     }
 
     /**
@@ -96,9 +95,9 @@ public class SellOutVoucher extends AbstractVoucher {
     private void makeSureBuyPackage() {
         //获取确认支付id
         IScene scene = BuyPackageRecordScene.builder().packageName("临时套餐").size(SIZE / 10).build();
-        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
+        JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
         Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals("临时套餐")).map(e -> e.getLong("id")).findFirst().orElse(null);
-        visitor.invokeApi(MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build());
+        MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build().visitor(visitor).execute();
     }
 
 }

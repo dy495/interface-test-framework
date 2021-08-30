@@ -123,8 +123,8 @@ public class SceneUtil extends BasicUtil {
         Long regionId = getRegionIdByRegionName(subjectId, tableName);
         Arrays.stream(table.getRows()).map(row -> createDeviceAndGetDeviceMap(subjectId, row))
                 .forEach(map -> map.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> {
-                    DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
-                    DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().execute(visitor);
+                    DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().visitor(visitor).execute();
+                    DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().visitor(visitor).execute();
                 }));
     }
 
@@ -140,12 +140,12 @@ public class SceneUtil extends BasicUtil {
             String floorName = row.getField(CmsConstants.TABLE_FIELD_FLOOR_NAME).getValue();
             EnumDataLayout enumDataLayout = StringUtils.isEmpty(floorName) ? EnumDataLayout.L1 : EnumDataLayout.finEnumByName(floorName.replace("层", ""));
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
-            DataRegionScene.builder().subjectId(subjectId).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().execute(visitor);
+            DataRegionScene.builder().subjectId(subjectId).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().visitor(visitor).execute();
             Long regionId = getRegionIdByRegionName(subjectId, shopName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
-                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
-                DataRegionDeviceScene.builder().regionId(regionId).deviceId(e.getValue()).build().execute(visitor);
-                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").isWhole(false).build().execute(visitor);
+                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().visitor(visitor).execute();
+                DataRegionDeviceScene.builder().regionId(regionId).deviceId(e.getValue()).build().visitor(visitor).execute();
+                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").isWhole(false).build().visitor(visitor).execute();
             });
         });
     }
@@ -163,8 +163,8 @@ public class SceneUtil extends BasicUtil {
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
             Long regionId = getRegionIdByRegionName(subjectId, floorName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
-                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
-                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().execute(visitor);
+                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().visitor(visitor).execute();
+                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().visitor(visitor).execute();
             });
         });
     }
@@ -204,7 +204,7 @@ public class SceneUtil extends BasicUtil {
      */
     public Long createLayoutAndGetLayoutId(long subjectId, String layoutName) {
         int floorId = EnumDataLayout.finEnumByName(layoutName).getFloorId();
-        DataLayoutScene.builder().name(layoutName).description(layoutName).subjectId(subjectId).floorId(floorId).build().execute(visitor);
+        DataLayoutScene.builder().name(layoutName).description(layoutName).subjectId(subjectId).floorId(floorId).build().visitor(visitor).execute();
         IScene scene = LayoutListScene.builder().subjectId(subjectId).build();
         return toJavaObject(scene, JSONObject.class, "floor_id", floorId).getLong("layout_id");
     }
@@ -259,7 +259,7 @@ public class SceneUtil extends BasicUtil {
         DataDeviceScene.builder().name(name).deviceType(EnumDeviceType.WEB_CAMERA.name()).url(url)
                 .subjectId(String.valueOf(subjectId)).manufacturer(EnumManufacturer.HIKVISION.getName())
                 .deploymentGroupId(getDeploymentGroupId()).deploymentId(getDeploymentId())
-                .cloudSceneType(getCloudSceneType()).build().execute(visitor);
+                .cloudSceneType(getCloudSceneType()).build().visitor(visitor).execute();
         return getDeviceIdByDeviceName(name);
     }
 

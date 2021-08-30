@@ -31,23 +31,23 @@ public class BasicUtil {
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass, String JSONArrayName) {
-        JSONArray list = scene.execute(visitor).getJSONArray(JSONArrayName);
+        JSONArray list = scene.visitor(visitor).execute().getJSONArray(JSONArrayName);
         return list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList());
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass) {
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         return toJavaObjectList(scene, tClass, total);
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Integer size, Class<T> tClass) {
         List<T> list = new ArrayList<>();
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
         }
         return list;
@@ -59,7 +59,7 @@ public class BasicUtil {
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
         }
         return list;
@@ -67,12 +67,12 @@ public class BasicUtil {
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> bean, String key, Object value) {
         List<T> list = new ArrayList<>();
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
                     .map(e -> JSONObject.toJavaObject(e, bean)).forEach(list::add);
         }
@@ -80,7 +80,7 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Class<T> tClass) {
-        return toJavaObject(scene.execute(visitor), tClass);
+        return toJavaObject(scene.visitor(visitor).execute(), tClass);
     }
 
     public <T> T toJavaObject(JSONObject object, Class<T> tClass) {
@@ -88,12 +88,12 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Class<T> tClass, String key, Object value) {
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
             if (clazz != null) {
@@ -104,12 +104,12 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Integer size, Class<T> tClass, String key, Object value) {
-        int total = scene.execute(visitor).getInteger("total");
+        int total = scene.visitor(visitor).execute().getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
-            JSONArray array = scene.execute(visitor).getJSONArray("list");
+            JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
             if (clazz != null) {
@@ -120,8 +120,8 @@ public class BasicUtil {
     }
 
     public <T> T toFirstJavaObject(@NotNull IScene scene, Class<T> tClass) {
-        JSONArray array = scene.execute(visitor).getJSONArray("list");
-        return array.size() == 0 ? null : toJavaObject(scene.execute(visitor).getJSONArray("list").getJSONObject(0), tClass);
+        JSONArray array = scene.visitor(visitor).execute().getJSONArray("list");
+        return array.size() == 0 ? null : toJavaObject(scene.visitor(visitor).execute().getJSONArray("list").getJSONObject(0), tClass);
     }
 
     public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {

@@ -33,28 +33,11 @@ public abstract class BaseScene implements IScene {
     private VisitorProxy visitor;
 
     /**
-     * 处理后的请求体
-     *
-     * @return 请求体
-     */
-    @Override
-    public JSONObject getBody() {
-        return body == null ? getRequestBody() : body;
-    }
-
-    /**
      * 获取请求体
      *
      * @return 请求体
      */
     protected abstract JSONObject getRequestBody();
-
-
-    @Override
-    public IScene setRequestBodyBody(JSONObject requestBodyBody) {
-        this.body = requestBodyBody;
-        return this;
-    }
 
     /**
      * 获取接口路径
@@ -75,15 +58,20 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
-     * 执行
+     * 处理后的请求体
      *
-     * @param visitor   要执行的产品
-     * @param checkCode 是否校验code
-     * @return 接口返回值
+     * @return 请求体
      */
     @Override
-    public JSONObject execute(@NotNull VisitorProxy visitor, boolean checkCode) {
-        return visitor.invokeApi(getPath(), getBody(), checkCode);
+    public JSONObject getBody() {
+        return body == null ? getRequestBody() : body;
+    }
+
+
+    @Override
+    public IScene setRequestBodyBody(JSONObject requestBodyBody) {
+        this.body = requestBodyBody;
+        return this;
     }
 
     /**
@@ -94,6 +82,16 @@ public abstract class BaseScene implements IScene {
     @Override
     public JSONObject execute() {
         return execute(true);
+    }
+
+    /**
+     * 获取接口返回值
+     *
+     * @return 响应数据
+     */
+    @Override
+    public Response getResponse() {
+        return JSONObject.toJavaObject(execute(false), Response.class);
     }
 
     /**
@@ -110,17 +108,8 @@ public abstract class BaseScene implements IScene {
     /**
      * 上传
      *
-     * @param visitor 要执行的产品
      * @return 接口返回值
      */
-    @Override
-    public JSONObject upload(@NotNull VisitorProxy visitor) {
-        this.visitor = visitor;
-        Preconditions.checkNotNull(getBody().getString("filePath"), "文件路径为空");
-        String filePath = getBody().getString("filePath");
-        return visitor.upload(getPath(), filePath);
-    }
-
     @Override
     public JSONObject upload() {
         Preconditions.checkNotNull(getBody().getString("filePath"), "文件路径为空");
@@ -143,6 +132,7 @@ public abstract class BaseScene implements IScene {
      *
      * @return key的集合
      */
+    @Override
     public List<String> getKeyList() {
         return getBody().entrySet().stream().filter(e -> e.getValue() != null)
                 .map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList::new));
@@ -155,6 +145,7 @@ public abstract class BaseScene implements IScene {
      * @param keys 键的集合
      * @return IScene
      */
+    @Override
     public IScene remove(String... keys) {
         body = getRequestBody();
         logger.info("移除键：{}", Arrays.stream(keys).toArray());
@@ -171,20 +162,11 @@ public abstract class BaseScene implements IScene {
      * @param <T>   T
      * @return this
      */
+    @Override
     public <T> IScene modify(String key, T value) {
         body = getRequestBody();
         body.put(key, value);
         return this;
-    }
-
-    /**
-     * 获取接口返回值
-     *
-     * @return 响应数据
-     */
-    @Override
-    public Response getResponse() {
-        return JSONObject.toJavaObject(execute(false), Response.class);
     }
 
     @Override

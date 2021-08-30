@@ -172,7 +172,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
                         .shareVoucher(shareVoucher)
                         .invitedVoucher(invitedVoucher)
                         .build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
+                Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
                 Preconditions.checkArgument(activityId > 0, "裂变活动创建失败");
@@ -248,7 +248,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
                             .voucherValid(voucherValid);
                 }
                 IScene scene = builder.build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
+                Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
                 Preconditions.checkArgument(activityId > 0, "招募活动创建失败");
@@ -296,8 +296,8 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
                     .picList(picList)
                     .actionPoint(1)
                     .build();
-            visitor.invokeApi(scene);
-            Long activityId = visitor.invokeApi(scene).getLong("id");
+            scene.visitor(visitor).execute();
+            Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "活动创建失败");

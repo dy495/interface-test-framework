@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationAddFavoriteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
@@ -91,7 +92,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr = EvaluationPageScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
+            JSONArray arr = EvaluationPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 Preconditions.checkArgument(obj.containsKey("id"), "没有");
@@ -132,27 +133,27 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
             String receptor_name = "";
             String customer_name = "";
             String customer_phone = "";
-            JSONArray arr = EvaluationPageScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
+            JSONArray arr = EvaluationPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             if (arr.size() > 0) {
                 JSONObject obj = arr.getJSONObject(0);
                 receptor_name = obj.getString("receptor_name");
                 customer_name = obj.getString("customer_name");
                 customer_phone = obj.getString("customer_phone");
-                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(receptor_name).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_receptor_name = obj1.getString("receptor_name");
                     Preconditions.checkArgument(search_receptor_name.toUpperCase().contains(receptor_name.toUpperCase()), "搜索接待顾问=" + receptor_name + " ,结果包含" + search_receptor_name);
                 }
 
-                JSONArray arr2 = EvaluationPageScene.builder().page(1).size(50).customerName(customer_name).build().execute(visitor).getJSONArray("list");
+                JSONArray arr2 = EvaluationPageScene.builder().page(1).size(50).customerName(customer_name).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr2.size(); i++) {
                     JSONObject obj1 = arr2.getJSONObject(i);
                     String search_customer_name = obj1.getString("customer_name");
                     Preconditions.checkArgument(search_customer_name.toUpperCase().contains(customer_name.toUpperCase()), "搜索客户姓名=" + customer_name + " ,结果包含" + search_customer_name);
                 }
 
-                JSONArray arr3 = EvaluationPageScene.builder().page(1).size(50).customerPhone(customer_phone).build().execute(visitor).getJSONArray("list");
+                JSONArray arr3 = EvaluationPageScene.builder().page(1).size(50).customerPhone(customer_phone).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr3.size(); i++) {
                     JSONObject obj1 = arr3.getJSONObject(i);
                     String search_customer_phone = obj1.getString("customer_phone");
@@ -175,20 +176,20 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(search).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(search).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr1.size(); i++) {
                 JSONObject obj1 = arr1.getJSONObject(i);
                 String search_receptor_name = obj1.getString("receptor_name").toUpperCase();
                 Preconditions.checkArgument(search_receptor_name.toUpperCase().contains(search.toUpperCase()), "搜索接待顾问=" + search + " ,结果包含" + search_receptor_name);
             }
-            JSONArray arr2 = EvaluationPageScene.builder().page(1).size(50).customerName(search).build().execute(visitor).getJSONArray("list");
+            JSONArray arr2 = EvaluationPageScene.builder().page(1).size(50).customerName(search).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr2.size(); i++) {
                 JSONObject obj1 = arr2.getJSONObject(i);
                 String search_customer_name = obj1.getString("customer_name").toUpperCase();
                 Preconditions.checkArgument(search_customer_name.toUpperCase().contains(search.toUpperCase()), "搜索客户姓名=" + search + " ,结果包含" + search_customer_name);
             }
 
-            JSONArray arr3 = EvaluationPageScene.builder().page(1).size(50).customerPhone(search).build().execute(visitor).getJSONArray("list");
+            JSONArray arr3 = EvaluationPageScene.builder().page(1).size(50).customerPhone(search).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr3.size(); i++) {
                 JSONObject obj1 = arr3.getJSONObject(i);
                 String search_customer_phone = obj1.getString("customer_phone").toUpperCase();
@@ -210,10 +211,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject obj = EvaluationPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor, false);
-            int code = obj.getInteger("code");
+            Response obj = EvaluationPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+            int code = obj.getCode();
             if (bool.equals("true")) {
-                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_time") + ":000";
@@ -239,11 +240,11 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("ENTER_STORE_STATUS_LIST").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("ENTER_STORE_STATUS_LIST").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int enter_status = arr.getJSONObject(i).getInteger("key");
                 String repair_type_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).enterStatus(enter_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).enterStatus(enter_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("repair_type_name");
                     Preconditions.checkArgument(search.equals(repair_type_name), "搜索服务内容=" + repair_type_name + " ,结果包含" + search);
@@ -263,11 +264,11 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("VOICE_EVALUATE_STATUS_LIST").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("VOICE_EVALUATE_STATUS_LIST").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).evaluateStatus(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).evaluateStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("evaluate_status_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索评分状态=" + evaluate_status_name + " ,结果包含" + search);
@@ -288,7 +289,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(search).customerPhone(search).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).receptorName(search).customerPhone(search).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr1.size(); i++) {
                 JSONObject obj1 = arr1.getJSONObject(i);
                 String search_receptor_name = obj1.getString("receptor_name").toUpperCase();
@@ -312,7 +313,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(30).isFavorite(Boolean.getBoolean(isfavorite)).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(30).isFavorite(Boolean.getBoolean(isfavorite)).build().visitor(visitor).execute().getJSONArray("list");
             for (int j = 0; j < arr1.size(); j++) {
                 Boolean search = arr1.getJSONObject(j).getBoolean("is_favorite");
                 Preconditions.checkArgument(search == Boolean.getBoolean(isfavorite), "搜索收藏状态为"+Boolean.getBoolean(isfavorite)+"结果不正确");
@@ -333,9 +334,9 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id= EvaluationPageScene.builder().page(1).size(30).isFavorite(false).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id= EvaluationPageScene.builder().page(1).size(30).isFavorite(false).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
             //收藏
-            int code = EvaluationAddFavoriteScene.builder().id(id).build().execute(visitor,false).getInteger("code");
+            int code = EvaluationAddFavoriteScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code==1000,"收藏语音，状态码为"+code);
 
             //todo 取消收藏
@@ -360,7 +361,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             for (int j = 0; j < arrlist.size(); j++) {
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("words"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词");
@@ -384,10 +385,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = SensitiveBehaviorPageScene.builder().page(1).size(1).build().execute(visitor).getJSONArray("list");
+            JSONArray arr = SensitiveBehaviorPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list");
             if (arr.size() > 0) {
                 String receptor_name = arr.getJSONObject(0).getString("receptor_name");
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().execute(visitor).getJSONArray("list");
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
                 Preconditions.checkArgument(arrlist.size() >= 0, "搜索列表存在的顾问，无结果");
                 for (int i = 0; i < arrlist.size(); i++) {
                     String search = arrlist.getJSONObject(i).getString("receptor_name");
@@ -410,7 +411,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arrlist.size(); i++) {
                 String search = arrlist.getJSONObject(i).getString("receptor_name").toUpperCase();
                 Preconditions.checkArgument(search.toUpperCase().contains(receptor_name.toUpperCase()), "搜索" + receptor_name + " ,结果包含" + search);
@@ -431,11 +432,11 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arrlist.size(); j++) {
                     String search = arrlist.getJSONObject(j).getString("sensitive_words_type_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
@@ -456,12 +457,12 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
 
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arrlist.size(); j++) {
                     String search = arrlist.getJSONObject(j).getString("approval_status_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
@@ -483,10 +484,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONObject obj = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor, false);
-            int code = obj.getInteger("code");
+            Response obj = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+            int code = obj.getCode();
             if (bool.equals("true")) {
-                JSONArray arr1 = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_start_time") + " 00:00:00:000";
@@ -516,18 +517,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
             //这个要去待审核的状态 100 随便写的 要改
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量 状态数要改
-                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().execute(visitor).getInteger("total");
+                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过 10 随便写的 要改
-                JSONObject obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().execute(visitor, false);
-                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+                Response obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
+                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().execute(visitor).getInteger("total");
+                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
 
             } else {
@@ -551,18 +552,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
 
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量
-                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().execute(visitor).getInteger("total");
+                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                JSONObject obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().execute(visitor, false);
-                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+                Response obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
+                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().execute(visitor).getInteger("total");
+                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
 
             } else {
@@ -587,7 +588,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(3).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(3).build().visitor(visitor).execute().getJSONArray("list");
             for (int j = 0; j < arrlist.size(); j++) {
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("audio_duration"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示音频时长");
@@ -613,12 +614,12 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         try {
             String receptor_name = "";
 
-            JSONArray arr = AfterSpecialAudioPageScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
+            JSONArray arr = AfterSpecialAudioPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             if (arr.size() > 0) {
                 JSONObject obj = arr.getJSONObject(0);
                 receptor_name = obj.getString("receptor_name");
 
-                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptorName(receptor_name).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_receptor_name = obj1.getString("receptor_name");
@@ -641,7 +642,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptorName(search).build().execute(visitor).getJSONArray("list");
+            JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptorName(search).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr1.size(); i++) {
                 JSONObject obj1 = arr1.getJSONObject(i);
                 String search_receptor_name = obj1.getString("receptor_name").toUpperCase();
@@ -663,10 +664,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONObject obj = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor, false);
-            int code = obj.getInteger("code");
+            Response obj = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+            int code = obj.getCode();
             if (bool.equals("true")) {
-                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_time") + " 00:00:00:000";
@@ -697,9 +698,9 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
             String start = dt.getHistoryDate(-369);
             String end = dt.getHistoryDate(-1);
 
-            JSONObject obj = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().execute(visitor, false);
-            int code = obj.getInteger("code");
-            Preconditions.checkArgument(code == 1001, "时间跨度大于1年，期待失败，实际提示" + obj.getString("message"));
+            Response obj = AfterSpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+            int code = obj.getCode();
+            Preconditions.checkArgument(code == 1001, "时间跨度大于1年，期待失败，实际提示" + obj.getMessage());
 
 
         } catch (AssertionError e) {
@@ -716,11 +717,11 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("approval_status_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索审核状态=" + evaluate_status_name + " ,结果包含" + search);
@@ -743,18 +744,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
             //这个要去待审核的状态
-            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量
-                int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().execute(visitor).getInteger("total");
+                int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                JSONObject obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(200).build().execute(visitor, false);
-                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+                Response obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
+                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().execute(visitor).getInteger("total");
+                int after = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
 
             } else {
@@ -778,18 +779,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
 
-            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().execute(visitor).getJSONArray("list");
+            JSONArray arrlist = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量
-                int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().execute(visitor).getInteger("total");
+                int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                JSONObject obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(300).build().execute(visitor, false);
-                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+                Response obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
+                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().execute(visitor).getInteger("total");
+                int after = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
 
             } else {
@@ -811,11 +812,11 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("RECEPTION_LINKS").build().execute(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("RECEPTION_LINKS").build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = SpeechTechniquePageScene.builder().page(1).size(50).type(evaluate_status).build().execute(visitor).getJSONArray("list");
+                JSONArray arr1 = SpeechTechniquePageScene.builder().page(1).size(50).type(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
 
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("link_name");
