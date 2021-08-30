@@ -7,10 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.AuthTreeScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleAddScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleDeleteScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleEditScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.StatusChangeScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffEditScene;
@@ -24,12 +21,8 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFl
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RolePageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role.RoleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
