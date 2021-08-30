@@ -39,14 +39,14 @@ public class TestUtil {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/jiedai-9-8/app/"
+                "http://192.168.50.3/api-doc/jiedai-9-8/pc/"
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/mc/scene")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
