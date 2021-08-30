@@ -390,7 +390,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("接待中编辑资料，异常情况");
+            saveData("接待中购车，异常情况");
         }
     }
 
