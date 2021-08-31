@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DingPushUtil {
-    private final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
+    private final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
     private String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
 
     public void changeWeHook(String webhookToken) {
