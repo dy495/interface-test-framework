@@ -847,7 +847,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
@@ -872,7 +872,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
@@ -898,7 +898,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
@@ -925,7 +925,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
@@ -952,7 +952,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
@@ -979,7 +979,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                    .voucherStatus("WORKING").build().execute().getJSONArray("list");
+                    .voucherStatus("WORKING").build().visitor(visitor).execute().getJSONArray("list");
             long voucher_id = voucher_list.getJSONObject(0).getLong("id");
             String[] types = {"TOTAL", "CONTINUE"};
             Arrays.stream(types).forEach(type -> {
