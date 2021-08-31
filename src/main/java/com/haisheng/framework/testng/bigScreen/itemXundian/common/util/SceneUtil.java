@@ -1106,14 +1106,14 @@ public class SceneUtil extends BasicUtil {
 
     public void enterShopData(String subjectName, String time, List<ShopData> shopDataList) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("#### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
+        sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
         DingPushUtil.send(sb.toString());
     }
 
     public void passShopData(String subjectName, String time, List<ShopData> shopDataList) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("#### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
+        sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
         DingPushUtil.send(sb.toString());
     }

@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * @date 2020/11/24
  */
 
-public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
+public class DataMonitoring extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduct PRODUCE = EnumTestProduct.XD_ONLINE;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private final SceneUtil util = new SceneUtil(visitor);
@@ -101,7 +101,7 @@ public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "PASS_ACCOUNT")
-    public void passPvUvMonitoring(AccountEnum account) {
+    public void passMonitoring(AccountEnum account) {
         try {
             util.loginPc(account);
             String subjectName = account.getSubjectName();

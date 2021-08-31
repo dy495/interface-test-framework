@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
 
-
     <listeners>
         <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
     </listeners>
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.ShopManagerCase"/>
-
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StorePcCaseOnline"></class>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.bgy.StoreDataConsistentcyBgy"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StoreDataCenter"></class>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zdf.SurveillanceForZDF"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.ddc.StoreDataConsistentcyDdc"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lnb.StoreDataForLNB"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.jkqs.StoreDataConsistentcyLz"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StorePcCaseOnline"/>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.bgy.StoreDataConsistentcyBgy"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StoreDataCenter"/>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zdf.SurveillanceForZDF"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.ddc.StoreDataConsistentcyDdc"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lnb.StoreDataForLNB"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.jkqs.StoreDataConsistentcyLz"/>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.xtc.StoreDataForXtc"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.XundianAppData"/>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.XundianCaseOnline"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.dzy.StoreDataForDzy"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.heyShop.StoreDataForHS"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppDataOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppSystemOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianPCSystemOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.StorePcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.StorePcData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.XundianAppData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.XundianPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.InsPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.GoodsMarkingCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.VoucherManagerCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.StoreInspectionOnlineCase"></class>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.dzy.StoreDataForDzy"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.heyShop.StoreDataForHS"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppDataOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianPCSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.StorePcCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.StorePcData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.XundianAppData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.XundianPcCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.InsPcCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.GoodsMarkingCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.VoucherManagerCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.StoreInspectionOnlineCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.VideoSurveillanceOnlineCase">
                 <methods>
                     <exclude name="myReportFilter1"/>
                 </methods>
             </class>
-
 
 
         </classes>
