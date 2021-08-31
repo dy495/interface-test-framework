@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.Cus
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.SceneUntil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -40,7 +40,7 @@ public class MallCaseOnline extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_ONLINE;
     private static final AccountEnum ACCOUNT = AccountEnum.MALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public LoginUntil util = new LoginUntil(visitor);
+    public SceneUntil util = new SceneUntil(visitor);
     public static final int page = 1;
     public static final int size = 100;
     private final static String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/common/pic/人脸.jpg";

@@ -2,22 +2,23 @@ package com.haisheng.framework.testng.bigScreen.itemMall.common.util;
 
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginPc;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.DingPushUtil;
 import com.haisheng.framework.util.MD5Util;
 
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
-public class LoginUntil {
+public class SceneUntil extends BasicUtil {
 
     private final VisitorProxy visitor;
 
-    public LoginUntil(VisitorProxy visitorProxy) {
-        this.visitor = visitorProxy;
+    public SceneUntil(VisitorProxy proxy) {
+        super(proxy);
+        this.visitor = proxy;
     }
 
     public void loginPc(@NotNull AccountEnum enumAccount) {
@@ -32,5 +33,13 @@ public class LoginUntil {
         visitor.setProduct(newProduce);
         visitor.login(scene);
         visitor.setProduct(oldProduce);
+    }
+
+    public void sendMessage(String subjectName, String time, Map<String, Integer> map) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append("##### ").append(subjectName).append(" ").append(time).append("数据为：").append("\n");
+        sb.append("###### ");
+        map.forEach((key, value) -> sb.append(key).append("数据为：").append(value).append(" "));
+        DingPushUtil.send(sb.toString());
     }
 }

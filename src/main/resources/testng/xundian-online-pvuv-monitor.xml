@@ -7,7 +7,8 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.DataMonitoring"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.DataMonitor"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemMall.caseonline.wm.DataMonitor"/>
         </classes>
     </test>
 </suite>

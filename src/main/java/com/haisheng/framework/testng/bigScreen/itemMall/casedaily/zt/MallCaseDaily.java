@@ -7,18 +7,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.AuthTreeScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleAddScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleDeleteScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleEditScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.*;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role.RolePageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -35,7 +29,7 @@ public class MallCaseDaily extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
     private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public LoginUntil user = new LoginUntil(visitor);
+    public SceneUntil user = new SceneUntil(visitor);
     MallScenarioUtil mall = MallScenarioUtil.getInstance();
     public static final int page = 1;
     public static final int size = 100;

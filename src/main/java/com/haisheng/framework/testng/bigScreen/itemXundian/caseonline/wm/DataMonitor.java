@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * @date 2020/11/24
  */
 
-public class DataMonitoring extends TestCaseCommon implements TestCaseStd {
+public class DataMonitor extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduct PRODUCE = EnumTestProduct.XD_ONLINE;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private final SceneUtil util = new SceneUtil(visitor);
