@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.casedaily.gly.Util.MallBusinessUtil;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.FloorTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.RegionTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.SortTypeEnum;
@@ -19,6 +20,7 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.CustomersPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.*;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.SceneUntil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
@@ -40,11 +42,10 @@ import java.util.*;
 public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public UserUtil user = new UserUtil(visitor);
-    public SceneUtil util = new SceneUtil(visitor);
     MallBusinessUtil businessUtil = new MallBusinessUtil(visitor);
-    StoreScenarioUtil su = StoreScenarioUtil.getInstance();
     CommonConfig commonConfig = new CommonConfig();
+    public SceneUntil user = new SceneUntil(visitor);
+    private static final AccountEnum ACCOUNT = AccountEnum.MALL_DAILY;
     Long floorId = 7344L;//日常1楼的楼层id
     String mallId = "55456";
 
@@ -75,7 +76,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
         //登录的日常的账号
-        su.loginInMall("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        user.loginPc(ACCOUNT);
 
     }
 
