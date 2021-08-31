@@ -71,7 +71,7 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    @Test(dataProvider = "ACCOUNT")
+    @Test(dataProvider = "ENTER_ACCOUNT")
     public void enterMonitoring(AccountEnum account) {
         try {
             util.loginPc(account);
@@ -128,8 +128,8 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "ACCOUNT")
-    public Object[] getAccount() {
+    @DataProvider(name = "ENTER_ACCOUNT")
+    public Object[] getEnterAccount() {
         return new Object[]{
                 AccountEnum.BGY,
                 AccountEnum.DDC,
