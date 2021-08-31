@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool;
 
 public class FastContent {
     public static final String NAME51 = "赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜戚谢邹喻柏水窦章云苏潘葛奚范彭郎鲁韦昌";
-    public static final String NAME50 = "赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜戚谢邹喻柏水窦?41aB[&(_*>";
+    public static final String NAME50 = "赵钱孙李周吴郑王ABcd1234!@#$ 吕施张孔曹严华金魏陶姜戚谢邹喻柏水窦?41aB[&(_*>";
     public static final String CONTENT1000 = "党史学习教育动员大会2月20日上午在北京召开。习近平总书记强调，全党同志要做到学史明理、学史增信、学史崇德、学史力行，" +
             "学党史、悟思想、办实事、开新局，以昂扬姿态奋力开启全面建设社会主义现代化国家新征程，以优异成绩迎接建党一百周年。风雨苍黄百年路，高歌奋进新征程。" +
             "习近平总书记为这场学习教育“开课”，为党员干部如何学好学深党史指明了方向。作为党员干部，我们要从党史学习教育中汲取智慧力量，认真回顾走过的路，" +

@@ -18,6 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.FastContent;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppBuyCarScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanagev4.PreSaleCustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -355,7 +356,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "接待中编辑资料，异常情况", dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    @Test(description = "接待中编辑资料", dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
     public void test04EditUserInfo(String description, String point, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
@@ -367,14 +368,39 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
             sleep(3);
             String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
-                    customerName("正常normal").customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
-                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate("2030-08-08").build()
+                    customerName(FastContent.NAME50).customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
+                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate(dt.getHistoryDate(0)).build()
                     .modify(point, content).visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(Objects.equals(expect, message), "修改资料" + description + "，预期结果：" + expect + "，实际：" + message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("接待中编辑资料，异常情况");
+            saveData("接待中编辑资料");
+        }
+    }
+
+
+    @Test(description = "接待中编辑预计购车日期", dataProvider = "customerLevel", dataProviderClass = DataCenter.class)
+    public void test04CustomerLevel(String time, String expectLevel) {
+        try {
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
+            AppReceptionBean getReception;
+            if (reception == null) {
+                getReception = preAssign("创建接待for判断客户等级" + dt.getHistoryDate(0), null, true);
+            } else {
+                getReception = reception.toJavaObject(AppReceptionBean.class);
+            }
+            sleep(3);
+            String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
+                    customerName("这人"+time+"购车").customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).
+                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate(time).build().visitor(visitor).getResponse().getMessage();
+            Preconditions.checkArgument(Objects.equals("success", message), "修改资料失败"+ message);
+            String customerLevel = PreSaleCustomerInfoScene.builder().customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).build().visitor(visitor).execute().getString("customer_level");
+                        Preconditions.checkArgument(Objects.equals(customerLevel,expectLevel),"变更预计购车时间为"+time+":该客户等级应变为"+expectLevel+",实际等级为"+customerLevel);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("接待中编辑预计购车日期");
         }
     }
 

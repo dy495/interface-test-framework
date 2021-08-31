@@ -359,8 +359,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "接待中编辑资料，异常情况", dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
-    public void test03EditUserInfo(String description, String point, String content, String expect) {
+    @Test(description = "接待中编辑资料", dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    public void test03EditUserInfoN(String description, String point, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
@@ -371,14 +371,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
             sleep(3);
             String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
-                    customerName("正常normal").customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
-                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate("2030-08-08").build()
+                    customerName(FastContent.NAME50).customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
+                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate(dt.getHistoryDate(0)).build()
                     .modify(point, content).visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(Objects.equals(expect, message), "修改资料" + description + "，预期结果：" + expect + "，实际：" + message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("接待中编辑资料，异常情况");
+            saveData("接待中编辑资料");
         }
     }
 

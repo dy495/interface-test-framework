@@ -85,6 +85,12 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "小程序差评：跟进任务分子+1 分母+1,跟进后分子-1")
+    public void todayTaskFlowUp(){
+        
+    }
+
+
     @Test(description = "今日任务销售接待：分子 = 今日未完成的主客接待记录；分母 = 今日所有的接待数（主客+陪客）")
     public void todayTaskPreReception(){
 

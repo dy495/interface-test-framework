@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool;
 
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.DataProvider;
 
 public class DataCenter {
@@ -33,7 +34,7 @@ public class DataCenter {
     }
 
     @DataProvider(name = "editErrorInfo")
-    private Object[] editErrorInfo(){
+    public Object[] editErrorInfo(){
         return new Object[][]{
                 {"校验购车时间：必填","estimate_buy_car_date",null,"预计购车时间不能为空"},
                 {"校验姓名：必填","customer_name",null,"客户名称不能为空"},
@@ -54,11 +55,12 @@ public class DataCenter {
                 {"校验购车车型：系统中不存在的车型", "intention_car_model_id", "0000", "意向车型不存在"},
                 //{"校验购车车型：门店中不存在的车型","intention_car_model_id","716","意向车型不存在"},    //X   能创建  接口问题，人工无法复现
                 {"校验购车时间：早于今天", "estimate_buy_car_date", "2021-01-01", "预计购车时间不能小于今天"},
+                {"修改正常情况", "", "", "success"},
         };
     }
 
     @DataProvider(name = "errorBuyCar")
-    private Object[] errorBuyCar(){
+    public Object[] errorBuyCar(){
         return new Object[][]{
                 {"校验购买车型：必填","car_model",null,"购买车辆车型不能为空"},
                 {"校验购车车型：系统中不存在的车型", "car_model", "0000", "车型不存在，请重新选择"},
@@ -70,7 +72,7 @@ public class DataCenter {
         };
     }
     @DataProvider(name = "addPlate")
-    private Object[] addPlate(){
+    public Object[] addPlate(){
         return new Object[][]{
                 {"车牌号格式：7位,汉字+纯数字","京"+CommonUtil.getRandom(6),"车牌号格式不正确"},
                 {"车牌号格式：9位,汉字+大写字母+纯数字","浙A"+CommonUtil.getRandom(7),"车牌号格式不正确"},
@@ -78,7 +80,7 @@ public class DataCenter {
         };
     }
     @DataProvider(name = "remark")
-    private Object[] remark(){
+    public Object[] remark(){
         return new Object[][]{
                 {"内容9个字", FastContent.CONTENT9, "1001"},
                 {"内容0个字符", "", "1001"},
@@ -89,7 +91,7 @@ public class DataCenter {
     }
 
     @DataProvider(name = "evaluateRemark")
-    private Object[] evaluateRemark(){
+    public Object[] evaluateRemark(){
         return new Object[][]{
               //  {"内容9个字", FastContent.CONTENT9, "1001"}, // 前端有校验
                 {"内容0个字符", "", "1001"},
@@ -100,7 +102,7 @@ public class DataCenter {
     }
 
     @DataProvider(name = "preFalse")
-    private Object[] preFalse(){
+    public Object[] preFalse(){
         return new Object[][]{
                 // {"正常名字51字，手机不填", FastContent.NAME51,""}, // 系统繁忙
                 {"正常名字1字，手机号11数字，非手机号格式", "1","2"+CommonUtil.getRandom(11)},
@@ -124,5 +126,19 @@ public class DataCenter {
                 {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "语音评鉴记录"}
         };
     }
+
+    @DataProvider(name = "customerLevel")
+    public Object[] customerLevel(){
+        DateTimeUtil dt = new DateTimeUtil();
+        return new Object[][]{
+                {dt.getHistoryDate(7), "H"},
+                {dt.getHistoryDate(8), "A"},
+                {dt.getHistoryDate(15), "A"},
+                {dt.getHistoryDate(16), "B"},
+                {dt.getHistoryDate(30), "B"},
+                {dt.getHistoryDate(31), "C"},
+        };
+    }
+
 
 }
