@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PassengerFlowBean;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPassPvUvBean;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPvUvBean;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.ShopData;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.ShopMessage;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.PatrolLoginScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
@@ -1078,27 +1078,27 @@ public class SceneUtil extends BasicUtil {
 
     //--------------------------------------------------数据监控----------------------------------------------------
 
-    public List<ShopData> getDdcShopData(Stream<ShopData> stream) {
+    public List<ShopMessage> getDdcShopData(Stream<ShopMessage> stream) {
         return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0)).collect(Collectors.toList());
     }
 
-    public List<ShopData> getBgyShopData(Stream<ShopData> stream) {
+    public List<ShopMessage> getBgyShopData(Stream<ShopMessage> stream) {
         return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0))
                 .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
     }
 
-    public List<ShopData> getLzShopData(Stream<ShopData> stream) {
+    public List<ShopMessage> getLzShopData(Stream<ShopMessage> stream) {
         return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0))
                 .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
     }
 
-    public List<ShopData> getPassLzShopData(Stream<ShopData> stream) {
+    public List<ShopMessage> getPassLzShopData(Stream<ShopMessage> stream) {
         return stream.filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPassPvUvBean().getTodayPv().equals(0))
                 .filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPassPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
     }
 
-    public ShopData setShopData(PassengerFlowBean flowBean, RealTimeShopPvUvBean pvUvBean, RealTimeShopPassPvUvBean passPvUvBean) {
-        ShopData shopData = new ShopData();
+    public ShopMessage setShopData(PassengerFlowBean flowBean, RealTimeShopPvUvBean pvUvBean, RealTimeShopPassPvUvBean passPvUvBean) {
+        ShopMessage shopData = new ShopMessage();
         shopData.setShopId(flowBean.getId());
         shopData.setShopName(flowBean.getName());
         shopData.setRealTimeShopPvUvBean(pvUvBean);
@@ -1106,17 +1106,17 @@ public class SceneUtil extends BasicUtil {
         return shopData;
     }
 
-    public void enterShopData(String subjectName, String time, List<ShopData> shopDataList) {
+    public void enterShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        DingPushUtil.send(sb.toString());
+        new DingPushUtil().send(sb.toString());
     }
 
-    public void passShopData(String subjectName, String time, List<ShopData> shopDataList) {
+    public void passShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        DingPushUtil.send(sb.toString());
+        new DingPushUtil().send(sb.toString());
     }
 }

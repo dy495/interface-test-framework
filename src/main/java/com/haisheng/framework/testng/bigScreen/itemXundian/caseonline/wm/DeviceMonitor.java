@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.DeviceMessage;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.mapp.AppPatrolDeviceLiveScene;
@@ -22,8 +23,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * 直播流监控
@@ -34,7 +36,7 @@ import java.util.Map;
 public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.XD_ONLINE;
     private static final AccountEnum ACCOUNT = AccountEnum.SALES_DEMO_ONLINE;
-    private static final Map<String, String> map = new LinkedHashMap<>();
+    private static final List<DeviceMessage> list = new ArrayList<>();
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
     private final CommonConfig commonConfig = new CommonConfig();
@@ -76,7 +78,11 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
             IScene scene = DevicePageScene.builder().deviceId(deviceId).type("CAMERA").build();
             String statusName = util.toFirstJavaObject(scene, JSONObject.class).getString("status_name");
             if (code != 1000 && !statusName.equals("运行中")) {
-                map.put(deviceName, deviceId);
+                DeviceMessage deviceMessage = new DeviceMessage();
+                deviceMessage.setDeviceId(deviceId);
+                deviceMessage.setDeviceName(deviceName);
+                deviceMessage.setDeviceStatus(statusName);
+                list.add(deviceMessage);
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -85,12 +91,13 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
 
     @Test(dependsOnMethods = "check_video_salesDemo")
     public void sendDing() {
-        if (map.size() != 0) {
+        if (list.size() != 0) {
             StringBuilder sb = new StringBuilder();
-            sb.append("\n").append("##### ").append(ACCOUNT.getSubjectName()).append("  ").append("门店共有").append(map.size()).append("个设备直播异常").append("\n");
-            map.forEach((key, value) -> sb.append("###### ").append("名称：").append(key).append(" ").append("ID：").append(value).append(" ").append("\n"));
-            DingPushUtil.changeWeHook(commonConfig.dingHook);
-            DingPushUtil.send(sb.toString());
+            sb.append("\n").append("##### ").append(ACCOUNT.getSubjectName()).append("  ").append("门店共有").append(list.size()).append("个设备直播异常").append("\n");
+            list.forEach(deviceMessage -> sb.append("###### ").append("设备名称：").append(deviceMessage.getDeviceName()).append(" ").append("设备ID：").append(deviceMessage.getDeviceId()).append(" ").append("设备状态：").append(deviceMessage.getDeviceStatus()).append("\n"));
+            DingPushUtil ding = new DingPushUtil();
+            ding.changeWeHook(commonConfig.dingHook);
+            ding.send(sb.toString());
         }
     }
 }

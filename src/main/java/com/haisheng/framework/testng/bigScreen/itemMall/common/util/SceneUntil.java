@@ -40,6 +40,6 @@ public class SceneUntil extends BasicUtil {
         sb.append("\n").append("##### ").append(subjectName).append(" ").append(time).append("数据为：").append("\n");
         sb.append("###### ");
         map.forEach((key, value) -> sb.append(key).append("数据为：").append(value).append(" "));
-        DingPushUtil.send(sb.toString());
+        new DingPushUtil().send(sb.toString());
     }
 }

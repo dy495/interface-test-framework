@@ -20,14 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DingPushUtil {
-    public static final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
-    private static String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
+    private final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
+    private String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
 
-    public static void changeWeHook(String webhookToken) {
+    public void changeWeHook(String webhookToken) {
         WEBHOOK_TOKEN = webhookToken;
     }
 
-    public static void send(String messageDetail) {
+    public void send(String messageDetail) {
         Map<String, String> map = new HashMap<>();
         map.put("title", "巡检");
         String text = "## **" + "线上巡检数据提醒：" + "**" + "\n"
@@ -37,7 +37,7 @@ public class DingPushUtil {
         send(map);
     }
 
-    public static void send(Map<String, String> map) {
+    public void send(Map<String, String> map) {
         try {
             String text = map.get("text");
             String title = map.get("title");
@@ -53,7 +53,7 @@ public class DingPushUtil {
         }
     }
 
-    private static void send(JSONObject object) throws IOException {
+    private void send(JSONObject object) throws IOException {
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
         httppost.addHeader("Content-Type", "application/json");
@@ -66,7 +66,7 @@ public class DingPushUtil {
         }
     }
 
-    public static void alarmTo(String[] who) {
+    public void alarmTo(String[] who) {
         DingChatbot.WEBHOOK_TOKEN = WEBHOOK_TOKEN;
         String msg = "#### 自动巡检发现门店数据为空" + "请 XXX及时查看" + "\n";
         StringBuilder toAt = new StringBuilder();

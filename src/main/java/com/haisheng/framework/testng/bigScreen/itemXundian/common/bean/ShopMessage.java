@@ -4,8 +4,11 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 门店信息
+ */
 @Data
-public class ShopData implements Serializable {
+public class ShopMessage implements Serializable {
 
     /**
      * 门店名称
