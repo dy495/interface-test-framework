@@ -6,6 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PassengerFlowBean;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPassPvUvBean;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPvUvBean;
@@ -1110,13 +1111,17 @@ public class SceneUtil extends BasicUtil {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        new DingPushUtil().send(sb.toString());
+        DingPushUtil util = new DingPushUtil();
+        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
+        util.send(sb.toString());
     }
 
     public void passShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        new DingPushUtil().send(sb.toString());
+        DingPushUtil util = new DingPushUtil();
+        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
+        util.send(sb.toString());
     }
 }

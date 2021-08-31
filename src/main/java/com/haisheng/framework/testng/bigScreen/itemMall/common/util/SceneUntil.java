@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemMall.common.util;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
@@ -40,6 +41,8 @@ public class SceneUntil extends BasicUtil {
         sb.append("\n").append("##### ").append(subjectName).append(" ").append(time).append("数据为：").append("\n");
         sb.append("###### ");
         map.forEach((key, value) -> sb.append(key).append("数据为：").append(value).append(" "));
-        new DingPushUtil().send(sb.toString());
+        DingPushUtil util = new DingPushUtil();
+        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
+        util.send(sb.toString());
     }
 }
