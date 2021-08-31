@@ -6,6 +6,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PassengerFlowBean;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPassPvUvBean;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPvUvBean;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.ShopData;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.PatrolLoginScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
@@ -39,6 +45,7 @@ import com.haisheng.framework.util.ImageUtil;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 业务场景工具
@@ -46,7 +53,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil extends BasicUtil {
+public class SceneUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
     /**
@@ -54,9 +61,14 @@ public class SupporterUtil extends BasicUtil {
      *
      * @param visitor visitor
      */
-    public SupporterUtil(VisitorProxy visitor) {
+    public SceneUtil(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
+    }
+
+    public void loginPc(AccountEnum account) {
+        IScene scene = PatrolLoginScene.builder().password(account.getPassword()).username(account.getUsername()).type(0).build();
+        visitor.login(scene);
     }
 
     /**
@@ -1059,5 +1071,50 @@ public class SupporterUtil extends BasicUtil {
     public List<Long> getArticleIdList() {
         JSONArray array = ArticleList.builder().build().visitor(visitor).execute().getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
+    }
+
+
+    //--------------------------------------------------数据监控----------------------------------------------------
+
+    public List<ShopData> getDdcShopData(Stream<ShopData> stream) {
+        return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0)).collect(Collectors.toList());
+    }
+
+    public List<ShopData> getBgyShopData(Stream<ShopData> stream) {
+        return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0))
+                .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
+    }
+
+    public List<ShopData> getLzShopData(Stream<ShopData> stream) {
+        return stream.filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPvUvBean().getTodayPv().equals(0))
+                .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
+    }
+
+    public List<ShopData> getPassLzShopData(Stream<ShopData> stream) {
+        return stream.filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getTodayPv() == null || shopData.getRealTimeShopPassPvUvBean().getTodayPv().equals(0))
+                .filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getTodayUv() == null || shopData.getRealTimeShopPassPvUvBean().getTodayUv().equals(0)).collect(Collectors.toList());
+    }
+
+    public ShopData setShopData(PassengerFlowBean flowBean, RealTimeShopPvUvBean pvUvBean, RealTimeShopPassPvUvBean passPvUvBean) {
+        ShopData shopData = new ShopData();
+        shopData.setShopId(flowBean.getId());
+        shopData.setShopName(flowBean.getName());
+        shopData.setRealTimeShopPvUvBean(pvUvBean);
+        shopData.setRealTimeShopPassPvUvBean(passPvUvBean);
+        return shopData;
+    }
+
+    public void enterShopData(String subjectName, String time, List<ShopData> shopDataList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append("#### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
+        shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
+        DingPushUtil.send(sb.toString());
+    }
+
+    public void passShopData(String subjectName, String time, List<ShopData> shopDataList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append("#### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
+        shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
+        DingPushUtil.send(sb.toString());
     }
 }

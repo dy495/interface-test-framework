@@ -943,7 +943,7 @@ public class CommonUsedUtilOnline {
      */
     public void pcLogin(String username, String password) {
         IScene scene = LoginPcScene.builder().type(0).username(username).password(password).build();
-        visitor.setToken(scene);
+        visitor.login(scene);
     }
 
 

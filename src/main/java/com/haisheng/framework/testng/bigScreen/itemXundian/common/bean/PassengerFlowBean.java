@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class PassengerFlowBean implements Serializable {
 
     @JSONField(name = "id")
-    private Long id;
+    private String id;
 
     @JSONField(name = "name")
     private String name;

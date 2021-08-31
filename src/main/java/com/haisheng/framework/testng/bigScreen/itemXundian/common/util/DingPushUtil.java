@@ -1,10 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.itemXundian.common.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.DetailMessage;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PvUvInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.ShopInfo;
-import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import org.apache.http.HttpResponse;
@@ -20,53 +17,17 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DingPushUtil {
     private static boolean isAt;
     public static final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
-    private static final String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=3d0c06f5a6780a25aabf3cd99f2574ea161172a39167b10b33548f9c492e9b26";
-
-    public static void sendMessage(List<ShopInfo> shopInfos) {
-        StringBuilder sb = new StringBuilder();
-        shopInfos.forEach(shopInfo -> {
-            String name = shopInfo.getShopName();
-            sb.append("\n").append("### **").append("门店：").append(name).append("**").append("\n");
-            shopInfo.getRealTimeShopPvUvBeanList().forEach(realTimeShopPvUvBean -> sb.append("\n").append("##### **").append("时间段：").append(realTimeShopPvUvBean.getTime()).append("**").append("\n")
-                    .append("###### 昨日人次：").append(realTimeShopPvUvBean.getYesterdayPv()).append("        昨日人数：").append(realTimeShopPvUvBean.getYesterdayUv()).append("\n"));
-            CommonUtil.valueView(shopInfo.getPvSum(), shopInfo.getUvSum());
-            isAt = shopInfo.getPvSum() == 0 || shopInfo.getUvSum() == 0;
-        });
-        send(sb.toString());
-        if (isAt) {
-            alarmTo(new String[]{"15321527989"});
-        }
-    }
-
-    public static void sendPVUVMessage(PvUvInfo pvUvInfo) {
-        List<DetailMessage> detailMessages = pvUvInfo.getDetailMessages();
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("### **").append("门店：").append(pvUvInfo.getShopId()).append("**").append("\n");
-        detailMessages.forEach(detailMessage -> sb.append("\n").append("##### **").append("数据：").append(detailMessage.getSourceName()).append("**").append("\n")
-                .append("###### 去重数据：").append(detailMessage.getHasReception()).append("      不去重数据：").append(detailMessage.getNoReception()).append("\n"));
-        send(sb.toString());
-    }
+    private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
 
     public static void send(String messageDetail) {
         Map<String, String> map = new HashMap<>();
         map.put("title", "巡检");
         String text = "## **" + "线上巡检数据提醒：" + "**" + "\n"
-                + "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n"
-                + "\n" + messageDetail + "\n";
-        map.put("text", text);
-        send(map);
-    }
-
-    public static void send_PV_UV(String messageDetail) {
-        Map<String, String> map = new HashMap<>();
-        map.put("title", "购物中心数据监控");
-        String text = "## **" + "流量巡检：" + "**" + "\n"
                 + "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n"
                 + "\n" + messageDetail + "\n";
         map.put("text", text);

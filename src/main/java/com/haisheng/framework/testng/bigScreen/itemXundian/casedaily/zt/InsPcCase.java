@@ -9,16 +9,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.activity.ActivityAddScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.EventTotalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.operation.ArticleAddScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.riskcontrol.rule.OperatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.WechatScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,7 +39,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     WechatScenarioUtil wx = WechatScenarioUtil.getInstance();
     MendianInfo info = new MendianInfo();
-    SupporterUtil util = new SupporterUtil(visitor);
+    SceneUtil util = new SceneUtil(visitor);
 //    InsInfo info = new  InsInfo();
 //    InsDesc info= new EnumDesc();
 

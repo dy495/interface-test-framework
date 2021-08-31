@@ -28,7 +28,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.generator.vouc
 //import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.voucher.ApplyPageScene;
 //import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.*;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -63,7 +63,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public final static Integer SIZE = 50;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override

@@ -30,7 +30,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     public static final int page = 1;
     public static final int size = 100;
     public static final int s = (int) (Math.random() * 10000);

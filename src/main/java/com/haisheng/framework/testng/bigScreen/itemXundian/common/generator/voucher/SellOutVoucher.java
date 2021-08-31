@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 
 /**
  * 无库存状态
@@ -26,7 +26,7 @@ public class SellOutVoucher extends AbstractVoucher {
     public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE SELL OUT START");
         super.visitor = visitor;
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         String voucherName = supporterUtil.createVoucher(1, VoucherTypeEnum.COMMODITY_EXCHANGE);
         applyVoucher(voucherName);
         IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();

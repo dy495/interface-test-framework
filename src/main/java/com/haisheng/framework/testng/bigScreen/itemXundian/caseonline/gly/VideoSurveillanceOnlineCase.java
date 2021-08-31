@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmen
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.ShopDeviceListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -32,7 +32,7 @@ public class VideoSurveillanceOnlineCase extends TestCaseCommon implements TestC
     private final EnumTestProduct product = EnumTestProduct.XD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     StoreScenarioUtil su = StoreScenarioUtil.getInstance();
     public Long shopId = 14630L;
     public String shopName = "中关村1号店";

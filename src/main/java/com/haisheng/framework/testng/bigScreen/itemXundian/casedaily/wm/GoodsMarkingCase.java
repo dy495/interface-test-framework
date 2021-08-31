@@ -18,7 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AccountEnum;
 //import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.*;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -46,7 +46,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduct PRODUCE = EnumTestProduct.INS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     private final static String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     private final static String FILEPATH_TWO = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/goods/联想.jpg";
     private final static Integer SIZE = 100;

@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.*
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffEditScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
@@ -20,7 +19,6 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.Sho
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

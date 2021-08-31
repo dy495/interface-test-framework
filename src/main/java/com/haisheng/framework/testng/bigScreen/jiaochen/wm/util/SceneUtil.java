@@ -122,7 +122,7 @@ public class SceneUtil extends BasicUtil {
         EnumTestProduct oldProduce = visitor.getProduct();
         EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.JC_DAILY_ZH : EnumTestProduct.JC_ONLINE_ZH;
         visitor.setProduct(newProduce);
-        visitor.setToken(scene);
+        visitor.login(scene);
         visitor.setProduct(oldProduce);
     }
 

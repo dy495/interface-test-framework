@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkris
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.AlarmDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.Constant;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -35,7 +35,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
     StoreScenarioUtil su = StoreScenarioUtil.getInstance();
     public Long shopId = 28758L;

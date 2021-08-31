@@ -20,21 +20,17 @@ public class LoginUntil {
         this.visitor = visitorProxy;
     }
 
-//    public void loginPc(@NotNull AccountEnum enumAccount) {
-//        String password = new MD5Util().getMD5(enumAccount.getPassword());
-//        IScene scene = LoginPcMall.builder().password(password).username(enumAccount.getUsername()).type(0).build();
-//        visitor.setToken(scene);
-//    }
     public void loginPc(@NotNull AccountEnum enumAccount) {
         String password = new MD5Util().getMD5(enumAccount.getPassword());
         IScene scene = LoginPcMall.builder().password(password).username(enumAccount.getUsername()).type(0).build();
         login(scene);
     }
+
     public void login(IScene scene) {
         EnumTestProduct oldProduce = visitor.getProduct();
         EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.MALL_DAILY_SSO : EnumTestProduct.MALL_ONLINE_SSO;
         visitor.setProduct(newProduce);
-        visitor.setToken(scene);
+        visitor.login(scene);
         visitor.setProduct(oldProduce);
     }
 }

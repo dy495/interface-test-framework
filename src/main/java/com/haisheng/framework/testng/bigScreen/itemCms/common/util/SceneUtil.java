@@ -34,7 +34,7 @@ public class SceneUtil extends BasicUtil {
     public void login(EnumAccount account) {
         String email = "28e3e02ba627a44c949d3ef94b217388";
         IScene scene = LoginScene.builder().email(account.getPhone()).password(email).build();
-        visitor.setToken(scene);
+        visitor.login(scene);
     }
 
 

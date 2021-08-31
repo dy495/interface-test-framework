@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianSc
 
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.WechatScenarioUtilOnline;
 
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -37,7 +37,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     WechatScenarioUtilOnline wx = WechatScenarioUtilOnline.getInstance();
     MendianInfoOnline info = new MendianInfoOnline();
-    SupporterUtil util = new SupporterUtil(visitor);
+    SceneUtil util = new SceneUtil(visitor);
 //    InsInfo info = new  InsInfo();
 //    InsDesc info= new EnumDesc();
 

@@ -6,12 +6,9 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
-
-import java.io.Serializable;
 
 /**
  * 调用http请求的代理
@@ -91,7 +88,7 @@ public class VisitorProxy extends TestCaseCommon {
      *
      * @param scene 场景
      */
-    public void setToken(@NotNull IScene scene) {
+    public void login(@NotNull IScene scene) {
         httpPost(product.getIp(), scene.getPath(), scene.getBody());
     }
 

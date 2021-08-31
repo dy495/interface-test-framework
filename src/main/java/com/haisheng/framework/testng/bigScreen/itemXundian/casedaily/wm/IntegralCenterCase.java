@@ -29,7 +29,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.applet.g
 //import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.GoodsManagePageScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -62,7 +62,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final Integer SIZE = 100;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override

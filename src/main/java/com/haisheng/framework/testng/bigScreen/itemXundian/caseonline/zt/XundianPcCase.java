@@ -20,7 +20,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.XD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     public static final int size = 100;
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();

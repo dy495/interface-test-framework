@@ -26,7 +26,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.Vou
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.generator.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.*;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -60,7 +60,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.INS_ZT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override

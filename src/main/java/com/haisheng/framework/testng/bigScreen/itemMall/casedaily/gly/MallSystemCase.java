@@ -20,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.*;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -41,7 +41,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     MallBusinessUtil businessUtil = new MallBusinessUtil(visitor);
     StoreScenarioUtil su = StoreScenarioUtil.getInstance();
     CommonConfig commonConfig = new CommonConfig();

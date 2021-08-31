@@ -17,6 +17,6 @@ public class UserUtil {
     public void loginPc(AccountEnum account) {
         String password = new MD5Util().getMD5(account.getPassword());
         IScene scene = PatrolLoginScene.builder().password(password).username(account.getUsername()).type(0).build();
-        visitorProxy.setToken(scene);
+        visitorProxy.login(scene);
     }
 }

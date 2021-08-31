@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 5.5. 门店小时级别实时客流pv & uv
+ * 5.4. 门店小时级别过店实时客流pv & uv
  *
  * @author wangmin
  * @date 2021-06-29 14:11:44
@@ -31,7 +31,7 @@ public class PassPvUvScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final Long shopId;
+    private final String shopId;
 
 
     @Override

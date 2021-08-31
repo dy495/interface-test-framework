@@ -13,6 +13,9 @@ public class ShopInfo implements Serializable {
      */
     private String shopName;
 
+
+    private Long shopId;
+
     /**
      * 门店数据
      */
