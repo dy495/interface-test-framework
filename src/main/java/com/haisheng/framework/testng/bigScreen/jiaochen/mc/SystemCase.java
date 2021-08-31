@@ -320,7 +320,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "preSuccess")
-    public void test01AssignReceptionY(String description, String name, String phone) {
+    public void a01AssignReceptionY(String description, String name, String phone) {
         try {
             // 前台分配
             String message = preAssign(name, phone).getMessage();

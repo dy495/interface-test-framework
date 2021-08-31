@@ -163,11 +163,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         return AppFinishReceptionScene.builder().id(id).shopId(shopId).build().visitor(visitor).getResponse().getMessage();
     }
 
-//    @Test(description = "初始化销售状态，每个状态都有人")
-//    public void test01SaleStatusInit(){
-//        //AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getVacationSaleId()).sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-18").vacationEndTime("2035-08-18").build().visitor(visitor).execute();
+    @Test(description = "初始化销售状态，每个状态都有人")
+    public void test01SaleStatusInit(){
+        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getVacationSaleId()).sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-18").vacationEndTime("2035-08-18").build().visitor(visitor).execute();
 //        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getBusySaleId()).sourceSaleStatus(0).targetSaleStatus(2).build().visitor(visitor).execute();
-//    }
+    }
 
     @Test(dataProvider = "notFreeSale")
     public void test02ChangeSale1(String description, Integer statusId) {

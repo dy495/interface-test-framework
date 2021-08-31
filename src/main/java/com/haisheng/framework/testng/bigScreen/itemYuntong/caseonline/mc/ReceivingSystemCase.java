@@ -128,7 +128,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "evaluateRemark", dataProviderClass = DataCenter.class)
-    public void flowUpContent(String description, String expect, String remark) {
+    public void flowUpContent(String description, String remark, String expect) {
         try {
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
             AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().visitor(visitor).execute();
