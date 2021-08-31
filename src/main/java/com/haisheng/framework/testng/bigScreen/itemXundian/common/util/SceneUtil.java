@@ -41,6 +41,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouch
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import com.haisheng.framework.util.MD5Util;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -67,7 +68,8 @@ public class SceneUtil extends BasicUtil {
     }
 
     public void loginPc(AccountEnum account) {
-        IScene scene = PatrolLoginScene.builder().password(account.getPassword()).username(account.getUsername()).type(0).build();
+        String password = new MD5Util().getMD5(account.getPassword());
+        IScene scene = PatrolLoginScene.builder().password(password).username(account.getUsername()).type(0).build();
         visitor.login(scene);
     }
 

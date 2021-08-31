@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 门店管理中pvuv监控
+ * pvuv监控
  *
  * @author wangmin
- * @date 2020/11/24
+ * @date 2021/08/31
  */
 
-public class DataMonitor extends TestCaseCommon implements TestCaseStd {
+public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduct PRODUCE = EnumTestProduct.XD_ONLINE;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private final SceneUtil util = new SceneUtil(visitor);

@@ -35,7 +35,6 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_Online_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();

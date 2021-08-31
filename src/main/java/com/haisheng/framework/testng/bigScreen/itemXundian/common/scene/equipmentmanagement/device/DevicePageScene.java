@@ -31,14 +31,16 @@ public class DevicePageScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 当前页的数量
      * 是否必填 true
      * 版本 -
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 设备名称
@@ -94,5 +96,16 @@ public class DevicePageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/patrol/equipment-management/device/page";
+    }
+
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

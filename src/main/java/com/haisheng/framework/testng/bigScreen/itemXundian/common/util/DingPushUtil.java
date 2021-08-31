@@ -20,9 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DingPushUtil {
-    private static boolean isAt;
     public static final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
-    private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
+    private static String WEBHOOK_TOKEN = EnumDingTalkWebHook.KLL.getWebHook();
+
+    public static void changeWeHook(String webhookToken) {
+        WEBHOOK_TOKEN = webhookToken;
+    }
 
     public static void send(String messageDetail) {
         Map<String, String> map = new HashMap<>();
