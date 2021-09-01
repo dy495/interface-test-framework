@@ -16,13 +16,12 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import lombok.Data;
 import org.testng.annotations.*;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataMonitor extends TestCaseCommon implements TestCaseStd {
@@ -37,7 +36,7 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_Online_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.MALL_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
@@ -60,8 +59,8 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    @Test(dataProvider = "ACCOUNT")
-    public void enterMonitor(AccountEnum account) {
+    @Test(dataProvider = "ACCOUNT", dependsOnMethods = "【09:00~22:00】全场监控")
+    public void fullCourtMonitor(AccountEnum account) {
         try {
             commonConfig.setMallId(account.getMallId());
             util.loginPc(account);
@@ -82,6 +81,8 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
             }
         } catch (Exception e) {
             collectMessage(e);
+        } finally {
+            saveData("【09:00~22:00】全场监控");
         }
     }
 
@@ -93,4 +94,23 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+    @Test(dataProvider = "REGION_TYPE", description = "【09:00~22:00】区域监控")
+    public void regionMonitor(AccountEnum account, String[] regionType) {
+        try {
+            System.err.println(Arrays.toString(regionType));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("【09:00~22:00】区域监控");
+        }
+    }
+
+    @DataProvider(name = "REGION_TYPE")
+    public Object[] regionType() {
+        String[] regionType = {"EXIT", "PARKING", "FLOOR"};
+        return new Object[][]{
+                {AccountEnum.MALL_ONLINE_LY, regionType},
+                {AccountEnum.MALL_ONLINE_ZD, regionType},
+        };
+    }
 }

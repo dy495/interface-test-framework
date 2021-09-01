@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.DingPushUtil;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.MD5Util;
 
 import javax.validation.constraints.NotNull;
@@ -42,7 +43,7 @@ public class SceneUntil extends BasicUtil {
         sb.append("###### ");
         map.forEach((key, value) -> sb.append(key).append("数据为：").append(value).append(" "));
         DingPushUtil util = new DingPushUtil();
-        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
+        util.changeWeHook(DingWebhook.PV_UV_ACCURACY_GRP);
         util.send(sb.toString());
     }
 }
