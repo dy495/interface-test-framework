@@ -73,8 +73,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-参与客户不限制，领取次数不限制，分享人数=2
-     *
-     * @return
      */
     @Test(description = "裂变活动-参与客户不限制，领取次数不限制，分享人数=2")
     public void activityType1() {
@@ -119,8 +117,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-参与客户不限制，领取次数限制1，分享人数=1
-     *
-     * @return
      */
     @Test(description = "裂变活动-参与客户不限制，领取次数限制1，分享人数=1")
     public void activityType2() {
@@ -166,8 +162,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-参与客户不限制，每人每天领取限制1，分享人数=1
-     *
-     * @return
      */
     @Test(description = "裂变活动-参与客户不限制，每天领取限制1，分享人数=1")
     public void activityType3() {
@@ -212,8 +206,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-领取次数不限制，分享人数=2，参与客户限制为普通、VIP、小程序、销售、售后
-     *
-     * @return
      */
     @Test(description = "裂变活动-领取次数不限制，分享人数=2，参与客户限制为普通、VIP、小程序、销售、售后")
     public void activityType4() {
@@ -230,14 +222,14 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
-            for (int i = 0; i < label.length; i++) {
-                labels.add(Integer.valueOf(label[i][0]));
+            for (String[] strings : label) {
+                labels.add(Integer.valueOf(strings[0]));
                 IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(1)
                         .chooseLabels(labels)
                         .receiveLimitType(0)
-                        .title("裂变-分享人数2-限制为" + label[i][1])
+                        .title("裂变-分享人数2-限制为" + strings[1])
                         .rule(pp.rule)
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
@@ -265,8 +257,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-参与客户限制为普通、VIP、小程序、销售、售后
-     *
-     * @return
      */
     @Test(description = "招募活动-参与客户限制为普通、VIP、小程序、销售、售后")
     public void activityType5() {
@@ -304,13 +294,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
-            for (int i = 0; i < label.length; i++) {
-                labels.add(Integer.valueOf(label[i][0]));
+            for (String[] strings : label) {
+                labels.add(Integer.valueOf(strings[0]));
                 ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
                         .type(2)
                         .participationLimitType(1)
                         .chooseLabels(labels)
-                        .title("招募-参与客户限制：" + label[i][1])
+                        .title("招募-参与客户限制：" + strings[1])
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
                         .applyStart(businessUtil.getStartDate())
@@ -326,10 +316,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                         .successReward(true)
                         .rewardReceiveType(0)
                         .isNeedApproval(true);
-                if (true) {
-                    builder.rewardVouchers(registerObject)
-                            .voucherValid(voucherValid);
-                }
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
                 IScene scene = builder.build();
                 Long activityId = scene.visitor(visitor).execute().getLong("id");
                 //审批通过招募活动
@@ -346,8 +334,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，需要审批")
     public void activityType6() {
@@ -405,10 +391,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(0)
                     .isNeedApproval(true);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -424,8 +408,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，不需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，不需要审批")
     public void activityType7() {
@@ -482,10 +464,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(0)
                     .isNeedApproval(false);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -501,8 +481,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，需要审批")
     public void activityType8() {
@@ -559,10 +537,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(1)
                     .isNeedApproval(true);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -578,8 +554,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，不需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，不需要审批")
     public void activityType9() {
@@ -636,10 +610,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(1)
                     .isNeedApproval(false);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -655,8 +627,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功无奖励，用户领取，需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功无奖励，用户领取，需要审批")
     public void activityType10() {
@@ -713,10 +683,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(false)
                     .rewardReceiveType(1)
                     .isNeedApproval(true);
-            if (false) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -732,8 +698,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功无奖励，用户领取，不需要审批
-     *
-     * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功无奖励，用户领取，不需要审批")
     public void activityType11() {
@@ -790,10 +754,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(false)
                     .rewardReceiveType(1)
                     .isNeedApproval(false);
-            if (false) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -824,7 +784,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             chooseLabels.add(2000);
             chooseLabels.add(3000);
             String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
-            for (int i = 0; i < label.length; i++) {
+            for (String[] strings : label) {
                 System.err.println(label.length + "-------" + 1);
                 SceneUtil supporterUtil = new SceneUtil(visitor);
                 PublicParameter pp = new PublicParameter();
@@ -838,13 +798,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                         .participationLimitType(1)
                         .chooseLabels(chooseLabels)
                         .receiveLimitType(0)
-                        .title("裂变活动标签为-" + label[i][1] + "-" + (int) (Math.random() * 10000))
+                        .title("裂变活动标签为-" + strings[1] + "-" + (int) (Math.random() * 10000))
                         .rule(pp.rule)
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label(label[i][0])
+                        .label(strings[0])
                         .picList(picList)
                         .shareNum("3")
                         .shareVoucher(shareVoucher)
@@ -925,10 +885,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(0)
                     .isNeedApproval(true);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
@@ -1002,10 +960,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .successReward(true)
                     .rewardReceiveType(0)
                     .isNeedApproval(true);
-            if (true) {
-                builder.rewardVouchers(registerObject)
-                        .voucherValid(voucherValid);
-            }
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
             IScene scene = builder.build();
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动

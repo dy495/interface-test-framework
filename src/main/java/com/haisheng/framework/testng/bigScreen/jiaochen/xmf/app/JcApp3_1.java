@@ -146,7 +146,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test()
+    @Test(enabled = false)
     public void Astart() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

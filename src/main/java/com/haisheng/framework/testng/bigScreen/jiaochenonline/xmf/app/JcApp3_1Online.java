@@ -269,7 +269,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "销售变更接待")
+    @Test(description = "销售变更接待", enabled = false)
     public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

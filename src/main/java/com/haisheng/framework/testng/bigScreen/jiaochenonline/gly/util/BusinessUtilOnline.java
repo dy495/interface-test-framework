@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
@@ -9,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.activity.ManagePageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.activity.ManageRegisterPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
@@ -25,12 +27,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class BusinessUtilOnline extends BasicUtil {
     private final VisitorProxy visitor;
@@ -197,7 +197,6 @@ public class BusinessUtilOnline extends BasicUtil {
         SceneUtil su = new SceneUtil(visitor);
         int allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
         return (int) Math.min((allowUseInventory == 1 ? allowUseInventory : allowUseInventory - 1), 30L);
-
     }
 
     /**
@@ -209,7 +208,6 @@ public class BusinessUtilOnline extends BasicUtil {
         return (long) allowUseInventory;
 
     }
-
 
     /**
      * 获取进行中的优惠券
@@ -241,31 +239,6 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 获取待审批的优惠券合集
-     */
-    public List<Long> getVoucherIds() {
-        List<Long> voucherIds = new ArrayList<>();
-        IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
-        JSONObject response = scene.visitor(visitor).execute();
-        int pages = response.getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long voucherId = list.getJSONObject(i).getLong("id");
-                String voucherStatus = list.getJSONObject(i).getString("audit_status_name");
-                String invalidStatusName = list.getJSONObject(i).getString("invalid_status_name");
-                String voucherName = list.getJSONObject(i).getString("voucher_name");
-                System.err.println(voucherId + "---------" + voucherStatus + "---------" + invalidStatusName);
-                if (voucherStatus.equals("审核中") && invalidStatusName.equals("待审核")) {
-                    voucherIds.add(voucherId);
-                }
-            }
-        }
-        return voucherIds;
-    }
-
-    /**
      * 构建裂变活动
      *
      * @param voucherId 包含卡券信息
@@ -276,7 +249,7 @@ public class BusinessUtilOnline extends BasicUtil {
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
-        IScene scene = null;
+        IScene scene;
         int AllowUseInventory = getVoucherAllowUseInventory(voucherId);
         if (AllowUseInventory > 6) {
             // 创建被邀请者和分享者的信息字段
@@ -327,11 +300,8 @@ public class BusinessUtilOnline extends BasicUtil {
                     .invitedVoucher(invitedVoucher)
                     .isCustomShareInfo(false)
                     .build();
-
         }
-
         return scene;
-
     }
 
     /**
@@ -372,7 +342,6 @@ public class BusinessUtilOnline extends BasicUtil {
                 .shareVoucher(shareVoucher)
                 .invitedVoucher(invitedVoucher)
                 .build();
-
     }
 
     /**
@@ -405,7 +374,9 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public Long createRecruitActivity(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         IScene scene = createRecruitActivityScene(voucherId, successReward, rewardReceiveType, isNeedApproval);
-        return scene.visitor(visitor).execute().getLong("id");
+        Long id = scene.visitor(visitor).execute().getLong("id");
+        Preconditions.checkNotNull(id, "创建失败");
+        return id;
     }
 
     /**
@@ -415,7 +386,9 @@ public class BusinessUtilOnline extends BasicUtil {
     public Long createRecruitActivity() {
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         IScene scene = createRecruitActivityScene(voucherId, true, 0, true, getEndDate(), getEndDate());
-        return scene.visitor(visitor).execute().getLong("id");
+        Long id = scene.visitor(visitor).execute().getLong("id");
+        Preconditions.checkNotNull(id, "创建失败");
+        return id;
     }
 
 
@@ -770,7 +743,6 @@ public class BusinessUtilOnline extends BasicUtil {
         return scene.visitor(visitor).execute().getString("par_value");
     }
 
-
     /**
      * 获取优惠券的成本
      */
@@ -785,17 +757,9 @@ public class BusinessUtilOnline extends BasicUtil {
      * 查询列表中的状态为【待审核的ID】---招募活动
      */
     public ManagePageBean getRecruitActivityWaitingApproval() {
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(2)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PENDING, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         createRecruitActivityApproval();
         return getRecruitActivityWaitingApproval();
@@ -805,17 +769,9 @@ public class BusinessUtilOnline extends BasicUtil {
      * 查询列表中的状态为【待审核的ID】---裂变活动
      */
     public ManagePageBean getFissionActivityWaitingApproval() {
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(1)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PENDING, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         createFissionActivity(voucherId);
@@ -840,16 +796,9 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getFissionActivityWorking() {
         //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(1)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         //创建活动并审批
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -857,37 +806,14 @@ public class BusinessUtilOnline extends BasicUtil {
         return getFissionActivityWorking();
     }
 
-    public ManagePageBean getActivity(ActivityStatusEnum status, Integer activityType) {
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            Stream<JSONObject> stream = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(status.getId()));
-            stream = activityType != null ? stream.filter(e -> e.getInteger("activity_type").equals(activityType)) : stream;
-            JSONObject obj = stream.findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
-        }
-        return null;
-    }
-
     /**
      * 招募活动-查询列表中的状态为【进行中的ID】
      */
     public ManagePageBean getRecruitActivityWorking() {
         //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(2)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         //创建活动
         Long id = createRecruitActivityApproval();
@@ -896,351 +822,169 @@ public class BusinessUtilOnline extends BasicUtil {
         return getRecruitActivityWorking();
     }
 
+    /**
+     * 查询活动
+     *
+     * @param status       活动状态
+     * @param activityType 活动类型1：裂变 2：招募 3：营销
+     * @return 结果
+     */
+    private ManagePageBean getActivity(@NotNull ActivityStatusEnum status, Integer activityType) {
+        IScene scene = ActivityManagePageScene.builder().status(status.getId()).build();
+        return activityType == null ? toFirstJavaObject(scene, ManagePageBean.class) : toJavaObject(scene, ManagePageBean.class, "activity_type", activityType);
+    }
 
     /**
      * 招募活动-查询列表中的状态为【进行中】的活动-存在待审批的人数
      */
-    public List<Long> getRecruitActivityWorkingApproval() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                String statusName = list.getJSONObject(i).getString("status_name");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (activityType == 2 && statusName.equals("进行中")) {
-                    int waitingAuditNum = list.getJSONObject(i).getInteger("waiting_audit_num");
-                    if (waitingAuditNum >= 1) {
-                        Long id = list.getJSONObject(i).getLong("id");
-                        ids.add(id);
-                        System.out.println("-----------------" + ids);
-                    }
-                }
-            }
+    public ManagePageBean getRecruitActivityWorkingApproval() {
+        IScene scene = ActivityManagePageScene.builder().status(ActivityStatusEnum.PASSED.getId()).build();
+        List<ManagePageBean> managePageBeanList = toJavaObjectList(scene, ManagePageBean.class, "activity_type", 2);
+        ManagePageBean managePageBean = managePageBeanList.stream().filter(e -> e.getWaitingAuditNum() >= 1).findFirst().orElse(null);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long id1 = createRecruitActivityApproval();
-            //审批活动
-            getApprovalPassed(id1);
-            ids.add(id1);
-            //小程序报名
-            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-            activityRegisterApplet(id1, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
-
-        }
-        return ids;
+        //创建活动
+        Long id = createRecruitActivityApproval();
+        //审批活动
+        getApprovalPassed(id);
+        //小程序报名
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        activityRegisterApplet(id, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
+        return getRecruitActivityWorkingApproval();
     }
-
 
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getActivityReject() {
-        List<Long> ids = new ArrayList<>();
+    public ManagePageBean getActivityReject() {
         //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                if (status == ActivityStatusEnum.REJECT.getId()) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    System.err.println(status + "-----" + id);
-                    ids.add(id);
-                }
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, null);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         //创建活动并审批不通过
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            getApprovalReject(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long id1 = createRecruitActivityApproval();
+        getApprovalReject(id1);
+        return getActivityReject();
     }
 
     /**
      * 查询列表中的状态为【审核未通过的ID】--招募活动
      */
-    public List<Long> getRecruitActivityReject() {
-        List<Long> ids = new ArrayList<>();
+    public ManagePageBean getRecruitActivityReject() {
         //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.REJECT.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    System.err.println(status + "-----" + id);
-                    ids.add(id);
-                }
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批不通过
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            getApprovalReject(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long id = createRecruitActivityApproval();
+        getApprovalReject(id);
+        return getRecruitActivityReject();
     }
 
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getFissionActivityReject() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.REJECT.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    System.err.println(status + "-----" + id);
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getFissionActivityReject() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批不通过
-        if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
-            getApprovalReject(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id1 = createFissionActivity(voucherId);
+        getApprovalReject(id1);
+        return getFissionActivityReject();
     }
-
 
     /**
      * 查询列表中的状态为【待审批的ID】--裂变活动
      */
-    public List<Long> getFissionActivityWait() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.PENDING.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getFissionActivityWait() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PENDING, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-
-        if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
-            ids.add(id1);
-        }
-        return ids;
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        createFissionActivity(voucherId);
+        return getFissionActivityWait();
     }
 
     /**
      * 查询列表中的状态为【待审批的ID】--招募活动
      */
-    public List<Long> getActivityWait() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.PENDING.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getActivityWait() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PENDING, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            ids.add(id1);
-        }
-        return ids;
+        createRecruitActivityApproval();
+        return getActivityWait();
     }
 
     /**
      * 查询列表中的状态为【审核已取消的ID】
      */
-    public List<Long> getActivityCancel() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                if (status == ActivityStatusEnum.CANCELED.getId()) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getActivityCancel() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, null);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动-审批通过活动-取消活动
-        if (ids.size() == 0) {
-            //创建活动
-            Long id = createRecruitActivityApproval();
-            //审批通过
-            getApprovalReject(id);
-            //取消活动
-            getCancelActivity(id);
-            ids.add(id);
-        }
-        return ids;
+        //创建活动
+        Long id = createRecruitActivityApproval();
+        //审批通过
+        getApprovalReject(id);
+        //取消活动
+        getCancelActivity(id);
+        return getActivityCancel();
     }
 
     /**
      * 查询列表中的状态为【审核已取消的ID】--招募活动
      */
-    public List<Long> getRecruitActivityCancel() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.CANCELED.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getRecruitActivityCancel() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         //创建活动-审批通过活动-取消活动
-        if (ids.size() == 0) {
-            //创建活动
-            Long id = createRecruitActivityApproval();
-            //审批通过
-            getApprovalReject(id);
-            //取消活动
-            getCancelActivity(id);
-            ids.add(id);
-        }
-        return ids;
+        Long id = createRecruitActivityApproval();
+        //审批通过
+        getApprovalReject(id);
+        //取消活动
+        getCancelActivity(id);
+        return getRecruitActivityCancel();
     }
 
     /**
      * 查询列表中的状态为【审核已取消的ID】--裂变活动
      */
-    public List<Long> getFissionActivityCancel() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.CANCELED.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getFissionActivityCancel() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动-审批通过活动-取消活动
-        if (ids.size() == 0) {
-            //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id = createFissionActivity(voucherId);
-            //审批通过
-            getApprovalReject(id);
-            //取消活动
-            getCancelActivity(id);
-            ids.add(id);
-        }
-        return ids;
-    }
-
-    /**
-     * 查询列表中的状态为【已撤销的ID】
-     * 2021-3-17
-     */
-    public List<Long> getActivityRevoke() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                if (status == ActivityStatusEnum.REVOKE.getId()) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
-        }
-
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            getRevokeActivity(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id = createFissionActivity(voucherId);
+        //审批通过
+        getApprovalReject(id);
+        //取消活动
+        getCancelActivity(id);
+        return getFissionActivityCancel();
     }
 
     /**
      * 查询列表中的状态为【已撤销的ID】----招募活动
      * 2021-3-17
      */
-    public List<Long> getRecruitActivityRevoke() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.REVOKE.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    System.err.println(status + "-------" + id);
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getRecruitActivityRevoke() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REVOKE, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            getRevokeActivity(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long id = createRecruitActivityApproval();
+        getRevokeActivity(id);
+        return getRecruitActivityRevoke();
     }
 
     /**
@@ -1259,104 +1003,36 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 招募活动-查询列表中的状态为【未开始的ID】
-     * 2021-3-17
-     */
-    public List<Long> getActivityWaitingStar() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.WAITING_START.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
-        }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long id1 = createRecruitActivity();
-            //审批活动
-            getApprovalPassed(id1);
-            ids.add(id1);
-
-        }
-        return ids;
-    }
-
-    /**
      * 招募活动-查询列表中的状态为【未开始的ID】---招募活动
      * 2021-3-17
      */
-    public List<Long> getRecruitActivityWaitingStar() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.WAITING_START.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getRecruitActivityWaitingStar() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.WAITING_START, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long id1 = createRecruitActivity();
-            //审批活动
-            String message = getApprovalPassed(id1);
-            System.err.println(message);
-            ids.add(id1);
-
-        }
-        return ids;
+        //创建活动
+        Long id = createRecruitActivity();
+        //审批活动
+        getApprovalPassed(id);
+        return getRecruitActivityWaitingStar();
     }
 
     /**
      * 查询列表中的状态为【未开始的ID】---裂变活动
      * 2021-3-17
      */
-    public List<Long> getFissionActivityWaitingStar() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.WAITING_START.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getFissionActivityWaitingStar() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.WAITING_START, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivityWaitingStarScene(voucherId);
-            //审批活动
-            getApprovalPassed(id1);
-            ids.add(id1);
-
-        }
-        return ids;
+        //创建活动
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id = createFissionActivityWaitingStarScene(voucherId);
+        //审批活动
+        getApprovalPassed(id);
+        return getFissionActivityWaitingStar();
     }
 
     /**
@@ -1371,24 +1047,8 @@ public class BusinessUtilOnline extends BasicUtil {
      * 招募活动-查询列表中的状态为【已过期的ID】---裂变活动
      * 2021-3-17
      */
-    public List<Long> getFissionActivityFinish() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.FINISH.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
-        }
-        return ids;
+    public ManagePageBean getFissionActivityFinish() {
+        return getActivity(ActivityStatusEnum.FINISH, 1);
     }
 
     public ManagePageBean getActivityManagerPage(Long id) {
@@ -1429,20 +1089,9 @@ public class BusinessUtilOnline extends BasicUtil {
     /**
      * 报名审批列表【待审批】ids的合集
      */
-    public List<Long> registerAppletIds(Long activityId) {
-        List<Long> ids = new ArrayList<>();
-        IScene scene = ManageRegisterPageScene.builder().page(1).size(100).status(1).activityId(activityId).build();
-        JSONObject response = scene.visitor(visitor).execute();
-        int pages = response.getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ManageRegisterPageScene.builder().page(page).size(10).status(1).activityId(activityId).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long id = list.getJSONObject(i).getLong("id");
-                ids.add(id);
-            }
-        }
-        return ids;
+    public ManageRegisterPageBean registerAppletRegister(Long activityId) {
+        IScene scene = ManageRegisterPageScene.builder().status(1).activityId(activityId).build();
+        return toFirstJavaObject(scene, ManageRegisterPageBean.class);
     }
 
     /**
@@ -1924,33 +1573,6 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * @description :比较日期大小的方法
-     * @date :2020/12/14
-     **/
-    public void dataCompare() throws ParseException {
-        String flag = "2020-12-13 12:33";
-        //获取当前时间---df.format(date)
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        //当前时间+-3天
-        Calendar rightNow = Calendar.getInstance();
-        int year = rightNow.get(Calendar.YEAR);    //获取年
-        int month = rightNow.get(Calendar.MONTH) + 1;   //获取月份，0表示1月份
-        int day = rightNow.get(Calendar.DAY_OF_MONTH);    //获取当前天数
-        int time = rightNow.get(Calendar.HOUR_OF_DAY);       //获取当前小时
-        int min = rightNow.get(Calendar.MINUTE);          //获取当前分钟
-        String startTime = year + "-" + month + "-" + (day - 3) + " " + time + ":" + min;
-        String endTime = year + "-" + month + "-" + (day + 3) + " " + time + ":" + min;
-        System.out.println("--------创建时间：" + "--------开始时间：" + startTime + "--------开始时间：" + endTime);
-        Date startDate = df.parse(startTime);
-        Date endDate = df.parse(endTime);
-        Date createDate = df.parse("2020-12-14 12:56");
-        System.out.println("--------创建时间：" + createDate + "--------开始时间：" + startDate + "--------开始时间：" + endDate);
-        System.out.println(createDate.compareTo(startDate));
-//        Preconditions.checkArgument(createDate.compareTo(startDate)>=0&&createDate.compareTo(endDate)<=0, "列表中创建时间："+createDate+"筛选栏开始时间："+startTime+"筛选栏开始时间："+endTime+"创建时间不在开始系欸结束之间之间");
-
-    }
-
-    /**
      * 获取活动的的状态
      * 2021-3-17
      */
@@ -2018,11 +1640,6 @@ public class BusinessUtilOnline extends BasicUtil {
         return subjectKey;
     }
 
-
-    /**
-     * ------------------------------------------矫辰3.1新增的方法---------------------------------------------
-     */
-
     /**
      * 构建招募活动
      * 标签的状态:0-优惠,1-特价,2-福利,3-红包,4-礼品,5-礼品,6-热销,7-推荐
@@ -2045,7 +1662,6 @@ public class BusinessUtilOnline extends BasicUtil {
                 .picList(picList)
                 .actionPoint(actionPoint)
                 .build();
-
     }
 
     /**
@@ -2095,22 +1711,18 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
+     * 取消的活动，进行恢复
+     */
+    public String getContentMarketingRecover(Long id) {
+        IScene scene = ManageRecoveryScene.builder().id(id).build();
+        return scene.visitor(visitor).getResponse().getMessage();
+    }
+
+    /**
      * 查询列表中的状态为【待审核的ID】---内容营销
      */
     public ManagePageBean getContentMarketingWaitingApproval() {
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            scene.setPage(page);
-            scene.setSize(10);
-            JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
-        }
-        return null;
+        return getActivity(ActivityStatusEnum.PENDING, 3);
     }
 
     /**
@@ -2118,18 +1730,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public ManagePageBean getContentMarketingRevoke() {
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.REVOKE.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
-        }
-        return null;
+        return getActivity(ActivityStatusEnum.REVOKE, 3);
     }
 
     /**
@@ -2137,16 +1738,9 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingReject() {
         //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.REJECT.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, 3);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         Long id = getContentMarketingAdd();
         getApprovalReject(id);
@@ -2157,16 +1751,9 @@ public class BusinessUtilOnline extends BasicUtil {
      * 查询列表中的状态为【审核已取消的ID】--招募活动
      */
     public ManagePageBean getContentMarketingCancel() {
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.CANCELED.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, 3);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         Long id = getContentMarketingAdd();
         getApprovalReject(id);
@@ -2175,28 +1762,12 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 取消的活动，进行恢复
-     */
-    public String getContentMarketingRecover(Long id) {
-        IScene scene = ManageRecoveryScene.builder().id(id).build();
-        return scene.visitor(visitor).getResponse().getMessage();
-    }
-
-
-    /**
      * 裂变活动-查询活动列表中的状态为【进行中的ID】
      */
     public ManagePageBean getContentMarketingWorking() {
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PASSED.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, 3);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         Long id = getContentMarketingAdd();
         getApprovalPassed(id);
@@ -2208,21 +1779,13 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public ManagePageBean getContentMarketingWaitingStar() {
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.WAITING_START.getId()))
-                    .filter(e -> e.getInteger("activity_type") == 3).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.WAITING_START, 3);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        Long id1 = getContentMarketingNotStar();
+        Long id = getContentMarketingNotStar();
         //审批活动
-        getApprovalPassed(id1);
+        getApprovalPassed(id);
         return getContentMarketingWaitingStar();
     }
 
@@ -2271,19 +1834,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public ManagePageBean geContentMarketingFinish() {
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.FINISH.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
-        }
-        return null;
+        return getActivity(ActivityStatusEnum.FINISH, 3);
     }
 
     /**
@@ -2291,17 +1842,9 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public ManagePageBean getContentMarketingOffLine() {
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(701))
-                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
-            if (obj != null) {
-                return JSONObject.toJavaObject(obj, ManagePageBean.class);
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 3);
+        if (managePageBean != null) {
+            return managePageBean;
         }
         //创建活动
         Long id = getContentMarketingNotStar();
@@ -2316,73 +1859,36 @@ public class BusinessUtilOnline extends BasicUtil {
      * 裂变活动-查询列表中的状态为【已下架的ID】
      * 2021-3-17
      */
-    public List<Long> getFissionActivityOffLine() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.OFFLINE.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                    System.err.println("----------" + id);
-                }
-            }
+    public ManagePageBean getFissionActivityOffLine() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
-            System.err.println("-----新建活动的ID-----" + id1);
-            //审批活动
-            getApprovalPassed(id1);
-            //活动下架
-            getContentMarketingOffLine(id1);
-            ids.add(id1);
-
-        }
-        return ids;
+        //创建活动
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id = createFissionActivity(voucherId);
+        //审批活动
+        getApprovalPassed(id);
+        //活动下架
+        getContentMarketingOffLine(id);
+        return getFissionActivityOffLine();
     }
 
     /**
      * 招募活动-查询列表中的状态为【已下架的ID】
      * 2021-3-17
      */
-    public List<Long> getRecruitActivityOffLine() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.visitor(visitor).execute().getInteger("pages") > 10 ? 10 : scene.visitor(visitor).execute().getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = scene1.visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.OFFLINE.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getRecruitActivityOffLine() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long id1 = createRecruitActivityApproval();
-            //审批活动
-            getApprovalPassed(id1);
-            //活动下架
-            getContentMarketingOffLine(id1);
-            ids.add(id1);
-
-        }
-        return ids;
+        Long id = createRecruitActivityApproval();
+        //审批活动
+        getApprovalPassed(id);
+        //活动下架
+        getContentMarketingOffLine(id);
+        return getRecruitActivityOffLine();
     }
 
     /**
@@ -2394,7 +1900,7 @@ public class BusinessUtilOnline extends BasicUtil {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         int AllowUseInventory = getVoucherAllowUseInventory(voucherId);
-        Long activityId = 0L;
+        Long activityId;
         if (AllowUseInventory > 6) {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
@@ -2449,6 +1955,4 @@ public class BusinessUtilOnline extends BasicUtil {
         }
         return activityId;
     }
-
-
 }

@@ -1324,7 +1324,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int pushMsgPageTotal = pushMsgPageScene.visitor(visitor).execute().getInteger("total");
             int surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            util.pushCustomMessage(0, true, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             sleep(1);
             String sendStatusName = messageFormPageScene.visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
@@ -1348,7 +1348,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = messageFormPageScene.visitor(visitor).execute().getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
-            util.pushCustomMessage(0, false, true, voucherId);
+            util.pushCustomMessage(0, false, voucherId);
             String sendStatusName = util.toFirstJavaObject(messageFormPageScene, MessageFormPageBean.class).getSendStatusName();
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, messageFormPageScene.visitor(visitor).execute().getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
@@ -1394,7 +1394,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            util.pushCustomMessage(0, true, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             //消息列表消息内容
             util.loginApplet(APPLET_USER_ONE);
             IScene appletMessageListScene = AppletMessageListScene.builder().size(20).build();
@@ -1510,7 +1510,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class).stream().filter(e -> e.getAllowUseInventory() > 0).map(VoucherFormVoucherPageBean::getVoucherId).findFirst().orElse(null);
             Preconditions.checkArgument(voucherId != null, "不存在库存大于0的已作废卡券");
             //发消息
-            String message = util.pushCustomMessage(0, true, false, voucherId).getString("message");
+            String message = util.pushCustomMessage(0, true, voucherId).getMessage();
             String err = "卡券【" + util.getVoucherName(voucherId) + "】已作废！";
             CommonUtil.checkResult("发送已作废卡券", err, message);
         } catch (Exception | AssertionError e) {
@@ -1526,7 +1526,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
-            String message = util.pushCustomMessage(0, true, false, voucherId).getString("message");
+            String message = util.pushCustomMessage(0, true, voucherId).getMessage();
             String err = "卡券【" + util.getVoucherName(voucherId) + "】可用库存不足！";
             CommonUtil.checkResult("发送已售罄卡券", err, message);
         } catch (Exception | AssertionError e) {
@@ -1545,7 +1545,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             //关闭套餐
             PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build().visitor(visitor).execute();
-            String message = util.pushCustomMessage(1, true, false, packageId).getString("message");
+            String message = util.pushCustomMessage(1, true, packageId).getMessage();
             String err = "套餐不允许发送，请重新选择";
             CommonUtil.checkResult("推送已关闭套餐", err, message);
         } catch (Exception | AssertionError e) {
@@ -1564,7 +1564,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = voucherPage.getVoucherName();
             Long packageId = util.editPackage(voucherPage, 1).getPackageId();
             //发消息
-            String message = util.pushCustomMessage(1, true, false, packageId).getString("message");
+            String message = util.pushCustomMessage(1, true, packageId).getMessage();
             String err = util.getPackageName(packageId) + ":卡券【" + voucherName + "】可用库存不足！";
             CommonUtil.checkResult("推送包含已售罄的套餐", err, message);
         } catch (Exception | AssertionError e) {

@@ -1114,7 +1114,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = voucherPage.getVoucherId();
             String voucherName = voucherPage.getVoucherName();
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
-            util.pushCustomMessage(0, true, true, filePath, voucherId);
+            util.pushCustomMessage(0, true, filePath, voucherId);
             //作废前数据
             util.loginApplet(APPLET_USER_ONE);
             int voucherCherNum = util.getAppletVoucherNum();
@@ -1335,7 +1335,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             util.editVoucher(voucherId);
             //发出一张卡券
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
-            util.pushCustomMessage(0, true, true, filePath, voucherId);
+            util.pushCustomMessage(0, true, filePath, voucherId);
             Thread.sleep(500);
             //获取最新发出卡券的code
             String voucherCode = util.getVoucherCode(voucherId);

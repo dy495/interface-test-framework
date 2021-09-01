@@ -531,7 +531,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     //2.0 变更接待
-    @Test(description = "变更接待列表")
+    @Test(description = "变更接待列表", enabled = false)
     public void receptorOnlyList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

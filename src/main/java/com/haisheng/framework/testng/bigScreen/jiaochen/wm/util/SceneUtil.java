@@ -900,23 +900,12 @@ public class SceneUtil extends BasicUtil {
      * @param voucherOrPackageId 卡券id
      * @param immediately        是否立即发送
      */
-    public void pushCustomMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
-        pushCustomMessage(type, immediately, true, voucherOrPackageId);
-    }
-
-    /**
-     * 给指定人发消息，如需修改接收人，请在文件中添加手机号
-     *
-     * @param type               推送优惠类型 0：卡券，1：套餐
-     * @param voucherOrPackageId 卡券id
-     * @param immediately        是否立即发送
-     */
-    public JSONObject pushCustomMessage(Integer type, boolean immediately, boolean checkCode, Long... voucherOrPackageId) {
+    public Response pushCustomMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发消息手机号.xlsx";
-        return pushCustomMessage(type, immediately, checkCode, filePath, voucherOrPackageId);
+        return pushCustomMessage(type, immediately, filePath, voucherOrPackageId);
     }
 
-    public JSONObject pushCustomMessage(Integer type, boolean immediately, boolean checkCode, String filePath, Long... voucherOrPackageId) {
+    public Response pushCustomMessage(Integer type, boolean immediately, String filePath, Long... voucherOrPackageId) {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         JSONObject response = CustomerImportScene.builder().filePath(filePath).build().visitor(visitor).upload();
         Preconditions.checkArgument(response.getInteger("code") == 1000);
@@ -927,7 +916,7 @@ public class SceneUtil extends BasicUtil {
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
-        return checkCode ? builder.build().visitor(visitor).execute() : builder.build().visitor(visitor).getResponse().getData();
+        return builder.build().visitor(visitor).getResponse();
     }
 
     //----------------------------------------------------预约记录-------------------------------------------------------
