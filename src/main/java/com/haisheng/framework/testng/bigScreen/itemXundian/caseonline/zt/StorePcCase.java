@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouch
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleUpdateScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.ExportReportScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.CancelScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.ShopDeviceListScene;
@@ -23,11 +24,13 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.apache.poi.xssf.usermodel.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
@@ -1808,8 +1811,27 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         }
+    }
 
+    @Test(description = "客流分析-历史客流-导出历史记录")
+    public void storeSystemCaseo(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            JSONArray day = new JSONArray();
+            day.add(0,dt.getHistoryDate(-7));
+            day.add(1,dt.getHistoryDate(-1));
+            JSONObject list = new JSONObject();
+            list.put("res",ExportReportScene.builder().day(day).time_type("DAY").winSense_shop_id("14630").build().visitor(visitor).getResponse());
+            System.err.println(list.getString("res"));
+            Preconditions.checkArgument(list.getString("res")!=null, "按天导出历史记录失败");
 
+            JSONObject list1 = new JSONObject();
+            list1.put("res",ExportReportScene.builder().day(day.getJSONArray(1)).time_type("HOUR").winSense_shop_id("14630").build().visitor(visitor).getResponse());
+            Preconditions.checkArgument(list1.getString("res")!=null, "按小时导出历史记录失败");
+        }catch (Exception | AssertionError e){
+            appendFailReason(e.toString());
+        }
+        saveData("客流分析-历史客流-导出历史记录");
     }
 }
 
