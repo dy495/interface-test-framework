@@ -823,18 +823,6 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 查询活动
-     *
-     * @param status       活动状态
-     * @param activityType 活动类型1：裂变 2：招募 3：营销
-     * @return 结果
-     */
-    private ManagePageBean getActivity(@NotNull ActivityStatusEnum status, Integer activityType) {
-        IScene scene = ActivityManagePageScene.builder().status(status.getId()).build();
-        return activityType == null ? toFirstJavaObject(scene, ManagePageBean.class) : toJavaObject(scene, ManagePageBean.class, "activity_type", activityType);
-    }
-
-    /**
      * 招募活动-查询列表中的状态为【进行中】的活动-存在待审批的人数
      */
     public ManagePageBean getRecruitActivityWorkingApproval() {
@@ -864,8 +852,8 @@ public class BusinessUtilOnline extends BasicUtil {
             return managePageBean;
         }
         //创建活动并审批不通过
-        Long id1 = createRecruitActivityApproval();
-        getApprovalReject(id1);
+        Long id = createRecruitActivityApproval();
+        getApprovalReject(id);
         return getActivityReject();
     }
 
@@ -892,8 +880,8 @@ public class BusinessUtilOnline extends BasicUtil {
             return managePageBean;
         }
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-        Long id1 = createFissionActivity(voucherId);
-        getApprovalReject(id1);
+        Long id = createFissionActivity(voucherId);
+        getApprovalReject(id);
         return getFissionActivityReject();
     }
 
@@ -1055,6 +1043,153 @@ public class BusinessUtilOnline extends BasicUtil {
         IScene scene = ActivityManagePageScene.builder().build();
         return toJavaObject(scene, ManagePageBean.class, "id", id);
     }
+
+    /**
+     * 招募活动-查询列表中的状态为【已过期的ID】---招募活动
+     * 2021-3-17
+     */
+    public ManagePageBean geContentMarketingFinish() {
+        return getActivity(ActivityStatusEnum.FINISH, 3);
+    }
+
+    /**
+     * 内容营销-查询列表中的状态为【未开始的ID】
+     * 2021-3-17
+     */
+    public ManagePageBean getContentMarketingOffLine() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 3);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        //创建活动
+        Long id = getContentMarketingNotStar();
+        //审批活动
+        getApprovalPassed(id);
+        //活动下架
+        getContentMarketingOffLine(id);
+        return getContentMarketingOffLine();
+    }
+
+    /**
+     * 裂变活动-查询列表中的状态为【已下架的ID】
+     * 2021-3-17
+     */
+    public ManagePageBean getFissionActivityOffLine() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 1);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        //创建活动
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id = createFissionActivity(voucherId);
+        //审批活动
+        getApprovalPassed(id);
+        //活动下架
+        getContentMarketingOffLine(id);
+        return getFissionActivityOffLine();
+    }
+
+    /**
+     * 招募活动-查询列表中的状态为【已下架的ID】
+     * 2021-3-17
+     */
+    public ManagePageBean getRecruitActivityOffLine() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 2);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        Long id = createRecruitActivityApproval();
+        //审批活动
+        getApprovalPassed(id);
+        //活动下架
+        getContentMarketingOffLine(id);
+        return getRecruitActivityOffLine();
+    }
+
+    /**
+     * 查询列表中的状态为【待审核的ID】---内容营销
+     */
+    public ManagePageBean getContentMarketingWaitingApproval() {
+        return getActivity(ActivityStatusEnum.PENDING, 3);
+    }
+
+    /**
+     * 查询列表中的状态为【已撤销的ID】---内容营销
+     * 2021-3-17
+     */
+    public ManagePageBean getContentMarketingRevoke() {
+        return getActivity(ActivityStatusEnum.REVOKE, 3);
+    }
+
+    /**
+     * 查询列表中的状态为【审核未通过的ID】--内容营销
+     */
+    public ManagePageBean getContentMarketingReject() {
+        //活动列表
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, 3);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        Long id = getContentMarketingAdd();
+        getApprovalReject(id);
+        return getContentMarketingReject();
+    }
+
+    /**
+     * 查询列表中的状态为【审核已取消的ID】--招募活动
+     */
+    public ManagePageBean getContentMarketingCancel() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, 3);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        Long id = getContentMarketingAdd();
+        getApprovalReject(id);
+        getCancelActivity(id);
+        return getContentMarketingCancel();
+    }
+
+    /**
+     * 裂变活动-查询活动列表中的状态为【进行中的ID】
+     */
+    public ManagePageBean getContentMarketingWorking() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, 3);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        Long id = getContentMarketingAdd();
+        getApprovalPassed(id);
+        return getContentMarketingWorking();
+    }
+
+    /**
+     * 内容营销-查询列表中的状态为【未开始的ID】
+     * 2021-3-17
+     */
+    public ManagePageBean getContentMarketingWaitingStar() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.WAITING_START, 3);
+        if (managePageBean != null) {
+            return managePageBean;
+        }
+        Long id = getContentMarketingNotStar();
+        //审批活动
+        getApprovalPassed(id);
+        return getContentMarketingWaitingStar();
+    }
+
+    /**
+     * 查询活动
+     *
+     * @param status       活动状态
+     * @param activityType 活动类型1：裂变 2：招募 3：营销
+     * @return 结果
+     */
+    private ManagePageBean getActivity(@NotNull ActivityStatusEnum status, Integer activityType) {
+        IScene scene = ActivityManagePageScene.builder().status(status.getId()).build();
+        return activityType == null ? toFirstJavaObject(scene, ManagePageBean.class) : toJavaObject(scene, ManagePageBean.class, "activity_type", activityType);
+    }
+
+    //---------------------------------------------活动状态---------------------------------------------
 
     /**
      * 获取活动的的状态
@@ -1719,77 +1854,6 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 查询列表中的状态为【待审核的ID】---内容营销
-     */
-    public ManagePageBean getContentMarketingWaitingApproval() {
-        return getActivity(ActivityStatusEnum.PENDING, 3);
-    }
-
-    /**
-     * 查询列表中的状态为【已撤销的ID】---内容营销
-     * 2021-3-17
-     */
-    public ManagePageBean getContentMarketingRevoke() {
-        return getActivity(ActivityStatusEnum.REVOKE, 3);
-    }
-
-    /**
-     * 查询列表中的状态为【审核未通过的ID】--内容营销
-     */
-    public ManagePageBean getContentMarketingReject() {
-        //活动列表
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REJECT, 3);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        Long id = getContentMarketingAdd();
-        getApprovalReject(id);
-        return getContentMarketingReject();
-    }
-
-    /**
-     * 查询列表中的状态为【审核已取消的ID】--招募活动
-     */
-    public ManagePageBean getContentMarketingCancel() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.CANCELED, 3);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        Long id = getContentMarketingAdd();
-        getApprovalReject(id);
-        getCancelActivity(id);
-        return getContentMarketingCancel();
-    }
-
-    /**
-     * 裂变活动-查询活动列表中的状态为【进行中的ID】
-     */
-    public ManagePageBean getContentMarketingWorking() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, 3);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        Long id = getContentMarketingAdd();
-        getApprovalPassed(id);
-        return getContentMarketingWorking();
-    }
-
-    /**
-     * 内容营销-查询列表中的状态为【未开始的ID】
-     * 2021-3-17
-     */
-    public ManagePageBean getContentMarketingWaitingStar() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.WAITING_START, 3);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        Long id = getContentMarketingNotStar();
-        //审批活动
-        getApprovalPassed(id);
-        return getContentMarketingWaitingStar();
-    }
-
-    /**
      * 编辑招募活动，返回活动ID
      */
     public String getContentMarketingEdit(Long id, String title, String rule) {
@@ -1827,68 +1891,6 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getContentMarketingOnline(Long id) {
         IScene scene = ManageOnlineScene.builder().id(id).build();
         return scene.visitor(visitor).getResponse().getMessage();
-    }
-
-    /**
-     * 招募活动-查询列表中的状态为【已过期的ID】---招募活动
-     * 2021-3-17
-     */
-    public ManagePageBean geContentMarketingFinish() {
-        return getActivity(ActivityStatusEnum.FINISH, 3);
-    }
-
-    /**
-     * 内容营销-查询列表中的状态为【未开始的ID】
-     * 2021-3-17
-     */
-    public ManagePageBean getContentMarketingOffLine() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 3);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        //创建活动
-        Long id = getContentMarketingNotStar();
-        //审批活动
-        getApprovalPassed(id);
-        //活动下架
-        getContentMarketingOffLine(id);
-        return getContentMarketingOffLine();
-    }
-
-    /**
-     * 裂变活动-查询列表中的状态为【已下架的ID】
-     * 2021-3-17
-     */
-    public ManagePageBean getFissionActivityOffLine() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 1);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        //创建活动
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-        Long id = createFissionActivity(voucherId);
-        //审批活动
-        getApprovalPassed(id);
-        //活动下架
-        getContentMarketingOffLine(id);
-        return getFissionActivityOffLine();
-    }
-
-    /**
-     * 招募活动-查询列表中的状态为【已下架的ID】
-     * 2021-3-17
-     */
-    public ManagePageBean getRecruitActivityOffLine() {
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.OFFLINE, 2);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        Long id = createRecruitActivityApproval();
-        //审批活动
-        getApprovalPassed(id);
-        //活动下架
-        getContentMarketingOffLine(id);
-        return getRecruitActivityOffLine();
     }
 
     /**
@@ -1953,6 +1955,7 @@ public class BusinessUtilOnline extends BasicUtil {
                     .build();
             activityId = scene.visitor(visitor).execute().getLong("id");
         }
+        Preconditions.checkNotNull(activityId, "创建失败");
         return activityId;
     }
 }
