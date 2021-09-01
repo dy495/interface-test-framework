@@ -1,25 +1,29 @@
 package com.haisheng.framework.testng.bigScreen.itemMall.caseonline.wm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.FullCourtTrendBean;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionDataBean;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.TimeTableEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.FullCourtTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.RegionRealTimeTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.SceneUntil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.TimeTableEnum;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.*;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,22 +63,22 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    @Test(dataProvider = "ACCOUNT", dependsOnMethods = "【09:00~22:00】全场监控")
+    @Test(dataProvider = "ACCOUNT", description = "【09:00~22:00】全场监控")
     public void fullCourtMonitor(AccountEnum account) {
         try {
             commonConfig.setMallId(account.getMallId());
             util.loginPc(account);
             String subjectName = account.getName();
-            Map<String, Integer> map = new HashMap<>();
             IScene scene = FullCourtTrendScene.builder().type("pv").build();
-            List<FullCourtTrendBean> fullCourtTrendBeanList_PV = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
-            fullCourtTrendBeanList_PV = fullCourtTrendBeanList_PV.stream().filter(e -> e.getTime().compareTo("09:00") >= 0 && e.getTime().compareTo("22:00") <= 0).collect(Collectors.toList());
+            List<FullCourtTrendBean> pvList = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
+            pvList = pvList.stream().filter(e -> util.filterTime(e.getTime())).collect(Collectors.toList());
             scene = FullCourtTrendScene.builder().type("uv").build();
-            List<FullCourtTrendBean> fullCourtTrendBeanList_UV = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
-            fullCourtTrendBeanList_UV = fullCourtTrendBeanList_UV.stream().filter(e -> e.getTime().compareTo("09:00") >= 0 && e.getTime().compareTo("22:00") <= 0).collect(Collectors.toList());
+            List<FullCourtTrendBean> uvList = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
+            uvList = uvList.stream().filter(e -> util.filterTime(e.getTime())).collect(Collectors.toList());
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            fullCourtTrendBeanList_PV.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(pv -> map.put("pv", pv));
-            fullCourtTrendBeanList_UV.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(uv -> map.put("uv", uv));
+            Map<String, Integer> map = new HashMap<>();
+            pvList.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(pv -> map.put("pv", pv));
+            uvList.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(uv -> map.put("uv", uv));
             if (map.get("pv") == null || map.get("pv").equals(0) || map.get("uv") == null || map.get("uv").equals(0)) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
                 util.sendMessage(subjectName, timeSection, map);
@@ -95,9 +99,28 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "REGION_TYPE", description = "【09:00~22:00】区域监控")
-    public void regionMonitor(AccountEnum account, String[] regionType) {
+    public void regionMonitor(AccountEnum account, String[] regions) {
         try {
-            System.err.println(Arrays.toString(regionType));
+            commonConfig.setMallId(account.getMallId());
+            util.loginPc(account);
+            List<RegionDataBean> list = new LinkedList<>();
+            String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
+            Arrays.stream(regions).forEach(region -> {
+                RegionDataBean regionDataBean = new RegionDataBean();
+                JSONArray seriesList = RegionRealTimeTrendScene.builder().region(region).type("UV").build().visitor(visitor).execute().getJSONArray("series_List");
+                JSONObject uvObj = util.findCurrentTimeData("UV", region, nowTime);
+                JSONObject pvObj = util.findCurrentTimeData("PV", region, nowTime);
+                List<RegionTrendBean> regionTrendBeanList = util.findCurrentTimeValueIsZeroData(seriesList, uvObj, pvObj);
+                if (regionTrendBeanList.size() != 0) {
+                    regionDataBean.setRegionTrendBeanList(regionTrendBeanList);
+                    regionDataBean.setRegion(region);
+                    list.add(regionDataBean);
+                }
+            });
+            if (list.size() != 0) {
+                String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
+                util.sendMessage(account.getName(), timeSection, list);
+            }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -113,4 +136,6 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
                 {AccountEnum.MALL_ONLINE_ZD, regionType},
         };
     }
+
+
 }
