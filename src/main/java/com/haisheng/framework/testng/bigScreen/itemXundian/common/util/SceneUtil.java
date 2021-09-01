@@ -1104,6 +1104,16 @@ public class SceneUtil extends BasicUtil {
         return shopData;
     }
 
+    /**
+     * 筛选时间
+     *
+     * @param time 时间字段
+     * @return boolean
+     */
+    public boolean filterTime(@org.jetbrains.annotations.NotNull String time) {
+        return time.compareTo("09:00") >= 0 && time.compareTo("22:00") <= 0;
+    }
+
     public void enterShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
@@ -1122,12 +1132,13 @@ public class SceneUtil extends BasicUtil {
         ding.send(sb.toString());
     }
 
-    public void pushMessage(String subjectName, List<DeviceMessage> list) {
+    public String pushMessage(String subjectName, List<DeviceMessage> list) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append("  ").append("门店共有").append(list.size()).append("个设备直播异常").append("\n");
         list.forEach(deviceMessage -> sb.append("###### ").append("设备名称：").append(deviceMessage.getDeviceName()).append("\n").append("###### ").append("设备ID：").append(deviceMessage.getDeviceId()).append(" ").append("设备状态：").append(deviceMessage.getDeviceStatus()).append("\n"));
         DingPushUtil ding = new DingPushUtil();
         ding.changeWeHook(DingWebhook.ONLINE_STORE_MANAGEMENT_VIDEO);
         ding.send(sb.toString());
+        return "push dingTalk";
     }
 }

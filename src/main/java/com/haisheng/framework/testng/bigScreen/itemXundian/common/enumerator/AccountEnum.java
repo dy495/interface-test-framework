@@ -10,10 +10,10 @@ public enum AccountEnum {
 
 
     ZD("zhengda@zhengda.com", "zhengda", false, null, "正大", "正大", null, null),
-    LZ("jiekeqiongsi@jiekeqiongsi.com", "jiekeqiongsi", true, null, "杰克琼斯", "绫致", null, null),
+    LZ("jiekeqiongsi@jiekeqiongsi.com", "jiekeqiongsi", false, null, "杰克琼斯", "绫致", null, null),
     DDC("ddc@ddc.com", "ddc", false, "", "电动车", "电动车", null, ""),
-    BGY("baiguoyuan@winsense.ai", "baiguoyuan", false, "", "百果园管理员", "百果园", null, ""),
-    MSC("moshangchen@moshangchen.com", "moshangchen", false, "", "陌上臣", "陌上臣", null, ""),
+    BGY("baiguoyuan@winsense.ai", "baiguoyuan", false, "", "百果园管理员", "百果园", null, null),
+    MSC("moshangchen@moshangchen.com", "moshangchen", false, "", "陌上臣", "陌上臣", null, null),
     ;
 
     AccountEnum(String username, String password, boolean isDaily, String phone, String name, String subjectName, Integer roleId, String roleName) {
