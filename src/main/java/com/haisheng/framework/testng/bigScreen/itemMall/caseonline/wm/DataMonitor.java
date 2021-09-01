@@ -104,7 +104,7 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
             util.loginPc(account);
             List<RegionDataBean> list = new LinkedList<>();
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            Arrays.stream(regions).forEach(region -> {
+            for (String region : regions) {
                 RegionDataBean regionDataBean = new RegionDataBean();
                 JSONArray seriesList = RegionRealTimeTrendScene.builder().region(region).type("UV").build().visitor(visitor).execute().getJSONArray("series_List");
                 JSONObject uvObj = util.findCurrentTimeData("UV", region, nowTime);
@@ -115,7 +115,7 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
                     regionDataBean.setRegion(region);
                     list.add(regionDataBean);
                 }
-            });
+            }
             if (list.size() != 0) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
                 util.sendMessage(account.getName(), timeSection, list);

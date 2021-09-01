@@ -50,7 +50,7 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VEDIO;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VIDEO;
         beforeClassInit(commonConfig);
         util.loginPc(ACCOUNT);
     }
@@ -73,16 +73,17 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "DEVICE_ID", dataProviderClass = XdPackageDataOnline.class)
     public void check_video_salesDemo(String deviceId, String deviceName) {
         try {
-            Response response = AppPatrolDeviceLiveScene.builder().deviceId(deviceId).build().visitor(visitor).getResponse();
-            Integer code = response.getCode();
+            Integer code = AppPatrolDeviceLiveScene.builder().deviceId(deviceId).build().visitor(visitor).getResponse().getCode();
             IScene scene = DevicePageScene.builder().deviceId(deviceId).type("CAMERA").build();
             String statusName = util.toFirstJavaObject(scene, JSONObject.class).getString("status_name");
-            if (code != 1000 && !statusName.equals("运行中")) {
-                DeviceMessage deviceMessage = new DeviceMessage();
-                deviceMessage.setDeviceId(deviceId);
-                deviceMessage.setDeviceName(deviceName);
-                deviceMessage.setDeviceStatus(statusName);
-                list.add(deviceMessage);
+            if (code != 1000) {
+                if (!statusName.equals("运行中")) {
+                    DeviceMessage deviceMessage = new DeviceMessage();
+                    deviceMessage.setDeviceId(deviceId);
+                    deviceMessage.setDeviceName(deviceName);
+                    deviceMessage.setDeviceStatus(statusName);
+                    list.add(deviceMessage);
+                }
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -92,12 +93,7 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
     @Test(dependsOnMethods = "check_video_salesDemo")
     public void sendDing() {
         if (list.size() != 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("\n").append("##### ").append(ACCOUNT.getSubjectName()).append("  ").append("门店共有").append(list.size()).append("个设备直播异常").append("\n");
-            list.forEach(deviceMessage -> sb.append("###### ").append("设备名称：").append(deviceMessage.getDeviceName()).append(" ").append("设备ID：").append(deviceMessage.getDeviceId()).append(" ").append("设备状态：").append(deviceMessage.getDeviceStatus()).append("\n"));
-            DingPushUtil ding = new DingPushUtil();
-            ding.changeWeHook(commonConfig.dingHook);
-            ding.send(sb.toString());
+            util.pushMessage(ACCOUNT.getSubjectName(), list);
         }
     }
 }
