@@ -133,7 +133,8 @@ public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
         return new Object[]{
                 AccountEnum.BGY,
                 AccountEnum.DDC,
-                AccountEnum.LZ
+                AccountEnum.LZ,
+                AccountEnum.MSC,
         };
     }
 
