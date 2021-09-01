@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class SubjectListScene extends BaseScene {
+public class UseRangeSubjectListScene extends BaseScene {
     @Override
     public JSONObject getRequestBody() {
         return new JSONObject();

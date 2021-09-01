@@ -68,7 +68,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RoleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.UseRangeSubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.UseRangeDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -322,7 +322,7 @@ public class SceneUtil extends BasicUtil {
      * @return 主体类型
      */
     public String getSubjectType() {
-        JSONArray array = SubjectListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
+        JSONArray array = UseRangeSubjectListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
         JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).findFirst().orElse(null);
         Preconditions.checkArgument(jsonObject != null, "主体类型为空");
         return jsonObject.getString("subject_key");

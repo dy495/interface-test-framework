@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
@@ -21,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.UseRangeSubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
@@ -32,18 +31,15 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class BusinessUtilOnline extends BasicUtil {
+public class BusinessUtilOnline extends SceneUtil {
     private final VisitorProxy visitor;
-    private final SceneUtil user;
 
     public BusinessUtilOnline(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
-        this.user = new SceneUtil(visitor);
     }
 
     PublicParameter pp = new PublicParameter();
-    public String shopId = "-1";
 
     /**
      * 创建裂变活动-分享者奖励
@@ -837,7 +833,7 @@ public class BusinessUtilOnline extends BasicUtil {
         //审批活动
         getApprovalPassed(id);
         //小程序报名
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        visitor.setToken(EnumAppletToken.JC_GLY_ONLINE.getToken());
         activityRegisterApplet(id, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
         return getRecruitActivityWorkingApproval();
     }
@@ -1189,8 +1185,6 @@ public class BusinessUtilOnline extends BasicUtil {
         return activityType == null ? toFirstJavaObject(scene, ManagePageBean.class) : toJavaObject(scene, ManagePageBean.class, "activity_type", activityType);
     }
 
-    //---------------------------------------------活动状态---------------------------------------------
-
     /**
      * 获取活动的的状态
      */
@@ -1228,6 +1222,8 @@ public class BusinessUtilOnline extends BasicUtil {
         IScene scene = ManageRegisterPageScene.builder().status(1).activityId(activityId).build();
         return toFirstJavaObject(scene, ManageRegisterPageBean.class);
     }
+
+    //---------------------------------------------操作活动---------------------------------------------
 
     /**
      * 活动管理-删除活动
@@ -1344,9 +1340,9 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray list;
         Long id = 0L;
         //获取此活动的名称
-        user.loginPc(pp.phone, pp.password);
+        loginPc(pp.phone, pp.password);
         String title = getRecruitActivityDetailDate1(activityId).getString("title");
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        visitor.setToken(EnumAppletToken.JC_GLY_ONLINE.getToken());
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = scene.visitor(visitor).execute();
@@ -1523,7 +1519,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.JC_ONLINE_YS);
+        loginPc(EnumAccount.JC_ONLINE_YS);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i < registerInformationList.size(); i++) {
@@ -1567,7 +1563,7 @@ public class BusinessUtilOnline extends BasicUtil {
         }
         //获取此活动的名称
         String title = getRecruitActivityDetailDate1(id).getString("title");
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        visitor.setToken(EnumAppletToken.JC_GLY_ONLINE.getToken());
         //获取小程序推荐列表
         JSONObject lastValue = null;
         JSONArray list;
@@ -1595,7 +1591,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.JC_ONLINE_YS);
+        loginPc(EnumAccount.JC_ONLINE_YS);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i < registerInformationList.size(); i++) {
@@ -1639,7 +1635,7 @@ public class BusinessUtilOnline extends BasicUtil {
         }
         //获取此活动的名称
         String title = getRecruitActivityDetailDate1(id).getString("title");
-        user.loginApplet(EnumAppletToken.JC_LXQ_ONLINE);
+        visitor.setToken(EnumAppletToken.JC_LXQ_ONLINE.getToken());
         //获取小程序推荐列表
         JSONObject lastValue = null;
         JSONArray list;
@@ -1669,9 +1665,9 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //获取此活动的名称
-        user.loginPc(pp.phone, pp.password);
+        loginPc(pp.phone, pp.password);
         String title = getRecruitActivityDetailDate1(id).getString("title");
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        visitor.setToken(EnumAppletToken.JC_GLY_ONLINE.getToken());
         //获取小程序推荐列表
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -1765,7 +1761,7 @@ public class BusinessUtilOnline extends BasicUtil {
         //定义主体的字段
         String subjectKey = "";
         //获取主题状态的列表
-        JSONArray list = SubjectListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
+        JSONArray list = UseRangeSubjectListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             String subjectValue = list.getJSONObject(i).getString("subject_value");
             if (subjectValue.equals(subjectName)) {

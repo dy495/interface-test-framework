@@ -3027,7 +3027,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void messageFormCustomerMethod(String jsonArray, String pram, String fieldReturn) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray result = jc.enummap().getJSONArray(jsonArray);
+            JSONArray result = jc.enumMap().getJSONArray(jsonArray);
             Map<String, String> map = new HashMap<String, String>();
             for (int i = 0; i < result.size(); i++) {
                 String kk = result.getJSONObject(i).getString("key");
@@ -3064,7 +3064,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      **/
     public String messageFormCustomerTurnMethod(String jsonArray, String fieldReturn) {
         logger.logCaseStart(caseResult.getCaseName());
-        JSONArray result = jc.enummap().getJSONArray(jsonArray);
+        JSONArray result = jc.enumMap().getJSONArray(jsonArray);
         String key = "";
         Map<String, String> map = new HashMap<String, String>();
         for (int i = 0; i < result.size(); i++) {

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -605,9 +606,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
-        if (StringUtils.isEmpty(path)) {
-            throw new RuntimeException("path不可为空");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
         String request = JSON.toJSONString(requestBody);
         String result = null;
         if (checkCode) {
@@ -3631,11 +3630,10 @@ public class ScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONObject("data");
     }
 
-    public JSONObject enummap() {
+    public JSONObject enumMap() {
         String url = "/car-platform/pc/enum-map";
         JSONObject json = new JSONObject();
-        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(result).getJSONObject("data");
+        return invokeApi(url, json);
     }
 
     @DataProvider(name = "ERR_PHONE")

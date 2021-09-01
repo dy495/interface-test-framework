@@ -772,7 +772,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
+            JSONArray result = jc.enumMap().getJSONArray("PUSH_REASON_TYPE");
 
             Map<String, String> map = new HashMap<>();
             for (int i = 0; i < result.size(); i++) {
