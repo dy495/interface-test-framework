@@ -21,7 +21,6 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
