@@ -43,7 +43,7 @@ public enum EnumAppletToken {
 
     INS_WM_ONLINE("TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
 
-    INS_ZT_DAILY("k8pUW1Lvm19tonFvrslT0g==", true, "13604609869"),
+    INS_ZT_DAILY("8aN6UJmSJuGteQ7i4CcqZQ==", true, "13604609869"),
 
     INS_ZT_ONLINE("Com3dkGhBuuZgzAir8SRDw==", false, "13604609869"),
     ;

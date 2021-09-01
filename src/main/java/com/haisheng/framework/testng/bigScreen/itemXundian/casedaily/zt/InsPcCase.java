@@ -9,6 +9,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.applet.AppletBannerScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.banner.EditScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.operation.ArticleAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
@@ -22,18 +25,24 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int page = 1;
     public static final int size = 100;
     private static final EnumTestProduct PRODUCE = EnumTestProduct.INS_DAILY;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_ZT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
@@ -1305,61 +1314,66 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //    }
 //
 //    //ok
-//    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
-//    public void banner_data_2() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            List<Long> articleIds = util.getArticleIdList();
-//            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
-//            File file = new File(filePath);
-//            File[] files = file.listFiles();
-//            assert files != null;
-//            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
-//            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
-//            JSONArray array = new JSONArray();
-//            JSONObject jsonObject1 = new JSONObject();
-//            jsonObject1.put("article_id", articleIds.get(0));
-//            jsonObject1.put("banner_img_url", picPaths.get(0));
-//            jsonObject1.put("banner_id", 31);
-//            jsonObject1.put("banner_select", "banner1");
-//            JSONObject jsonObject2 = new JSONObject();
-//            jsonObject2.put("article_id", articleIds.get(1));
-//            jsonObject2.put("banner_img_url", picPaths.get(1));
-//            jsonObject2.put("banner_id", 87);
-//            jsonObject2.put("banner_select", "banner2");
-//            JSONObject jsonObject3 = new JSONObject();
-//            jsonObject3.put("article_id", articleIds.get(2));
-//            jsonObject3.put("banner_img_url", picPaths.get(2));
-//            jsonObject3.put("banner_id", 88);
-//            jsonObject3.put("banner_select", "banner3");
-//            JSONObject jsonObject4 = new JSONObject();
-//            jsonObject4.put("article_id", articleIds.get(3));
-//            jsonObject4.put("banner_img_url", picPaths.get(3));
-//            jsonObject4.put("banner_id", 89);
-//            jsonObject4.put("banner_select", "banner4");
-//            JSONObject jsonObject5 = new JSONObject();
-//            jsonObject5.put("article_id", articleIds.get(4));
-//            jsonObject5.put("banner_img_url", picPaths.get(4));
-//            jsonObject5.put("banner_id", 90);
-//            jsonObject5.put("banner_select", "banner5");
-//            array.add(jsonObject1);
-//            array.add(jsonObject2);
-//            array.add(jsonObject3);
-//            array.add(jsonObject4);
-//            array.add(jsonObject5);
-////            articleIds.add(articleIds.get(2));
-////            articleIds.add(articleIds.get(2));
-//            EditScene.builder().list(array).adName("首页banner").adType("BANNER").build().invoke(visitor);
-//            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
-//            JSONArray list = AppletBannerScene.builder().adType("BANNER").build().invoke(visitor).getJSONArray("list");
-//            List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
-//            CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("内容运营--banner--填写banner1-banner5的内容");
-//        }
-//    }
+    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
+    public void banner_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<Long> articleIds = util.getArticleIdList();
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
+            File file = new File(filePath);
+            File[] files = file.listFiles();
+            assert files != null;
+            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().visitor(visitor).execute().getString("pic_path")).collect(Collectors.toList());
+            JSONArray array = new JSONArray();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("article_id", articleIds.get(0));
+            jsonObject1.put("image_dump_url", picPaths.get(0));
+            jsonObject1.put("banner_id", 31);
+            jsonObject1.put("banner_select", "banner1");
+            jsonObject1.put("dump_type", "STATION");
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("article_id", articleIds.get(1));
+            jsonObject2.put("image_dump_url", picPaths.get(1));
+            jsonObject2.put("banner_id", 87);
+            jsonObject2.put("banner_select", "banner2");
+            jsonObject2.put("dump_type", "STATION");
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("article_id", articleIds.get(2));
+            jsonObject3.put("image_dump_url", picPaths.get(2));
+            jsonObject3.put("banner_id", 88);
+            jsonObject3.put("banner_select", "banner3");
+            jsonObject3.put("dump_type", "STATION");
+            JSONObject jsonObject4 = new JSONObject();
+            jsonObject4.put("article_id", articleIds.get(3));
+            jsonObject4.put("image_dump_url", picPaths.get(3));
+            jsonObject4.put("banner_id", 89);
+            jsonObject4.put("banner_select", "banner4");
+            jsonObject4.put("dump_type", "STATION");
+            JSONObject jsonObject5 = new JSONObject();
+            jsonObject5.put("article_id", articleIds.get(4));
+            jsonObject5.put("banner_img_url", picPaths.get(4));
+            jsonObject5.put("banner_id", 90);
+            jsonObject5.put("banner_select", "banner5");
+            jsonObject5.put("dump_type", "STATION");
+            array.add(jsonObject1);
+            array.add(jsonObject2);
+            array.add(jsonObject3);
+            array.add(jsonObject4);
+            array.add(jsonObject5);
+//            articleIds.add(articleIds.get(2));
+//            articleIds.add(articleIds.get(2));
+            EditScene.builder().list(array).adName("首页banner").adType("BANNER").build().visitor(visitor).execute();
+            visitor.setToken(APPLET_USER_ONE.getToken());
+            JSONArray list = AppletBannerScene.builder().adType("BANNER").build().visitor(visitor).execute().getJSONArray("list");
+            List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
+            CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("内容运营--banner--填写banner1-banner5的内容");
+        }
+    }
 
     //    ------------------------------------------------------Ins小程序-----------------------------------------------------------------------------------------------------------------
     //小程序附近门店
