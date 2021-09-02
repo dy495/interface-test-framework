@@ -6,13 +6,11 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PassengerFlowBean;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPassPvUvBean;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPvUvBean;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.ShopMessage;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.*;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.PatrolLoginScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.realtime.shop.PassPvUvScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.realtime.shop.PvUvScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
@@ -39,10 +37,12 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.opera
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.*;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import com.haisheng.framework.util.MD5Util;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -1107,21 +1107,68 @@ public class SceneUtil extends BasicUtil {
         return shopData;
     }
 
+    /**
+     * 查询当前时间的过店数据
+     *
+     * @param shopId  门店id
+     * @param nowTime 当前时间
+     * @return RealTimeShopPassPvUvBean
+     */
+    public RealTimeShopPassPvUvBean findCurrentTimePassData(String shopId, String nowTime) {
+        IScene scene = PassPvUvScene.builder().shopId(shopId).build();
+        List<RealTimeShopPassPvUvBean> passPvUvList = toJavaObjectList(scene, RealTimeShopPassPvUvBean.class, "list");
+        return passPvUvList.stream().filter(e -> filterTime(e.getTime())).filter(e -> e.getHour().equals(nowTime)).findFirst().orElse(null);
+    }
+
+    /**
+     * 查询当前时间的进店数据
+     *
+     * @param shopId  门店id
+     * @param nowTime 当前时间
+     * @return RealTimeShopPvUvBean
+     */
+    public RealTimeShopPvUvBean findCurrentTimeEnterData(String shopId, String nowTime) {
+        IScene scene = PvUvScene.builder().shopId(shopId).build();
+        List<RealTimeShopPvUvBean> enterPvUvList = toJavaObjectList(scene, RealTimeShopPvUvBean.class, "list");
+        return enterPvUvList.stream().filter(e -> filterTime(e.getTime())).filter(e -> e.getTime().substring(0, 2).equals(nowTime)).findFirst().orElse(null);
+    }
+
+    /**
+     * 筛选时间
+     *
+     * @param time 时间字段
+     * @return boolean
+     */
+    public boolean filterTime(@org.jetbrains.annotations.NotNull String time) {
+        return time.compareTo("09:00") >= 0 && time.compareTo("22:00") <= 0;
+    }
+
     public void enterShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("进店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        DingPushUtil util = new DingPushUtil();
-        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
-        util.send(sb.toString());
+        DingPushUtil ding = new DingPushUtil();
+        ding.changeWeHook(DingWebhook.PV_UV_ACCURACY_GRP);
+        ding.send(sb.toString());
     }
 
     public void passShopData(String subjectName, String time, List<ShopMessage> shopDataList) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append("##### ").append(subjectName).append(" ").append("以下").append(shopDataList.size()).append("个店铺 ").append(time).append("过店数据为0").append("\n");
         shopDataList.forEach(e -> sb.append("###### ").append(e.getShopName()).append("--").append(e.getShopId()).append("\n"));
-        DingPushUtil util = new DingPushUtil();
-        util.changeWeHook(EnumDingTalkWebHook.PV_UV_ACCURACY_GRP.getWebHook());
-        util.send(sb.toString());
+        DingPushUtil ding = new DingPushUtil();
+        ding.changeWeHook(DingWebhook.PV_UV_ACCURACY_GRP);
+        ding.send(sb.toString());
+    }
+
+    public String pushMessage(String subjectName, List<DeviceMessage> list) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append("##### ").append(subjectName).append("  ").append("门店共有").append(list.size()).append("个设备直播异常").append("\n");
+        list.forEach(deviceMessage -> sb.append("###### ").append("设备名称：").append(deviceMessage.getDeviceName()).append("\n")
+                .append("###### ").append("设备ID：").append(deviceMessage.getDeviceId()).append(" ").append("设备状态：").append(deviceMessage.getDeviceStatus()).append("\n"));
+        DingPushUtil ding = new DingPushUtil();
+        ding.changeWeHook(DingWebhook.ONLINE_STORE_MANAGEMENT_VIDEO);
+        ding.send(sb.toString());
+        return "push dingTalk";
     }
 }

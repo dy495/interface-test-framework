@@ -50,7 +50,7 @@ public class SalesVideoOne extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店(巡店) 线上");
-        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VEDIO;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VIDEO;
         commonConfig.pushRd = new String[]{"13581630214", "13604609869","13373166806"};
 //        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);

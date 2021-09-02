@@ -71,60 +71,51 @@ public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    @Test(dataProvider = "ENTER_ACCOUNT")
+    @Test(dataProvider = "ENTER_ACCOUNT", description = "进店数据监控")
     public void enterMonitoring(AccountEnum account) {
         try {
             util.loginPc(account);
-            String subjectName = account.getSubjectName();
-            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             List<ShopMessage> shopDataList = new LinkedList<>();
+            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             for (PassengerFlowBean flowBean : passengerFlowBeanList) {
-                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(PvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPvUvBean.class, "list");
-                shopDataList.addAll(realTimeShopPvUvBeanList.stream()
-                        .filter(pvUvBean -> pvUvBean.getTime().compareTo("09:00") >= 0)
-                        .filter(pvUvBean -> pvUvBean.getTime().compareTo("22:00") <= 0)
-                        .map(pvUvBean -> util.setShopData(flowBean, pvUvBean, null))
-                        .collect(Collectors.toList()));
+                List<RealTimeShopPvUvBean> enterPvUvList = util.toJavaObjectList(PvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPvUvBean.class, "list");
+                shopDataList.addAll(enterPvUvList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, pvUvBean, null)).collect(Collectors.toList()));
             }
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            logger.info("当前时间：{}", nowTime);
-            Stream<ShopMessage> stream = shopDataList.stream()
-                    .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTime().substring(0, 2).equals(nowTime));
+            Stream<ShopMessage> stream = shopDataList.stream().filter(shopData -> shopData.getRealTimeShopPvUvBean().getTime().substring(0, 2).equals(nowTime));
             shopDataList = account.equals(AccountEnum.DDC) ? util.getDdcShopData(stream) : account.equals(AccountEnum.BGY) ? util.getBgyShopData(stream) : util.getLzShopData(stream);
             if (shopDataList.size() != 0) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
-                util.enterShopData(subjectName, timeSection, shopDataList);
+                util.enterShopData(account.getSubjectName(), timeSection, shopDataList);
             }
         } catch (Exception e) {
             collectMessage(e);
+        } finally {
+            saveData("进店数据监控");
         }
     }
 
-    @Test(dataProvider = "PASS_ACCOUNT")
+    @Test(dataProvider = "PASS_ACCOUNT", description = "过店数据监控")
     public void passMonitoring(AccountEnum account) {
         try {
             util.loginPc(account);
-            String subjectName = account.getSubjectName();
-            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             List<ShopMessage> shopDataList = new LinkedList<>();
+            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             for (PassengerFlowBean flowBean : passengerFlowBeanList) {
-                List<RealTimeShopPassPvUvBean> realTimeShopPassPvUvBeanList = util.toJavaObjectList(PassPvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPassPvUvBean.class, "list");
-                shopDataList.addAll(realTimeShopPassPvUvBeanList.stream()
-                        .filter(pvUvBean -> pvUvBean.getTime().compareTo("09:00") >= 0)
-                        .filter(pvUvBean -> pvUvBean.getTime().compareTo("22:00") <= 0)
-                        .map(pvUvBean -> util.setShopData(flowBean, null, pvUvBean))
-                        .collect(Collectors.toList()));
+                List<RealTimeShopPassPvUvBean> passPvUvList = util.toJavaObjectList(PassPvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPassPvUvBean.class, "list");
+                shopDataList.addAll(passPvUvList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, null, pvUvBean)).collect(Collectors.toList()));
             }
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            logger.info("当前时间：{}", nowTime);
             Stream<ShopMessage> stream = shopDataList.stream().filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getHour().equals(nowTime));
             shopDataList = util.getPassLzShopData(stream);
             if (shopDataList.size() != 0) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
-                util.passShopData(subjectName, timeSection, shopDataList);
+                util.passShopData(account.getSubjectName(), timeSection, shopDataList);
             }
         } catch (Exception e) {
             collectMessage(e);
+        } finally {
+            saveData("过店数据监控");
         }
     }
 
@@ -133,7 +124,8 @@ public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
         return new Object[]{
                 AccountEnum.BGY,
                 AccountEnum.DDC,
-                AccountEnum.LZ
+                AccountEnum.LZ,
+                AccountEnum.MSC,
         };
     }
 

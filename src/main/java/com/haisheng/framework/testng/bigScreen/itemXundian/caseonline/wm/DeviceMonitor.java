@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -17,15 +16,11 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * 直播流监控
@@ -36,21 +31,22 @@ import java.util.List;
 public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.XD_ONLINE;
     private static final AccountEnum ACCOUNT = AccountEnum.SALES_DEMO_ONLINE;
-    private static final List<DeviceMessage> list = new ArrayList<>();
+    private final List<DeviceMessage> list = new ArrayList<>();
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
-    private final CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VEDIO;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_VIDEO;
+        commonConfig.setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginPc(ACCOUNT);
     }
@@ -70,34 +66,50 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    @Test(dataProvider = "DEVICE_ID", dataProviderClass = XdPackageDataOnline.class)
+    @Test(dataProvider = "DEVICE", description = "门店设备监控")
     public void check_video_salesDemo(String deviceId, String deviceName) {
         try {
-            Response response = AppPatrolDeviceLiveScene.builder().deviceId(deviceId).build().visitor(visitor).getResponse();
-            Integer code = response.getCode();
+            Integer code = AppPatrolDeviceLiveScene.builder().deviceId(deviceId).build().visitor(visitor).getResponse().getCode();
             IScene scene = DevicePageScene.builder().deviceId(deviceId).type("CAMERA").build();
             String statusName = util.toFirstJavaObject(scene, JSONObject.class).getString("status_name");
-            if (code != 1000 && !statusName.equals("运行中")) {
-                DeviceMessage deviceMessage = new DeviceMessage();
-                deviceMessage.setDeviceId(deviceId);
-                deviceMessage.setDeviceName(deviceName);
-                deviceMessage.setDeviceStatus(statusName);
-                list.add(deviceMessage);
+            if (code != 1000) {
+                if (!statusName.equals("运行中")) {
+                    DeviceMessage deviceMessage = new DeviceMessage();
+                    deviceMessage.setDeviceId(deviceId);
+                    deviceMessage.setDeviceName(deviceName);
+                    deviceMessage.setDeviceStatus(statusName);
+                    list.add(deviceMessage);
+                }
             }
         } catch (Exception | AssertionError e) {
             collectMessage(e);
+        } finally {
+            saveData("门店设备监控");
         }
     }
 
-    @Test(dependsOnMethods = "check_video_salesDemo")
-    public void sendDing() {
-        if (list.size() != 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("\n").append("##### ").append(ACCOUNT.getSubjectName()).append("  ").append("门店共有").append(list.size()).append("个设备直播异常").append("\n");
-            list.forEach(deviceMessage -> sb.append("###### ").append("设备名称：").append(deviceMessage.getDeviceName()).append(" ").append("设备ID：").append(deviceMessage.getDeviceId()).append(" ").append("设备状态：").append(deviceMessage.getDeviceStatus()).append("\n"));
-            DingPushUtil ding = new DingPushUtil();
-            ding.changeWeHook(commonConfig.dingHook);
-            ding.send(sb.toString());
+    @Test(dependsOnMethods = "check_video_salesDemo", description = "门店设备监控")
+    public void check_video_salesDemo_1() {
+        try {
+            String message = list.size() == 0 ? "无异常设备" : util.pushMessage(ACCOUNT.getSubjectName(), list);
+            logger.info("message is：{}", message);
+        } catch (Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("门店设备监控");
         }
+    }
+
+    @DataProvider(name = "DEVICE")
+    public static Object[] device() {
+        return new String[][]{
+                {"8720871407682560", "大门152"},
+//                {"8134193718100992","云台全功能"},
+                {"8446461860381696", "巡店1（ 不支持云台操作）"},
+                {"8446463209866240", "巡店2（ 不支持云台操作）"},
+                {"8530565666243584", "宇视-云台全功能"},
+//                {"8166364248540160","AI摄像头【151】"},
+//                {"8256597211415552","AI摄像头【180】"}
+        };
     }
 }
