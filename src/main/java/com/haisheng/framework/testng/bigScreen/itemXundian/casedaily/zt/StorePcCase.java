@@ -1936,6 +1936,8 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-卡券数量==优惠券管理中状态为进行中的数量");
     }
 
+
+
 //    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
 //    @Test()
 //    public void searchMember8() throws Exception{
