@@ -28,19 +28,21 @@ public class DingPushUtil {
     }
 
     public void send(String messageDetail) {
-        Map<String, String> map = new HashMap<>();
+        String nowTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+        Map<String, Object> map = new HashMap<>();
         map.put("title", "巡检");
-        String text = "## **" + "线上巡检数据提醒：" + "**" + "\n"
-                + "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n"
-                + "\n" + messageDetail + "\n";
-        map.put("text", text);
+        StringBuilder sb = new StringBuilder();
+        sb.append("## **").append("线上巡检数据提醒").append("**").append("\n")
+                .append("### **").append(nowTime).append("**").append("\n")
+                .append(messageDetail).append("\n");
+        map.put("text", sb);
         send(map);
     }
 
-    public void send(Map<String, String> map) {
+    public void send(Map<String, Object> map) {
         try {
-            String text = map.get("text");
-            String title = map.get("title");
+            String title = map.get("title").toString();
+            String text = map.get("text").toString();
             JSONObject object = new JSONObject();
             JSONObject markdown = new JSONObject();
             object.put("msgtype", "markdown");

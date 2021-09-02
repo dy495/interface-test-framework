@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.FullCourtDataBean;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.FullCourtTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionDataBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.FullCourtTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.RegionRealTimeTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.DingPushUtil;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
@@ -18,7 +20,6 @@ import com.haisheng.framework.util.MD5Util;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SceneUntil extends BasicUtil {
@@ -57,6 +58,19 @@ public class SceneUntil extends BasicUtil {
     /**
      * 找到当前数据时间的指定类型数据
      *
+     * @param type    数据类型pv/uv
+     * @param nowTime 当前时间
+     * @return FullCourtTrendBean
+     */
+    public FullCourtTrendBean findCurrentTimeData(String type, String nowTime) {
+        IScene scene = FullCourtTrendScene.builder().type(type).build();
+        List<FullCourtTrendBean> list = toJavaObjectList(scene, FullCourtTrendBean.class, "list");
+        return list.stream().filter(e -> filterTime(e.getTime())).filter(e -> e.getTime().substring(0, 2).equals(nowTime)).findFirst().orElse(null);
+    }
+
+    /**
+     * 找到当前数据时间的指定类型数据
+     *
      * @param type    数据类型
      * @param region  区域类型
      * @param nowTime 当前时间
@@ -87,19 +101,32 @@ public class SceneUntil extends BasicUtil {
         return regionTrendBeanList.stream().filter(e -> e.getPv() == null || e.getPv() == 0 || e.getUv() == null || e.getUv() == 0).collect(Collectors.toList());
     }
 
-    public void sendMessage(String subjectName, String time, Map<String, Integer> map) {
+    /**
+     * 全场数据监控发送消息
+     *
+     * @param subjectName       主体名称
+     * @param time              时间
+     * @param fullCourtDataBean fullCourtDataBean
+     */
+    public void sendMessage(String subjectName, String time, FullCourtDataBean fullCourtDataBean) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("##### ").append(subjectName).append(" ").append(time).append("数据为：").append("\n");
-        sb.append("###### ");
-        map.forEach((key, value) -> sb.append(key).append("数据为：").append(value).append(" "));
+        sb.append("\n").append("#### ").append(subjectName).append(" ").append(time).append(" ").append("全场数据监控").append("\n");
+        sb.append("###### ").append("PV数据为：").append(fullCourtDataBean.getPv()).append(" ").append("UV数据为：").append(fullCourtDataBean.getUv());
         DingPushUtil util = new DingPushUtil();
         util.changeWeHook(DingWebhook.PV_UV_ACCURACY_GRP);
         util.send(sb.toString());
     }
 
+    /**
+     * 区域数据监控发送消息
+     *
+     * @param subjectName 主体名称
+     * @param time        时间
+     * @param list        List<RegionDataBean>
+     */
     public void sendMessage(String subjectName, String time, List<RegionDataBean> list) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("#### ").append(subjectName).append(" ").append(time).append("数据监控").append("\n");
+        sb.append("\n").append("#### ").append(subjectName).append(" ").append(time).append(" ").append("区域数据监控").append("\n");
         list.forEach(regionData -> {
             String region = regionData.getRegion();
             List<RegionTrendBean> regionTrendBeanList = regionData.getRegionTrendBeanList();

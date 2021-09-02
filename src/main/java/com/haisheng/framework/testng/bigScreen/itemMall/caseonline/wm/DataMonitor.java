@@ -3,16 +3,15 @@ package com.haisheng.framework.testng.bigScreen.itemMall.caseonline.wm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.FullCourtDataBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.FullCourtTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionDataBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.bean.RegionTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.TimeTableEnum;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.FullCourtTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.RegionRealTimeTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.SceneUntil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -25,7 +24,6 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DataMonitor extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_ONLINE;
@@ -67,20 +65,15 @@ public class DataMonitor extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.setMallId(account.getMallId());
             util.loginPc(account);
-            String subjectName = account.getName();
-            IScene scene = FullCourtTrendScene.builder().type("pv").build();
-            List<FullCourtTrendBean> pvList = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
-            pvList = pvList.stream().filter(e -> util.filterTime(e.getTime())).collect(Collectors.toList());
-            scene = FullCourtTrendScene.builder().type("uv").build();
-            List<FullCourtTrendBean> uvList = util.toJavaObjectList(scene, FullCourtTrendBean.class, "list");
-            uvList = uvList.stream().filter(e -> util.filterTime(e.getTime())).collect(Collectors.toList());
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            Map<String, Integer> map = new HashMap<>();
-            pvList.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(pv -> map.put("pv", pv));
-            uvList.stream().filter(e -> e.getTime().substring(0, 2).equals(nowTime)).map(FullCourtTrendBean::getToday).forEach(uv -> map.put("uv", uv));
-            if (map.get("pv") == null || map.get("pv").equals(0) || map.get("uv") == null || map.get("uv").equals(0)) {
+            FullCourtTrendBean pvData = util.findCurrentTimeData("PV", nowTime);
+            FullCourtTrendBean uvData = util.findCurrentTimeData("UV", nowTime);
+            FullCourtDataBean fullCourtData = new FullCourtDataBean();
+            fullCourtData.setPv(pvData.getToday());
+            fullCourtData.setUv(uvData.getToday());
+            if (fullCourtData.getPv() == null || fullCourtData.getPv().equals(0) || fullCourtData.getUv() == null || fullCourtData.getUv().equals(0)) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
-                util.sendMessage(subjectName, timeSection, map);
+                util.sendMessage(account.getName(), timeSection, fullCourtData);
             }
         } catch (Exception e) {
             collectMessage(e);
