@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.pre
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.FastContent;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppBuyCarScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
@@ -356,7 +356,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "接待中编辑资料", dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    @Test(description = "接待中编辑资料", dataProvider = "editErrorInfo", dataProviderClass = JcDataCenter.class)
     public void test04EditUserInfo(String description, String point, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
@@ -367,11 +367,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 getReception = reception.toJavaObject(AppReceptionBean.class);
             }
             sleep(3);
-            String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
+            Integer code = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
                     customerName(FastContent.NAME50).customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
                     intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate(dt.getHistoryDate(0)).build()
-                    .modify(point, content).visitor(visitor).getResponse().getMessage();
-            Preconditions.checkArgument(Objects.equals(expect, message), "修改资料" + description + "，预期结果：" + expect + "，实际：" + message);
+                    .modify(point, content).visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(Objects.equals(expect, code.toString()), "修改资料" + description + "，预期结果：" + expect + "，实际：" + code);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -380,7 +380,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "接待中编辑预计购车日期", dataProvider = "customerLevel", dataProviderClass = DataCenter.class)
+    @Test(description = "接待中编辑预计购车日期", dataProvider = "customerLevel", dataProviderClass = JcDataCenter.class)
     public void test04CustomerLevel(String time, String expectLevel) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
@@ -405,7 +405,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "接待中购车异常情况", dataProvider = "errorBuyCar", dataProviderClass = DataCenter.class)
+    @Test(description = "接待中购车异常情况", dataProvider = "errorBuyCar", dataProviderClass = JcDataCenter.class)
     public void test05receptionBuyCar(String description, String point, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
@@ -424,7 +424,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "用户添加车牌号,异常", dataProvider = "addPlate", dataProviderClass = DataCenter.class)
+    @Test(description = "用户添加车牌号,异常", dataProvider = "addPlate", dataProviderClass = JcDataCenter.class)
     public void test03AddPlateNumber(String description, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);
@@ -443,7 +443,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "接待中备注", dataProvider = "remark", dataProviderClass = DataCenter.class)
+    @Test(description = "接待中备注", dataProvider = "remark", dataProviderClass = JcDataCenter.class)
     public void receptionRemark(String description, String content, String expect) {
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().findAny().orElse(null);

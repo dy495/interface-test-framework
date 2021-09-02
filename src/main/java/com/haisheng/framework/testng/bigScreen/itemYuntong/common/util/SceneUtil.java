@@ -12,7 +12,10 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homep
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionDetailV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionCreateV7;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerBuyCarPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
@@ -26,8 +29,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voice
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppPersonalPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.carmodel.AppCarModelTreeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalOverviewScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerDetailV4Scene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerEditV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppDepartmentPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppPersonalPageScene;
@@ -45,7 +46,9 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffEditScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -249,16 +252,16 @@ public class SceneUtil extends BasicUtil {
      * @param receptionId 接待id
      * @param customerId  客户id
      */
-    public void appCustomerEditV4(String receptionId, String customerId) {
+    public void appCustomerEditV4(Long receptionId, Long customerId) {
         String shopId = getReceptionShopId();
         int carModelId = getCarModelId(shopId);
-        JSONObject response = AppCustomerDetailV4Scene.builder().id(receptionId).customerId(customerId).shopId(shopId).build().visitor(visitor).execute();
+        JSONObject response = AppPreSalesReceptionDetailV4Scene.builder().id(receptionId).customerId(customerId).shopId(Long.parseLong(shopId)).build().visitor(visitor).execute();
         String customerName = response.getString("customer_name");
         int gender = response.getInteger("customer_gender");
         String customerPhone = response.getString("customer_phone");
         String estimateBuyCarDate = "2100-01-01";
-        AppCustomerEditV4Scene.builder().shopId(shopId).id(receptionId).customerId(customerId)
-                .customerName(customerName).customerPhone(customerPhone).intentionCarModelId(String.valueOf(carModelId))
+        AppCustomerEditV4Scene.builder().shopId(Long.parseLong(shopId)).id(receptionId).customerId(customerId)
+                .customerName(customerName).customerPhone(customerPhone).intentionCarModelId((long)carModelId)
                 .estimateBuyCarDate(estimateBuyCarDate).sexId(gender).build().visitor(visitor).execute();
     }
 
@@ -515,5 +518,43 @@ public class SceneUtil extends BasicUtil {
     public String mcCarId() {
         return visitor.isDaily() ? "775" : "20895";
     }
-
+    /**
+     * @description: 将虚拟卡片资料维护后返回一个有客户id的接待
+     * @param card: 虚拟卡片AppReceptionBean
+     * @return : 接待的AppReceptionBean
+     **/
+    public AppReceptionBean cardToReception(AppReceptionBean card){
+        String message = AppCustomerEditV4Scene.builder().id(card.getId()).customerId(card.getCustomerId())
+                .shopId(card.getShopId()).customerName("自动创建"+new DateTimeUtil().getHistoryDate(0)).customerPhone("13"+CommonUtil.getRandom(9)).customerSource("NATURE_VISIT")
+                .sexId(1).intentionCarModelId(Long.parseLong(mcCarId())).estimateBuyCarDate("2035-12-20").build().visitor(visitor).getResponse().getMessage();
+        Preconditions.checkArgument(Objects.equals("success", message),"修改资料失败:"+message);
+        return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .filter(e ->Objects.equals(e.getString("id"), card.getId().toString())).findFirst().get().toJavaObject(AppReceptionBean.class);
+    }
+    /**
+     * @description: 创建一个接待并维护资料得到有客户id的接待
+     * @param : null
+     * @return : 维护后的接待AppReceptionBean
+     **/
+    public AppReceptionBean creatReception(){
+        AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse();
+        AppReceptionBean beforeReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
+                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+        return cardToReception(beforeReception);
+    }
+    /**
+     * @description: 获取一个接待，没有则创建
+     * @param : null
+     * @return : AppReceptionBean
+     **/
+    public AppReceptionBean getReception(){
+        JSONObject findReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).findAny().orElse(null);
+        if (findReception == null){
+            return creatReception();
+        }else if (findReception.containsKey("customer_id")){
+            return findReception.toJavaObject(AppReceptionBean.class);
+        }else {
+            return cardToReception(findReception.toJavaObject(AppReceptionBean.class));
+        }
+    }
 }

@@ -25,7 +25,7 @@ public class AppPreSalesReceptionPageScene extends BaseScene {
      * 是否必填 false
      * 版本 v1.0
      */
-    private final JSONObject lastValue;
+    private final Integer lastValue;
 
 
     @Override

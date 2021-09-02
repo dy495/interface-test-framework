@@ -13,7 +13,8 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.YtDataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -72,7 +73,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     /**
      * @description :导出页-->导出当前页-->导出记录增加一条“导出记录”处的信息
      **/
-    @Test(dataProvider = "exportPages", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "exportPages", dataProviderClass = YtDataCenter.class)
     public void testExportPage(String product, String path, String type) {
         try {
             JSONObject res1 = util.checkExport(); //查询接口

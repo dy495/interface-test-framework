@@ -22,7 +22,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -93,8 +93,8 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         return customer;
     }
 
-    @Test(dataProvider = "createErrorInfo", dataProviderClass = DataCenter.class)
-    public void test01createCustomer_system_err(String description, String point, String content, String expect) {
+    @Test(dataProvider = "createErrorInfo", dataProviderClass = JcDataCenter.class)
+    public void test01createCustomerError(String description, String point, String content, String expect) {
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + CommonUtil.getRandom(9)).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().modify(point, content);Integer code = scene.visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(expect, String.valueOf(code)), description + ",预期结果code=" + expect + "，实际结果code=" + code);
@@ -127,7 +127,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "evaluateRemark", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "evaluateRemark", dataProviderClass = JcDataCenter.class)
     public void flowUpContent(String description, String remark, String expect) {
         try {
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");

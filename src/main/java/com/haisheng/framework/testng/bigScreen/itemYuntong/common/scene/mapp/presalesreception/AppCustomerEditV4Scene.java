@@ -68,7 +68,7 @@ public class AppCustomerEditV4Scene extends BaseScene {
      * 版本 v4.0
      */
     private final String estimateBuyCarDate;
-
+    private final String customerSource;
 
     @Override
     protected JSONObject getRequestBody() {
@@ -81,6 +81,7 @@ public class AppCustomerEditV4Scene extends BaseScene {
         object.put("customer_phone", customerPhone);
         object.put("intention_car_model_id", intentionCarModelId);
         object.put("estimate_buy_car_date", estimateBuyCarDate);
+        object.put("customer_source",customerSource);
         return object;
     }
 

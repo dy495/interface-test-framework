@@ -10,11 +10,11 @@ public class AppReceptionBean implements Serializable {
     @JSONField(name = "id")
     private Long id;
     @JSONField(name = "belong_sale_name")
-    private String belongSaleName;
+    private String belongSaleName = null;
     @JSONField(name = "customer_id")
-    private Long customerId;
+    private Long customerId = null;
     @JSONField(name = "customer_phone")
-    private String customerPhone;
+    private String customerPhone = null;
     @JSONField(name = "customer_name")
     private String customerName;
     @JSONField(name = "receptor_id")

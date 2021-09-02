@@ -4,7 +4,7 @@ import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.DataProvider;
 
-public class DataCenter {
+public class JcDataCenter {
 
     @DataProvider(name = "createErrorInfo")
     public Object[] createErrorInfo() {
@@ -32,6 +32,7 @@ public class DataCenter {
                 {"校验购车时间：早于今天", "estimate_buy_car_time", "2021-01-01", "1001"}, //"预计购车时间不能小于今天"
         };
     }
+
 
     @DataProvider(name = "editErrorInfo")
     public Object[] editErrorInfo(){
@@ -108,22 +109,6 @@ public class DataCenter {
                 {"正常名字1字，手机号11数字，非手机号格式", "1","2"+CommonUtil.getRandom(11)},
                 {"正常名字1字，手机号12数字", "1",CommonUtil.getRandom(12)},
                 {"正常名字0字", "","13"+CommonUtil.getRandom(9)}
-        };
-    }
-    @DataProvider(name = "exportPages")
-    public Object[] exportPages() {
-        return new String[][]{
-                {"car", "/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page/export", "成交记录"},
-                {"car", "/car-platform/pc/pre-sales-reception/export", "销售接待记录"},
-                {"car", "/car-platform/pc/manage/evaluate/v4/export", "销售接待线下评价"},
-                {"car", "/car-platform/pc/record/import-record/export", "导入记录"},
-                {"car", "/car-platform/pc/record/export-record/export", "导出记录"},
-                {"car", "/car-platform/pc/record/login-record/export", "登录记录"},
-                {"car", "/car-platform/pc/shop/export", "门店管理"},
-                {"car", "/car-platform/pc/brand/export", "品牌管理"},
-                {"car", "/car-platform/pc/brand/car-style/export", "车系列表"},
-                {"car", "/car-platform/pc/brand/car-style/car-model/export", "车型列表"},
-                {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "语音评鉴记录"}
         };
     }
 

@@ -14,19 +14,17 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.service.ApiRequest;
 import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
@@ -88,7 +86,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 
     }
 
-    @Test(dataProvider = "remark", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "remark", dataProviderClass = JcDataCenter.class)
     public void test02PcRemark(String description, String remark, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
@@ -140,7 +138,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         };
     }
 
-    @Test(dataProvider = "remark", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "remark", dataProviderClass = JcDataCenter.class)
     public void test04AppRemark(String description, String remark, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
@@ -186,14 +184,14 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 //        }
 //    }
 
-    @Test(dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "editErrorInfo", dataProviderClass = JcDataCenter.class)
     public void test07ChangeUserInfo(String description, String point, String content, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
                 customerConfig();
             }
-            String message = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字" + dt.getHistoryDate(0)).customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point, content).visitor(visitor).getResponse().getMessage();
-            Preconditions.checkArgument(Objects.equals(message, expect), description + "，期待结果=" + expect + "实际结果=" + message);
+            Integer code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字" + dt.getHistoryDate(0)).customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point, content).visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(Objects.equals(code.toString(), expect), description + "，期待结果=" + expect + "实际结果=" + code);
             sleep(3);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

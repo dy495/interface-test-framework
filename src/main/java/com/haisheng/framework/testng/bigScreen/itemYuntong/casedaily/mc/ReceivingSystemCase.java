@@ -11,7 +11,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionCreateScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionCreateV7;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
@@ -19,16 +22,21 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.YtDataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD; // 管理页—-首页
@@ -73,41 +81,43 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-//    // 随机n位数字
-//    private String numRandom(Integer n) {
-//        Random ran = new Random();
-//        String numStr = "";
-//        for (int i = 0; i < n; i++) {
-//            String num = ran.nextInt(9) + "";
-//            numStr += num;
-//        }
-//        return numStr;
-//    }
 
-    @Test(dataProvider = "createErrorInfo", dataProviderClass = DataCenter.class)
-    public void test01createCustomer_system_err(String description, String point, String content, String expect) {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
-        try {
-            IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + CommonUtil.getRandom(9)).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().modify(point, content);
-            Integer code = scene.visitor(visitor).getResponse().getCode();
-            Preconditions.checkArgument(Objects.equals(expect, String.valueOf(code)), description + ",预期结果code=" + expect + "，实际结果code=" + code);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("手动创建接待,所有异常情况");
-        }
-
+    public AppReceptionBean createCustomerCommon(String name, Integer sex, String phone, Long carId, String buyTime) {
+        AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse();
+        AppReceptionBean beforeReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
+                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+        String message = AppCustomerEditV4Scene.builder().id(beforeReception.getId()).customerId(beforeReception.getCustomerId())
+                .shopId(beforeReception.getShopId()).customerName(name).customerPhone(phone).customerSource("NATURE_VISIT")
+                .sexId(sex).intentionCarModelId(carId).estimateBuyCarDate(buyTime).build().visitor(visitor).getResponse().getMessage();
+        Preconditions.checkArgument(Objects.equals("success", message),"修改资料失败:"+message);
+        return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .filter(e ->Objects.equals(e.getString("id"), beforeReception.getId().toString())).findFirst().get().toJavaObject(AppReceptionBean.class);
     }
 
-    @Test
+//    @Test(dataProvider = "createErrorInfo", dataProviderClass = JcDataCenter.class)
+//    public void test01createCustomer_system_err(String description, String point, String content, String expect) {
+//        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
+//        try {
+//            IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId())).estimateBuyCarTime("2035-12-20").build().modify(point, content);
+//            Integer code = scene.visitor(visitor).getResponse().getCode();
+//            Preconditions.checkArgument(Objects.equals(expect, String.valueOf(code)), description + ",预期结果code=" + expect + "，实际结果code=" + code);
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("手动创建接待,所有异常情况");
+//        }
+//
+//    }
+
+    //@Test
     public void test02samePhone() {
         try {
             String phone = "15" + CommonUtil.getRandom(9);
-            Map<String, String> first = util.createCustomerCommon("一次接待", "1", phone, util.mcCarId(), "2066-12-21");
-            AppFinishReceptionScene.builder().id(first.get("id")).shopId(first.get("shopId")).build().visitor(visitor).execute();
-            Map<String, String> second = util.createCustomerCommon("二次接待", "1", phone, util.mcCarId(), "2066-12-21");
-            AppFinishReceptionScene.builder().id(second.get("id")).shopId(second.get("shopId")).build().visitor(visitor).execute();
-            String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().visitor(visitor).getResponse().getMessage();
+            AppReceptionBean first = createCustomerCommon("一次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
+            AppFinishReceptionScene.builder().id(first.getId()).shopId(first.getShopId()).build().visitor(visitor).execute();
+            AppReceptionBean second = createCustomerCommon("二次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
+            AppFinishReceptionScene.builder().id(second.getId()).shopId(second.getShopId()).build().visitor(visitor).execute();
+            String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId())).estimateBuyCarTime("2035-12-20").build().visitor(visitor).getResponse().getMessage();
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
             Preconditions.checkArgument(Objects.equals("该客户当天已接待2次！不能再进行接待！", message), "同一个手机号当天接待三次,message:" + message);
 
@@ -118,16 +128,16 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "evaluateRemark", dataProviderClass = DataCenter.class)
+    @Test(dataProvider = "evaluateRemark", dataProviderClass = YtDataCenter.class)
     public void flowUpContent(String description, String remark, String expect) {
         try {
-            Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
-            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().visitor(visitor).execute();
+            AppReceptionBean customer = createCustomerCommon("自动创建差评跟进", 1, "150" + CommonUtil.getRandom(8), Long.parseLong(util.mcCarId()), "2033-12-20");
+            AppFinishReceptionScene.builder().id(customer.getId()).shopId(customer.getShopId()).build().visitor(visitor).execute();
             commonConfig.setShopId(null);
             commonConfig.setRoleId(null);
             JSONArray evaluateInfoList = new JSONArray();
-            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).execute().getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
-            PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().visitor(visitor).getResponse();
+            PreSalesRecpEvaluateOpt.builder().reception_id(customer.getId()).build().visitor(visitor).execute().getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
+            PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(customer.getId()).build().visitor(visitor).getResponse();
             commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId());
             commonConfig.setRoleId(YT_RECEPTION_DAILY.getRoleId());
             JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
