@@ -78,12 +78,11 @@ public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
             List<ShopMessage> shopDataList = new LinkedList<>();
             List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             for (PassengerFlowBean flowBean : passengerFlowBeanList) {
-                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(PvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPvUvBean.class, "list");
-                shopDataList.addAll(realTimeShopPvUvBeanList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, pvUvBean, null)).collect(Collectors.toList()));
+                List<RealTimeShopPvUvBean> enterPvUvList = util.toJavaObjectList(PvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPvUvBean.class, "list");
+                shopDataList.addAll(enterPvUvList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, pvUvBean, null)).collect(Collectors.toList()));
             }
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
-            Stream<ShopMessage> stream = shopDataList.stream()
-                    .filter(shopData -> shopData.getRealTimeShopPvUvBean().getTime().substring(0, 2).equals(nowTime));
+            Stream<ShopMessage> stream = shopDataList.stream().filter(shopData -> shopData.getRealTimeShopPvUvBean().getTime().substring(0, 2).equals(nowTime));
             shopDataList = account.equals(AccountEnum.DDC) ? util.getDdcShopData(stream) : account.equals(AccountEnum.BGY) ? util.getBgyShopData(stream) : util.getLzShopData(stream);
             if (shopDataList.size() != 0) {
                 String timeSection = TimeTableEnum.findSectionByHour(nowTime).getSection();
@@ -103,8 +102,8 @@ public class PvUvMonitor extends TestCaseCommon implements TestCaseStd {
             List<ShopMessage> shopDataList = new LinkedList<>();
             List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             for (PassengerFlowBean flowBean : passengerFlowBeanList) {
-                List<RealTimeShopPassPvUvBean> realTimeShopPassPvUvBeanList = util.toJavaObjectList(PassPvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPassPvUvBean.class, "list");
-                shopDataList.addAll(realTimeShopPassPvUvBeanList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, null, pvUvBean)).collect(Collectors.toList()));
+                List<RealTimeShopPassPvUvBean> passPvUvList = util.toJavaObjectList(PassPvUvScene.builder().shopId(flowBean.getId()).build(), RealTimeShopPassPvUvBean.class, "list");
+                shopDataList.addAll(passPvUvList.stream().filter(e -> util.filterTime(e.getTime())).map(pvUvBean -> util.setShopData(flowBean, null, pvUvBean)).collect(Collectors.toList()));
             }
             String nowTime = DateTimeUtil.getFormat(new Date(), "HH");
             Stream<ShopMessage> stream = shopDataList.stream().filter(shopData -> shopData.getRealTimeShopPassPvUvBean().getHour().equals(nowTime));

@@ -31,7 +31,7 @@ import java.util.List;
 public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.XD_ONLINE;
     private static final AccountEnum ACCOUNT = AccountEnum.SALES_DEMO_ONLINE;
-    private static final List<DeviceMessage> list = new ArrayList<>();
+    private final List<DeviceMessage> list = new ArrayList<>();
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
 
@@ -98,7 +98,6 @@ public class DeviceMonitor extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("门店设备监控");
         }
-
     }
 
     @DataProvider(name = "DEVICE")
