@@ -15,15 +15,14 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.Region
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewFloorOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewVenueOverviewScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.CustomersPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.SceneUntil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -33,7 +32,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -2226,6 +2224,40 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("");
         }
     }
+
+    /**
+     *区域进出口趋势-所有区域占比之和==100%
+     */
+    @Test(description = " 区域进出口趋势-所有区域占比之和==100%")
+    public void mallCenterDataCase67(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //获取区域进出口的
+                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONArray list1=scene1.visitor(visitor).execute().getJSONArray("list");
+                double portNum=0;
+                //获取楼层出入口的各个人数占比
+                for(int j=0;j<list1.size();j++){
+                    String number=list1.getJSONObject(j).getString("percentage");
+                    double port=businessUtil.getNumHalfUp(Double.parseDouble(number.substring(0,number.length()-1)),4);
+                    portNum=businessUtil.getDecimalResult(portNum,port,"add",4);
+                }
+                logger.info("进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
+                Preconditions.checkArgument(portNum<=100.01&&portNum>=99.99,"进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("区域进出口趋势-所有区域占比之和==100%");
+        }
+    }
+
 
 
 }

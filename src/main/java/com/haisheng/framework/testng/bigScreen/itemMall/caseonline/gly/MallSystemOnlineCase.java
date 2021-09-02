@@ -13,8 +13,14 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.FloorT
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.RegionTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewFloorOverviewScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewRegionOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewVenueOverviewScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionCustomerTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPortraitScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionRegionTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.CustomersPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.*;
@@ -28,6 +34,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.nio.cs.ext.ISCII91;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -368,25 +376,13 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 IScene scene= HourPortraitScene.builder().date(businessUtil.getDate(-3)).region(e).build();
                 JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
                 double portNum=0;
-                if(e.equals(RegionTypeEnum.EXIT.getRegion())){
                     //获取楼层出入口的各个人数占比
                     for(int i=0;i<list.size();i++){
                         String number=list.getJSONObject(i).getString("percentage");
                         double port=businessUtil.getNumHalfUp(Double.parseDouble(number.substring(0,number.length()-1)),4);
                         portNum=businessUtil.getDecimalResult(portNum,port,"add",4);
-                        logger.info("----------"+portNum);
                     }
-                    Preconditions.checkArgument(portNum<=100.01||portNum>=99.99,"进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
-                }else{
-                    //获取楼层出入口的各个人数占比
-                    for(int i=0;i<list.size();i++){
-                        String number=list.getJSONObject(i).getString("percentage");
-                        double port=businessUtil.getNumHalfUp(Double.parseDouble(number.substring(0,number.length()-1)),4);
-                        portNum=businessUtil.getDecimalResult(portNum,port,"add",4);
-                        logger.info("----------"+portNum);
-                    }
-                    Preconditions.checkArgument(portNum<=100.01||portNum>=99.99,"进出口到访趋势图-各停车场的人次的占比相加为："+portNum);
-                }
+                    Preconditions.checkArgument(portNum<=100.01&&portNum>=99.99,e+"进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
             });
 
         }catch (AssertionError | Exception e) {
@@ -521,7 +517,6 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-
     /**
      * 场馆客流分时/楼层客流分时的男性占比+女性占比=100%--ok
      */
@@ -533,7 +528,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
             Arrays.stream(sceneArray).forEach(scene->{
                 //获取各个年龄段的占比
                 IScene scene1=scene.equals("VENUE")? CustomersPortraitScene.builder().scene(scene).date(businessUtil.getDate(-1)).build():CustomersPortraitScene.builder().scene(scene).date(businessUtil.getDate(-1)).floorId(floorId).build();
-                JSONObject response=scene1.visitor(visitor).execute();;
+                JSONObject response=scene1.visitor(visitor).execute();
                 String malePercent=response.getString("male_ratio_str");
                 double male=Double.parseDouble(malePercent.substring(0,malePercent.length()-1));
                 String femalePercent=response.getString("female_ratio_str");
@@ -1730,30 +1725,6 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
     public void mallCenterDataCase51(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-//            String[][] type={{"pv_overview","enter_pv","PV"},{"uv_overview","enter_uv","UV"}};
-//            for(int i=0;i<type.length;i++){
-//                String[][] time={{businessUtil.getStartDate(-1),businessUtil.getEndDate(0),"周数据"},{businessUtil.getMonthStartDate(-1),businessUtil.getMonthEndDate(-1),"月数据"}};
-//                for(int a=0;a<time.length;a++){
-//                    //获取历史客流数据
-//                    IScene scene= OverviewVenueOverviewScene.builder().startTime(time[a][0]).endTime(time[a][1]).build();
-//                    JSONObject response=visitor.invokeApi(scene,true);
-//                    //当前人数
-//                    int numberUv=response.getJSONObject(type[i][0]).getInteger("number");
-//
-//                    //获取全场到访趋势图在中人数的之和
-//                    IScene scene2=CycleFullCourtTrendHistoryScene.builder().type(type[i][2]).startTime(time[a][0]).endTime(time[a][1]).build();
-//                    JSONObject response2=visitor.invokeApi(scene2,true);
-//                    int number=0;
-//                    JSONArray list=response2.getJSONArray("list");
-//                    for(int j=0;j<list.size();j++){
-//                        int hourNum=list.getJSONObject(j).containsKey(type[i][1])?list.getJSONObject(j).getInteger(type[i][1]):0;
-//                        number+=hourNum;
-//                    }
-//                    logger.info(time[a][2]+" "+type[i][2]+" 客流总览中的当前人数为："+numberUv+"    全场到访趋势图在中人数的之和为："+number);
-//                    Preconditions.checkArgument(numberUv<=number,time[a][2]+" "+type[i][2]+" 客流总览中的当前人数为："+numberUv+"    全场到访趋势图在中人数的之和为："+number);
-//                }
-//            }
-
             String[][] type={{"pv_overview","enter_pv","PV"},{"uv_overview","enter_uv","UV"}};
             for (String[] strings : type) {
                 //获取历史客流数据
@@ -2181,26 +2152,269 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
+
+    //-------------------------------------------------场景区域总览---------------------------------------------------
+
     /**
-     *
+     *区域管理-列表中累计到访人数<=累计到访人次
      */
-    @Test(description = "")
+    @Test(description = "区域管理-列表中累计到访人数<=累计到访人次")
     public void mallCenterDataCase62(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                //累计人数
+                int visitNumber=list.getJSONObject(i).getInteger("visit_number");
+                //累计人次
+                int visitTimes=list.getJSONObject(i).getInteger("visit_times");
 
+                System.out.println("累计人次为："+visitTimes+"  累计人数为："+visitNumber);
+                Preconditions.checkArgument(visitTimes>=visitNumber,"累计人次为："+visitTimes+"  累计人数为："+visitNumber);
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("区域管理-列表中累计到访人数<=累计到访人次");
         }
     }
 
     /**
-     *
+     *累计到访人次==客流趋势到访人次之和&&累计到访人数==客流趋势到访人数之和&&累计到访人数<=累计到访人次
      */
-    @Test(description = "")
+    @Test(description = "累计到访人次==客流趋势到访人次之和&&累计到访人数==客流趋势到访人数之和&&累计到访人数<=累计到访人次")
     public void mallCenterDataCase63(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //场馆列表中查看详情页面
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                JSONObject response=scene1.visitor(visitor).execute();
+                //获取人数
+                int numberUv=response.getJSONObject("uv_overview").getInteger("number");
+                //获取人次
+                int numberPv=response.getJSONObject("pv_overview").getInteger("number");
+
+                //获取到访趋势的人数的总和
+                int sumUV=0;
+                int sumPV=0;
+                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONArray list1=scene2.visitor(visitor).execute().getJSONArray("list");
+                for(int j=0;j<list1.size();j++){
+                    int numberUV=list1.getJSONObject(j).containsKey("enter_uv")?list1.getJSONObject(j).getInteger("enter_uv"):0;
+                    int numberPV=list1.getJSONObject(j).containsKey("enter_pv")?list1.getJSONObject(j).getInteger("enter_pv"):0;
+                    sumUV+=numberUV;
+                    sumPV+=numberPV;
+                }
+                Preconditions.checkArgument(numberUv<=numberPv," 客流总览中的当前人数为："+numberUv+"    客流总览中的当前人次为："+numberPv);
+                Preconditions.checkArgument(numberUv<=sumUV," 客流总览中的当前人数为："+numberUv+"    全场到访趋势图在中人数的之和为："+sumUV);
+                Preconditions.checkArgument(numberPv<=sumPV," 客流总览中的当前人次为："+numberPv+"    全场到访趋势图在中的之re人次和为："+sumPV);
+
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计到访人次==客流趋势到访人次之和&&累计到访人数==客流趋势到访人数之和&&累计到访人数<=累计到访人次");
+        }
+    }
+
+    /**
+     *累计到访人次环比==前7天人次-前前7天人次/前前7天人次x100%
+     */
+    @Test(description = " 累计到访人次环比==前7天人次-前前7天人次/前前7天人次x100%")
+    public void mallCenterDataCase64(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //场馆列表中查看详情页面上个七天
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                JSONObject response=scene1.visitor(visitor).execute();
+                //场馆列表中查看详情页面上上个七天
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                JSONObject response2=scene2.visitor(visitor).execute();
+                //获取人次环比
+                String number=response.getJSONObject("pv_overview").getString("pre_week_compare");
+                double numberQoq=businessUtil.getNumHalfUp(number,4);
+                //获取上个七天人次
+                int numberUv=response.getJSONObject("pv_overview").getInteger("number");
+                //上上个七天获取的人次
+                int numberUvLast=response2.getJSONObject("pv_overview").getInteger("number");
+
+                //计算过店人次环比
+                double value=numberUv-numberUvLast;
+                double qoq=numberUvLast==0?0:value/numberUvLast;
+                double percent=businessUtil.getNumHalfUp(qoq,4);
+                logger.info("页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+                Preconditions.checkArgument(numberQoq==percent,"页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计到访人次环比==前7天人次-前前7天人次/前前7天人次x100%");
+        }
+    }
+
+    /**
+     *累计到访人数环比==前7天人数-前前7天人数/前前7天人数x100%
+     */
+    @Test(description = "累计到访人数环比==前7天人数-前前7天人数/前前7天人数x100% ")
+    public void mallCenterDataCase65(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //场馆列表中查看详情页面上个七天
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                JSONObject response=scene1.visitor(visitor).execute();
+                //场馆列表中查看详情页面上上个七天
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                JSONObject response2=scene2.visitor(visitor).execute();
+                //获取人数环比
+                String number=response.getJSONObject("uv_overview").getString("pre_week_compare");
+                double numberQoq=businessUtil.getNumHalfUp(number,4);
+                //获取上个七天人数
+                int numberUv=response.getJSONObject("uv_overview").getInteger("number");
+                //上上个七天获取的人数
+                int numberUvLast=response2.getJSONObject("uv_overview").getInteger("number");
+
+                //计算过店人数环比
+                double value=numberUv-numberUvLast;
+                double qoq=numberUvLast==0?0:value/numberUvLast;
+                double percent=businessUtil.getNumHalfUp(qoq,4);
+                logger.info("页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+                Preconditions.checkArgument(numberQoq==percent,"页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计到访人数环比==前7天人数-前前7天人数/前前7天人数x100%");
+        }
+    }
+
+    /**
+     *人均停留时长==前7天人均停留时长-前前7天人均停留时长/前前7天人均停留时长x100%
+     */
+    @Test(description = "人均停留时长==前7天人均停留时长-前前7天人均停留时长/前前7天人均停留时长x100% ")
+    public void mallCenterDataCase66(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //场馆列表中查看详情页面上个七天
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                JSONObject response=scene1.visitor(visitor).execute();
+                //场馆列表中查看详情页面上上个七天
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                JSONObject response2=scene2.visitor(visitor).execute();
+                //获取人次环比
+                String number=response.getJSONObject("stay_time_overview").getString("pre_week_compare");
+                double numberQoq=businessUtil.getNumHalfUp(number,4);
+                //获取上个七天人次
+                int numberUv=response.getJSONObject("stay_time_overview").getInteger("number");
+                //上上个七天获取的人次
+                int numberUvLast=response2.getJSONObject("stay_time_overview").getInteger("number");
+
+                //计算过店人次环比
+                double value=numberUv-numberUvLast;
+                double qoq=numberUvLast==0?0:value/numberUvLast;
+                double percent=businessUtil.getNumHalfUp(qoq,4);
+                double count=businessUtil.getDecimalResult(numberQoq,percent,"subtract",4);
+                logger.info("页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+                Preconditions.checkArgument(count<=0.01,"页面展示的环比数据为："+numberQoq+"  计算结果的结果为："+percent);
+            }
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("人均停留时长==前7天人均停留时长-前前7天人均停留时长/前前7天人均停留时长x100%");
+        }
+    }
+
+    /**
+     *区域进出口趋势-所有区域占比之和==100%
+     */
+    @Test(description = " 区域进出口趋势-所有区域占比之和==100%")
+    public void mallCenterDataCase67(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //获取区域进出口的
+                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONArray list1=scene1.visitor(visitor).execute().getJSONArray("list");
+                double portNum=0;
+                //获取楼层出入口的各个人数占比
+                for(int j=0;j<list1.size();j++){
+                    String number=list1.getJSONObject(j).getString("percentage");
+                    double port=businessUtil.getNumHalfUp(Double.parseDouble(number.substring(0,number.length()-1)),4);
+                    portNum=businessUtil.getDecimalResult(portNum,port,"add",4);
+                }
+                Preconditions.checkArgument(portNum<=100.01&&portNum>=99.99,"进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("区域进出口趋势-所有区域占比之和==100%");
+        }
+    }
+
+
+    /**
+     *客流趋势每日的人次==趋势图中每个出入口的人次之和
+     */
+    @Test(description = "客流趋势每日的人次==趋势图中每个出入口的人次之和 ")
+    public void mallCenterDataCase68(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+//            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+//            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+//            for(int i=0;i<list.size();i++) {
+//                //获取区域id
+//                String regionId = list.getJSONObject(i).getString("region_id");
+//                //获取区域进出口的
+//                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+//                JSONArray list1=scene1.visitor(visitor).execute().getJSONArray("list");
+//
+
+//            }
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客流趋势每日的人次==趋势图中每个出入口的人次之和");
+        }
+    }
+
+    /**
+     *客流趋势每日的人数==趋势图中每个出入口的人数之和
+     */
+    @Test(description = " ")
+    public void mallCenterDataCase69(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
 
