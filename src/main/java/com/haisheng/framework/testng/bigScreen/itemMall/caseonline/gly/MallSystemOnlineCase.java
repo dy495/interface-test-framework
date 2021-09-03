@@ -15,10 +15,7 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.SortTy
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewFloorOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewRegionOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewVenueOverviewScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionCustomerTrendScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPageScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionPortraitScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.RegionRegionTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.region.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.CustomersPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
@@ -34,8 +31,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sun.nio.cs.ext.ISCII91;
-
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -535,7 +530,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 double female=Double.parseDouble(femalePercent.substring(0,malePercent.length()-1));
                 double sum=businessUtil.getDecimalResult(male,female,"add",4);
                 logger.info("---------"+sum);
-                Preconditions.checkArgument(sum>=99.98||sum<=100.02||sum==0.00,"男性占比和女性占比之和为："+sum);
+                Preconditions.checkArgument((sum>=99.98&&sum<=100.02)||sum==0.00,"男性占比和女性占比之和为："+sum);
             });
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -565,7 +560,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                     String femalePercent=list.getJSONObject(i).getString("female_percent");
                     double female=Double.parseDouble(femalePercent.substring(0,femalePercent.length()-1));
                     System.out.println(scene+"男性占比为："+malePercent+"  女性占比为："+femalePercent+"  年龄段占比为："+ageGroupPercent);
-                    Preconditions.checkArgument(ageGroup<=(male+female+0.02)||ageGroup>=(male+female-0.02),scene+"男性占比为："+malePercent+"  女性占比为："+femalePercent+"  年龄段占比为："+ageGroupPercent);
+                    Preconditions.checkArgument(ageGroup<=(male+female+0.02)&&ageGroup>=(male+female-0.02),scene+"男性占比为："+malePercent+"  女性占比为："+femalePercent+"  年龄段占比为："+ageGroupPercent);
                 }
             });
         }catch (AssertionError | Exception e) {
@@ -605,7 +600,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 }
                 logger.info(maleNum+"      "+femaleNum+"     "+maleStr+"      "+femaleStr+"    "+scene);
                 Preconditions.checkArgument(maleStr<=maleNum+0.01||maleNum-0.01<=maleStr,scene+"女性占比为："+malePercentStr+"  各年龄段女性占比相加为："+maleNum);
-                Preconditions.checkArgument( femaleStr<=femaleNum+0.01||femaleStr-0.01<=femaleStr,scene+" 男性占比为："+femalePercentStr+"  各年龄段男性占比相加为："+femaleNum);
+                Preconditions.checkArgument( femaleStr<=femaleNum+0.01&&femaleStr-0.01<=femaleStr,scene+" 男性占比为："+femalePercentStr+"  各年龄段男性占比相加为："+femaleNum);
 
             });
 
@@ -993,7 +988,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 sum+=percentNum;
             }
             logger.info("--------"+sum);
-            Preconditions.checkArgument(sum<=100.02||sum>=100.02,"所有年龄段的人数占比的相加之和为："+sum);
+            Preconditions.checkArgument(sum<=100.02&&sum>=100.02,"所有年龄段的人数占比的相加之和为："+sum);
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1776,7 +1771,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 }
                 logger.info("----------"+portNum);
 
-                Preconditions.checkArgument(portNum<=100.02||portNum>=99.98,e+" 进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
+                Preconditions.checkArgument(portNum<=100.02&&portNum>=99.98,e+" 进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
             });
 
         }catch (AssertionError | Exception e) {
@@ -1805,7 +1800,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                     portNum=businessUtil.getDecimalResult(portNum,port,"add",2);
                 }
                 System.err.println(e+" 进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
-                Preconditions.checkArgument(portNum<=100.02||portNum>=99.98,e+" 进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
+                Preconditions.checkArgument(portNum<=100.02&&portNum>=99.98,e+" 进出口到访趋势图-各进出口的人次的占比相加为："+portNum);
             });
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1972,7 +1967,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                     double female = Double.parseDouble(femalePercent.substring(0, malePercent.length() - 1));
                     double sum = male + female;
                    logger.info(strings[2] + " "+scene + "-男性占比为："+male+"  女性占比为："+female);
-                    Preconditions.checkArgument(sum >= 99.98 || sum <= 100.02 || sum == 0.0, strings[2] + " " + scene + "-男性占比为："+male+"  女性占比为："+female);
+                    Preconditions.checkArgument((sum >= 99.98 && sum <= 100.02) || sum == 0.0, strings[2] + " " + scene + "-男性占比为："+male+"  女性占比为："+female);
                 }
             });
         }catch (AssertionError | Exception e) {
@@ -2005,7 +2000,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                         String femalePercent = list.getJSONObject(i).getString("female_percent");
                         double female = Double.parseDouble(femalePercent.substring(0, femalePercent.length() - 1));
                         logger.info(scene + " " + strings[2] + " 男性占比为：" + malePercent + "  女性占比为：" + femalePercent + "  年龄段占比为：" + ageGroupPercent);
-                        Preconditions.checkArgument(ageGroup <= (male + female + 0.02) || ageGroup >= (male + female - 0.02), scene + " " + strings[2] + " 男性占比为：" + malePercent + "  女性占比为：" + femalePercent + "  年龄段占比为：" + ageGroupPercent);
+                        Preconditions.checkArgument(ageGroup <= (male + female + 0.02) && ageGroup >= (male + female - 0.02), scene + " " + strings[2] + " 男性占比为：" + malePercent + "  女性占比为：" + femalePercent + "  年龄段占比为：" + ageGroupPercent);
                     }
                 }
             });
@@ -2047,8 +2042,8 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                         femaleNum += female;
                     }
                     logger.info(scene + " " + strings[2] + " " + maleNum + "      " + femaleNum + "     " + maleStr + "      " + femaleStr);
-                    Preconditions.checkArgument(maleStr <= (maleNum + 0.01) || (maleNum - 0.01) <= maleStr, scene + " " + strings[2] + "女性占比为：" + malePercentStr + "  各年龄段女性占比相加为：" + maleNum);
-                    Preconditions.checkArgument(femaleStr <= (femaleNum + 0.01) || (femaleStr - 0.01) <= femaleStr, scene + " " + strings[2] + "男性占比为：" + femalePercentStr + "  各年龄段男性占比相加为：" + femaleNum);
+                    Preconditions.checkArgument(maleStr <= (maleNum + 0.05) && (maleNum - 0.05) <= maleStr, scene + " " + strings[2] + "女性占比为：" + malePercentStr + "  各年龄段女性占比相加为：" + maleNum);
+                    Preconditions.checkArgument(femaleStr <= (femaleNum + 0.05) && (femaleStr - 0.05) <= femaleStr, scene + " " + strings[2] + "男性占比为：" + femalePercentStr + "  各年龄段男性占比相加为：" + femaleNum);
 
                 }
             });
@@ -2384,25 +2379,60 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
 
 
     /**
-     *客流趋势每日的人次==趋势图中每个出入口的人次之和
+     *客流趋势每日的人次==趋势图中每个出入口的人次之和--不等
      */
-    @Test(description = "客流趋势每日的人次==趋势图中每个出入口的人次之和 ")
+    @Test(description = "客流趋势每日的人次==趋势图中每个出入口的人次之和 ",enabled = false)
     public void mallCenterDataCase68(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //区域管理的列表
-//            IScene scene= RegionPageScene.builder().page(1).size(10).build();
-//            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
-//            for(int i=0;i<list.size();i++) {
-//                //获取区域id
-//                String regionId = list.getJSONObject(i).getString("region_id");
-//                //获取区域进出口的
-//                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
-//                JSONArray list1=scene1.visitor(visitor).execute().getJSONArray("list");
-//
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //获取客流到访的的总和
+//                int sumCustomerUV=0;
+                int sumCustomerPV=0;
+                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONArray list1=scene2.visitor(visitor).execute().getJSONArray("list");
+                for(int j=0;j<list1.size();j++){
+//                    int numberUV=list1.getJSONObject(j).containsKey("enter_uv")?list1.getJSONObject(j).getInteger("enter_uv"):0;
+                    int numberPV=list1.getJSONObject(j).containsKey("enter_pv")?list1.getJSONObject(j).getInteger("enter_pv"):0;
+//                    sumCustomerUV+=numberUV;
+                    sumCustomerPV+=numberPV;
+                }
+                //获取趋势进出口的人数和人次的总和
+                IScene scene3= RegionRegionTrendScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).type("PV").regionId(regionId).build();
+                JSONObject response=scene3.visitor(visitor).execute();
+                JSONArray list3=response.getJSONArray("list");
+                JSONArray seriesList=response.getJSONArray("series_List");
+                List<String> exitArray=new ArrayList<>();
+                //存放各个出入口的名称和id的map
+                Map<String,String> exitName=new HashMap<>();
+                //获取各个出入口的id和名称
+                for(int a=0;a<seriesList.size();a++){
+                    String key=seriesList.getJSONObject(a).getString("key");
+                    String name=seriesList.getJSONObject(a).getString("name");
+                    exitName.put(key,name);
+                    exitArray.add(key);
+                }
+                System.err.println(exitName);
+                System.err.println(list3);
+                //获取各个出口的人次和名称
+                int count=0;
+                for(int k=0;k<list3.size();k++){
+                    for (String s : exitArray) {
+                        int pv = list3.getJSONObject(k).containsKey(s)?list3.getJSONObject(k).getInteger(s):0;
+                        System.out.println(s+"---------"+pv+"-------"+list3.getJSONObject(k).containsKey(s));
 
-//            }
+                        count+=pv;
+                    }
+                }
 
+                System.out.println("各个出入口的人次总和为："+count+"  客流总览中的人次的总和为："+sumCustomerPV);
+                Preconditions.checkArgument(count==sumCustomerPV,"各个出入口的人次总和为："+count+"  客流总览中的人次的总和为："+sumCustomerPV);
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2411,19 +2441,118 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     *客流趋势每日的人数==趋势图中每个出入口的人数之和
+     * 场馆客流分时/楼层客流分时的男性占比+女性占比=100%--ok
      */
-    @Test(description = " ")
+    @Test(description = "场馆客流分时/楼层客流分时的男性占比+女性占比=100%")
     public void mallCenterDataCase69(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int i=0;i<list.size();i++) {
+                //获取区域id
+                String regionId = list.getJSONObject(i).getString("region_id");
+                //获取各个年龄段的占比
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONObject response = scene1.visitor(visitor).execute();
+                String malePercent = response.getString("male_ratio_str");
+                double male = Double.parseDouble(malePercent.substring(0, malePercent.length() - 1));
+                String femalePercent = response.getString("female_ratio_str");
+                double female = Double.parseDouble(femalePercent.substring(0, malePercent.length() - 1));
+                double sum = businessUtil.getDecimalResult(male, female, "add", 4);
+                logger.info(femalePercent+"---------" + malePercent);
+                Preconditions.checkArgument((sum >= 99.98 &&sum <= 100.02) || sum == 0.00, "男性占比和女性占比之和为：" + sum);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("场馆客流分时/楼层客流分时的男性占比+女性占比=100%");
+        }
+    }
+
+    /**
+     * 各年龄段占比=各年龄段女性占比+各年龄段男性占比--ok
+     */
+    @Test(description = "各年龄段占比=各年龄段女性占比+各年龄段男性占比")
+    public void mallCenterDataCase70(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list1=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int j=0;j<list1.size();j++) {
+                //获取区域id
+                String regionId = list1.getJSONObject(j).getString("region_id");
+                //获取各个年龄段的占比
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONObject response = scene1.visitor(visitor).execute();
+                JSONArray list=response.getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String ageGroupPercent=list.getJSONObject(i).getString("age_group_percent");
+                    double ageGroup=Double.parseDouble(ageGroupPercent.substring(0,ageGroupPercent.length()-1));
+                    String malePercent=list.getJSONObject(i).getString("male_percent");
+                    double male=Double.parseDouble(malePercent.substring(0,malePercent.length()-1));
+                    String femalePercent=list.getJSONObject(i).getString("female_percent");
+                    double female=Double.parseDouble(femalePercent.substring(0,femalePercent.length()-1));
+                    Preconditions.checkArgument(ageGroup<=(male+female+0.02)||ageGroup>=(male+female-0.02),"男性占比为："+malePercent+"  女性占比为："+femalePercent+"  年龄段占比为："+ageGroupPercent);
+                }
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("各年龄段占比=各年龄段女性占比+各年龄段男性占比");
+        }
+    }
+
+    /**
+     * 女性占比=各年龄段女性占比相加&&男性占比=各年龄段男性占比相加
+     */
+    @Test(description = "女性占比=各年龄段女性占比相加&&男性占比=各年龄段男性占比相加")
+    public void mallCenterDataCase71(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //区域管理的列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list1=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int j=0;j<list1.size();j++) {
+                //获取区域id
+                String regionId = list1.getJSONObject(j).getString("region_id");
+                //获取各个年龄段的占比
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                JSONObject response = scene1.visitor(visitor).execute();
+                String malePercentStr=response.getString("male_ratio_str");
+                double maleStr=Double.parseDouble(malePercentStr.substring(0,malePercentStr.length()-1));
+                String femalePercentStr=response.getString("female_ratio_str");
+                double femaleStr=Double.parseDouble(femalePercentStr.substring(0,femalePercentStr.length()-1));
+
+                JSONArray list=response.getJSONArray("list");
+                double maleNum=0L;
+                double femaleNum=0L;
+                for(int i=0;i<list.size();i++){
+                    String malePercent=list.getJSONObject(i).getString("male_percent");
+                    double male=Double.parseDouble(malePercent.substring(0,malePercent.length()-1));
+                    String femalePercent=list.getJSONObject(i).getString("female_percent");
+                    double female=Double.parseDouble(femalePercent.substring(0,femalePercent.length()-1));
+                    maleNum=businessUtil.getDecimalResult(maleNum,male,"add",2);
+                    femaleNum=businessUtil.getDecimalResult(femaleNum,female,"add",2);
+                    logger.info(male+"--------"+female);
+                }
+                logger.info(maleNum+"      "+femaleNum+"     "+maleStr+"      "+femaleStr+"    ");
+                Preconditions.checkArgument(maleStr<=maleNum+0.01||maleNum-0.01<=maleStr,"女性占比为："+malePercentStr+"  各年龄段女性占比相加为："+maleNum);
+                Preconditions.checkArgument( femaleStr<=femaleNum+0.01&&femaleStr-0.01<=femaleStr," 男性占比为："+femalePercentStr+"  各年龄段男性占比相加为："+femaleNum);
+
+
+
+            }
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("女性占比=各年龄段女性占比相加&&男性占比=各年龄段男性占比相加");
         }
     }
+
 
 
 

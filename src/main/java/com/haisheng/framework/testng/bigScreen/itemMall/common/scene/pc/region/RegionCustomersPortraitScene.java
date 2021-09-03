@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-09-01 17:31:17
  */
 @Builder
-public class CustomersPortraitScene extends BaseScene {
+public class RegionCustomersPortraitScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false
@@ -46,7 +46,7 @@ public class CustomersPortraitScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final Long regionId;
+    private final String regionId;
 
 
     @Override
