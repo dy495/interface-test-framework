@@ -91,7 +91,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
             Preconditions.checkArgument(total2 == total1 + 1, type + "页面导出结果导出记录中没有+1");  //判断记录是否+1
             if (total2 == total1 + 1) {
-                Preconditions.checkArgument(Objects.equals(typeName, type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
+                Preconditions.checkArgument(Objects.equals(typeName, type), "导出记录中的第一条期待：" + type+"，实际："+typeName); // 如果结果+1 ，判断第一条是不是相应的位置
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

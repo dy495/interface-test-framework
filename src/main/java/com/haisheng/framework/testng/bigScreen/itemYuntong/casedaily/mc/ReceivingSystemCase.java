@@ -131,7 +131,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "evaluateRemark", dataProviderClass = YtDataCenter.class)
     public void flowUpContent(String description, String remark, String expect) {
         try {
-            AppReceptionBean customer = createCustomerCommon("自动创建差评跟进", 1, "150" + CommonUtil.getRandom(8), Long.parseLong(util.mcCarId()), "2033-12-20");
+            AppReceptionBean customer = util.getReception();
             AppFinishReceptionScene.builder().id(customer.getId()).shopId(customer.getShopId()).build().visitor(visitor).execute();
             commonConfig.setShopId(null);
             commonConfig.setRoleId(null);

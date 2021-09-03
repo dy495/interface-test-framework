@@ -15,6 +15,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.YtDataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -190,8 +191,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             if (newId == null || newCustomerId == null) {
                 customerConfig();
             }
-            Integer code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字" + dt.getHistoryDate(0)).customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point, content).visitor(visitor).getResponse().getCode();
-            Preconditions.checkArgument(Objects.equals(code.toString(), expect), description + "，期待结果=" + expect + "实际结果=" + code);
+            String message = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字" + dt.getHistoryDate(0)).customerPhone("13" + CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point, content).visitor(visitor).getResponse().getMessage();
+            Preconditions.checkArgument(Objects.equals(message, expect), description + "，期待结果=" + expect + "实际结果=" + message);
             sleep(3);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
