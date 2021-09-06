@@ -58,7 +58,7 @@ public class YtDataCenter {
               //  {"内容9个字", FastContent.CONTENT9, "1001"}, // 前端有校验
                 {"内容0个字符", "", "1001"},
                 {"内容1001个字", FastContent.CONTENT1000+"字", "1001"},
-                {"内容10个字", FastContent.CONTENT10, "1000"},
+//                {"内容10个字", FastContent.CONTENT10, "1000"},
                 {"内容1000个字", FastContent.CONTENT1000, "1000"},
         };
     }

@@ -12,6 +12,10 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherSce
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayTaskScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppFinishReceptionScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionCreateV7;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -32,7 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseStd {
+public class ReceiveDataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_DAILY_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
@@ -72,6 +76,27 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
         logger.logCaseStart(caseResult.getCaseName());
+    }
+
+    @Test(description = "新建虚拟卡片，app接待列表+1，销售客户管理+0，接待记录+0")
+    public void creatCard(){
+        try {
+            Integer totalBefore = AppPreSalesReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
+            Integer customerTotalBefore = PreSaleCustomerPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getInteger("total");
+            Integer recepTotalBefore = PreSalesReceptionPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getInteger("total");
+            String message = AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse().getMessage();
+            Preconditions.checkArgument(Objects.equals("success", message),"创建虚拟卡片失败message："+message);
+            Integer totalAfter = AppPreSalesReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(totalAfter == totalBefore + 1, "接待列表总数:"+totalBefore+"，创建虚拟卡片成功后app销售接待列表总数:"+totalAfter);
+            Integer customerTotalAfter = PreSaleCustomerPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(customerTotalAfter+1 == customerTotalBefore+1, "销售客户列表总共"+customerTotalBefore+"，创建虚拟卡片后pc销售客户列表"+customerTotalAfter);
+            Integer recepTotalAfter = PreSalesReceptionPageScene.builder().page(1).size(10).build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(recepTotalBefore+1 == recepTotalAfter+1, "销售接待记录总共"+recepTotalBefore+"条，创建虚拟卡片后pc销售接待记录列表"+recepTotalAfter);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建虚拟卡片，app接待列表+1，销售客户管理+0，接待记录+0");
+        }
     }
 
     @Test
@@ -127,7 +152,6 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         } finally {
             saveData("销售接待差评跟进,【首页-今日任务】分子-1,分母-0");
         }
-
     }
 
 }
