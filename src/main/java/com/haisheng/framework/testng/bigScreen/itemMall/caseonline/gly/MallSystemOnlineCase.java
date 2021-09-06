@@ -988,7 +988,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 sum+=percentNum;
             }
             logger.info("--------"+sum);
-            Preconditions.checkArgument(sum<=100.02&&sum>=100.02,"所有年龄段的人数占比的相加之和为："+sum);
+            Preconditions.checkArgument(sum<=100.02&&sum>=99.98,"所有年龄段的人数占比的相加之和为："+sum);
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2190,7 +2190,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //场馆列表中查看详情页面
-                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
                 JSONObject response=scene1.visitor(visitor).execute();
                 //获取人数
                 int numberUv=response.getJSONObject("uv_overview").getInteger("number");
@@ -2200,7 +2200,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取到访趋势的人数的总和
                 int sumUV=0;
                 int sumPV=0;
-                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONArray list1=scene2.visitor(visitor).execute().getJSONArray("list");
                 for(int j=0;j<list1.size();j++){
                     int numberUV=list1.getJSONObject(j).containsKey("enter_uv")?list1.getJSONObject(j).getInteger("enter_uv"):0;
@@ -2234,13 +2234,13 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //场馆列表中查看详情页面上个七天
-                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
                 JSONObject response=scene1.visitor(visitor).execute();
                 //场馆列表中查看详情页面上上个七天
-                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-14)).endTime(businessUtil.getDate(-8)).regionId(regionId).build();
                 JSONObject response2=scene2.visitor(visitor).execute();
                 //获取人次环比
-                String number=response.getJSONObject("pv_overview").getString("pre_week_compare");
+                String number=response.getJSONObject("pv_overview").getString("day_qoq");
                 double numberQoq=businessUtil.getNumHalfUp(number,4);
                 //获取上个七天人次
                 int numberUv=response.getJSONObject("pv_overview").getInteger("number");
@@ -2275,13 +2275,13 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //场馆列表中查看详情页面上个七天
-                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
                 JSONObject response=scene1.visitor(visitor).execute();
                 //场馆列表中查看详情页面上上个七天
-                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-14)).endTime(businessUtil.getDate(-8)).regionId(regionId).build();
                 JSONObject response2=scene2.visitor(visitor).execute();
                 //获取人数环比
-                String number=response.getJSONObject("uv_overview").getString("pre_week_compare");
+                String number=response.getJSONObject("uv_overview").getString("day_qoq");
                 double numberQoq=businessUtil.getNumHalfUp(number,4);
                 //获取上个七天人数
                 int numberUv=response.getJSONObject("uv_overview").getInteger("number");
@@ -2316,19 +2316,20 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //场馆列表中查看详情页面上个七天
-                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
                 JSONObject response=scene1.visitor(visitor).execute();
                 //场馆列表中查看详情页面上上个七天
-                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-16)).endTime(businessUtil.getDate(-9)).regionId(regionId).build();
+                IScene scene2 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-14)).endTime(businessUtil.getDate(-8)).regionId(regionId).build();
                 JSONObject response2=scene2.visitor(visitor).execute();
                 //获取人次环比
-                String number=response.getJSONObject("stay_time_overview").getString("pre_week_compare");
+                String number=response.getJSONObject("stay_time_overview").getString("day_qoq");
                 double numberQoq=businessUtil.getNumHalfUp(number,4);
                 //获取上个七天人次
                 int numberUv=response.getJSONObject("stay_time_overview").getInteger("number");
                 //上上个七天获取的人次
                 int numberUvLast=response2.getJSONObject("stay_time_overview").getInteger("number");
 
+                System.out.println(numberUv+"-------"+numberUvLast);
                 //计算过店人次环比
                 double value=numberUv-numberUvLast;
                 double qoq=numberUvLast==0?0:value/numberUvLast;
@@ -2359,7 +2360,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //获取区域进出口的
-                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene1= RegionPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONArray list1=scene1.visitor(visitor).execute().getJSONArray("list");
                 double portNum=0;
                 //获取楼层出入口的各个人数占比
@@ -2394,7 +2395,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取客流到访的的总和
 //                int sumCustomerUV=0;
                 int sumCustomerPV=0;
-                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene2= RegionCustomerTrendScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONArray list1=scene2.visitor(visitor).execute().getJSONArray("list");
                 for(int j=0;j<list1.size();j++){
 //                    int numberUV=list1.getJSONObject(j).containsKey("enter_uv")?list1.getJSONObject(j).getInteger("enter_uv"):0;
@@ -2403,7 +2404,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                     sumCustomerPV+=numberPV;
                 }
                 //获取趋势进出口的人数和人次的总和
-                IScene scene3= RegionRegionTrendScene.builder().startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).type("PV").regionId(regionId).build();
+                IScene scene3= RegionRegionTrendScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).type("PV").regionId(regionId).build();
                 JSONObject response=scene3.visitor(visitor).execute();
                 JSONArray list3=response.getJSONArray("list");
                 JSONArray seriesList=response.getJSONArray("series_List");
@@ -2454,7 +2455,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list.getJSONObject(i).getString("region_id");
                 //获取各个年龄段的占比
-                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONObject response = scene1.visitor(visitor).execute();
                 String malePercent = response.getString("male_ratio_str");
                 double male = Double.parseDouble(malePercent.substring(0, malePercent.length() - 1));
@@ -2485,7 +2486,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list1.getJSONObject(j).getString("region_id");
                 //获取各个年龄段的占比
-                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONObject response = scene1.visitor(visitor).execute();
                 JSONArray list=response.getJSONArray("list");
                 for(int i=0;i<list.size();i++){
@@ -2519,7 +2520,7 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 //获取区域id
                 String regionId = list1.getJSONObject(j).getString("region_id");
                 //获取各个年龄段的占比
-                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-8)).endTime(businessUtil.getDate(-1)).build();
+                IScene scene1 = RegionCustomersPortraitScene.builder().regionId(regionId).startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).build();
                 JSONObject response = scene1.visitor(visitor).execute();
                 String malePercentStr=response.getString("male_ratio_str");
                 double maleStr=Double.parseDouble(malePercentStr.substring(0,malePercentStr.length()-1));
@@ -2541,15 +2542,51 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
                 logger.info(maleNum+"      "+femaleNum+"     "+maleStr+"      "+femaleStr+"    ");
                 Preconditions.checkArgument(maleStr<=maleNum+0.01||maleNum-0.01<=maleStr,"女性占比为："+malePercentStr+"  各年龄段女性占比相加为："+maleNum);
                 Preconditions.checkArgument( femaleStr<=femaleNum+0.01&&femaleStr-0.01<=femaleStr," 男性占比为："+femalePercentStr+"  各年龄段男性占比相加为："+femaleNum);
-
-
-
             }
-
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("女性占比=各年龄段女性占比相加&&男性占比=各年龄段男性占比相加");
+        }
+    }
+
+    /**
+     *累计到访人数>=区域建成后到昨天的人数&&累计到访人次>=区域建成后到昨天的人次
+     */
+    @Test(description ="累计到访人数>=区域建成后到昨天的人数&&累计到访人次>=区域建成后到昨天的人次")
+    public void mallCenterDataCase72(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //获取场馆区域分析列表
+            IScene scene= RegionPageScene.builder().page(1).size(10).build();
+            JSONArray list1=scene.visitor(visitor).execute().getJSONArray("list");
+            for(int j=0;j<list1.size();j++) {
+                //获取区域id
+                String regionId = list1.getJSONObject(j).getString("region_id");
+//                //获取区域名称
+//                String regionName = list1.getJSONObject(j).getString("region_name");
+//                //获取区域描述
+//                String regionDesc = list1.getJSONObject(j).getString("region_desc");
+                //获取人数
+                int visitNumber = list1.getJSONObject(j).getInteger("visit_number");
+                //获取人次
+                int visitTimes = list1.getJSONObject(j).getInteger("visit_times");
+
+                //获取场馆区域分析的详情页面
+                IScene scene1 = OverviewRegionOverviewScene.builder().startTime(businessUtil.getDate(-7)).endTime(businessUtil.getDate(-1)).regionId(regionId).build();
+                JSONObject response=scene1.visitor(visitor).execute();
+                //获取人数
+                int numberUv=response.getJSONObject("uv_overview").getInteger("number");
+                //获取人次
+                int numberPv=response.getJSONObject("pv_overview").getInteger("number");
+
+                System.err.println("场馆区域分析列表展示的累计人数和人次分别为："+visitNumber+"  "+visitTimes+"  详情中展示的人数和人次分别为："+numberUv+"  "+numberPv);
+                Preconditions.checkArgument(visitNumber>=numberUv&&visitTimes>=numberPv,"场馆区域分析列表展示的累计人数和人次分别为："+visitNumber+"  "+visitTimes+"  详情中展示的人数和人次分别为："+numberUv+"  "+numberPv);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计到访人数>=区域建成后到昨天的人数&&累计到访人次>=区域建成后到昨天的人次");
         }
     }
 
