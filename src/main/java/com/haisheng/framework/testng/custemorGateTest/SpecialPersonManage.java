@@ -1652,10 +1652,10 @@ public class SpecialPersonManage {
             len = jsonArrayFaces.size();
         }
         for (int i = 0; i < len; i++) {
-            faceUrlFirst = jsonArrayFaces.getJSONObject(0).getString("face_url");
+            faceUrlFirst = jsonArrayFaces.getJSONObject(0).getString("face_id");
             faceIdFirst = jsonArrayFaces.getJSONObject(0).getString("face_id");
 
-            String faceUrl = jsonArrayFaces.getJSONObject(i).getString("face_url");
+            String faceUrl = jsonArrayFaces.getJSONObject(i).getString("face_id");
             String faceId = jsonArrayFaces.getJSONObject(i).getString("face_id");
 
             faceUrlConcat = faceUrlConcat.concat(faceUrl);
@@ -1686,8 +1686,8 @@ public class SpecialPersonManage {
             for (int j = 0; j < jsonArraySimilar_faces.size(); j++) {
                 com.alibaba.fastjson.JSONObject jsonObjectfirstFace = jsonArraySimilar_faces.getJSONObject(0);
                 com.alibaba.fastjson.JSONObject jsonObjectFace = jsonArraySimilar_faces.getJSONObject(j);
-                firstFaceUrl = jsonObjectfirstFace.getString("face_url");
-                String FaceUrl = jsonObjectFace.getString("face_url");
+                firstFaceUrl = jsonObjectfirstFace.getString("face_id");
+                String FaceUrl = jsonObjectFace.getString("face_id");
                 faceUrlConcat = faceUrlConcat.concat(FaceUrl);
             }
         }

@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.dataCenter.dataLayerCase;
 
+import ai.winsense.retail.scenario.gate.client.tools.HttpConnector;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -8,6 +9,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.dataCenter.interfaceUtil.LogicLayerUtil;
+import com.haisheng.framework.testng.dataCenter.interfaceUtil.OmputingLayerUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -22,8 +24,7 @@ import java.lang.reflect.Method;
 public class LogicCase extends TestCaseCommon implements TestCaseStd {
     LogicLayerUtil logic = LogicLayerUtil.getInstance();
     String request_id = "8b21f20d-6af6-43ff-8fd3-4251e9";
-
-    String face_url = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=381876729,1649964117&fm=26&gp=0.jpg";
+    String face_url = OmputingLayerUtil.base64Convert("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=381876729,1649964117&fm=26&gp=0.jpg");
     String userId = "";
     String imgUrl = "";
 
