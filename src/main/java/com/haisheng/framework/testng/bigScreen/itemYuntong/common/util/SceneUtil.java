@@ -532,16 +532,30 @@ public class SceneUtil extends BasicUtil {
                 .filter(e ->Objects.equals(e.getString("id"), card.getId().toString())).findFirst().get().toJavaObject(AppReceptionBean.class);
     }
     /**
-     * @description: 创建一个接待并维护资料得到有客户id的接待
+     * @description: 创建一个接待卡片
      * @param : null
-     * @return : 维护后的接待AppReceptionBean
+     * @return : 接待卡片AppReceptionBean
      **/
-    public AppReceptionBean creatReception(){
+    public AppReceptionBean createCard(){
         AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse();
-        AppReceptionBean beforeReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
+        return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
                 .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
-        return cardToReception(beforeReception);
     }
+    /**
+     * @description: 获取一个接待卡片
+     * @param : null
+     * @return : 接待卡片AppReceptionBean
+     **/
+    public AppReceptionBean getReceptionCard(){
+        JSONObject receptionCard = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .filter(e -> !e.containsKey("customer_id")).findFirst().orElse(null);
+        if (receptionCard != null){
+            return receptionCard.toJavaObject(AppReceptionBean.class);
+        } else {
+            return createCard();
+        }
+    }
+
     /**
      * @description: 获取一个接待，没有则创建
      * @param : null
@@ -550,7 +564,7 @@ public class SceneUtil extends BasicUtil {
     public AppReceptionBean getReception(){
         JSONObject findReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).findAny().orElse(null);
         if (findReception == null){
-            return creatReception();
+            return cardToReception(createCard());
         }else if (findReception.containsKey("customer_id")){
             return findReception.toJavaObject(AppReceptionBean.class);
         }else {

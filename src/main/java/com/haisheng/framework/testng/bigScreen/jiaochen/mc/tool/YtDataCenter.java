@@ -76,7 +76,7 @@ public class YtDataCenter {
                 {"car", "/car-platform/pc/brand/export", "品牌管理"},
                 {"car", "/car-platform/pc/brand/car-style/export", "车系列表"},
                 {"car", "/car-platform/pc/brand/car-style/car-model/export", "车型列表"},
-                {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "语音评鉴记录"}
+                {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "销售语音评鉴记录"}
         };
     }
 
@@ -90,6 +90,17 @@ public class YtDataCenter {
                 {dt.getHistoryDate(16), "B"},
                 {dt.getHistoryDate(30), "B"},
                 {dt.getHistoryDate(31), "C"},
+        };
+    }
+
+    @DataProvider(name = "qrCodeInfo")
+    public Object[] qrCodeInfo(){
+        return new Object[][]{
+                //{"校验姓名：必填","customer_name",null,"1001"},
+                //{"校验姓名：空字符","customer_name","","1001"},
+                //{"校验姓名：长度51字","customer_name",FastContent.NAME51,"1001"},
+                {"校验姓名：长度50字","customer_name",FastContent.NAME50,"1000"},
+                //{"校验性别：必填","sex_id",null,"1001"},
         };
     }
 

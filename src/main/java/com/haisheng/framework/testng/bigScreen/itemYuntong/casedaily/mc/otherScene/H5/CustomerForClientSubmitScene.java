@@ -5,59 +5,59 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class CustomerInputInfo extends BaseScene {
+public class CustomerForClientSubmitScene extends BaseScene {
     /**
      * url附带的接待id
      * Required : true
      **/
-    private final int reception_id;
+    private final long receptionId;
     /**
      * 客户名称
      * Required : false
      **/
-    private final int customer_name;
+    private final String customerName;
     /**
      * 客户手机号
      * Required : false
      **/
-    private final int customer_phone;
+    private final String customerPhone;
     /**
      * 客户性别
      * Required : false
      **/
-    private final int sex_id;
+    private final int sexId;
     /**
      * 验证码
      * Required : false
      **/
-    private final int verification_code;
+    private final String verificationCode;
     /**
      * 意向车型Id
      * Required : false
      **/
-    private final int intention_car_model_id;
+    private final String intentionCarModelId;
     /**
      * 预计购车时间
      * Required : false
      **/
-    private final int estimate_buy_car_time;
+    private final String estimateBuyCarTime;
     /**
      * 是否授权
      * Required : false
      **/
-    private final int is_empower;
+    private final boolean isEmpower;
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject obj = new JSONObject();
-        obj.put("reception_id",reception_id);
-        obj.put("customer_name",customer_name);
-        obj.put("customer_phone",customer_phone);
-        obj.put("sex_id",sex_id);
-        obj.put("verification_code",verification_code);
-        obj.put("intention_car_model_id",intention_car_model_id);
-        obj.put("estimate_buy_car_time",estimate_buy_car_time);
-        obj.put("is_empower",is_empower);
+        obj.put("reception_id", receptionId);
+        obj.put("customer_name", customerName);
+        obj.put("customer_phone", customerPhone);
+        obj.put("sex_id", sexId);
+        obj.put("verification_code", verificationCode);
+        obj.put("intention_car_model_id", intentionCarModelId);
+        obj.put("estimate_buy_car_time", estimateBuyCarTime);
+        obj.put("is_empower", isEmpower);
         return obj;
     }
 

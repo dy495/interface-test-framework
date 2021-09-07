@@ -367,11 +367,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 getReception = reception.toJavaObject(AppReceptionBean.class);
             }
             sleep(3);
-            Integer code = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
+            String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
                     customerName(FastContent.NAME50).customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
                     intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate(dt.getHistoryDate(0)).build()
-                    .modify(point, content).visitor(visitor).getResponse().getCode();
-            Preconditions.checkArgument(Objects.equals(expect, code.toString()), "修改资料" + description + "，预期结果：" + expect + "，实际：" + code);
+                    .modify(point, content).visitor(visitor).getResponse().getMessage();
+            Preconditions.checkArgument(Objects.equals(expect, message), "修改资料" + description + "，预期结果：" + expect + "，实际：" + message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -473,7 +473,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         AppReidReidDistributeScene.builder().reidInfoList(customers).enterType("PRE_SALE").build().visitor(visitor).getResponse();
     }
 
-
+    /**
+     * @description: 把所有接待都完成的工具。。
+     **/
     //@Test
     public void finish() {
         AppPreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.toJavaObject(AppReceptionBean.class)).forEach(e -> finishReception(e));

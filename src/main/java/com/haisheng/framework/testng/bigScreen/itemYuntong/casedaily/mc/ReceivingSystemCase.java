@@ -10,11 +10,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.CustomerForClientSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.customermanager.AppCustomerManagerPreCustomerAddPlateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.followup.AppFollowUpPageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerRemarkV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionQueryRetentionQrCodeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoRemarkRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
@@ -77,8 +79,23 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    // @Test(description = "客户扫码修改资料")
-    public void QRCodeCreat(){
+    @Test(description = "客户扫码留资修改资料",dataProvider = "qrCodeInfo", dataProviderClass = YtDataCenter.class)
+    public void QRCodeCreat(String description, String point, String content, String expect){
+        try {
+            commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId());
+            AppReceptionBean receptionCard = util.getReceptionCard();
+            AppPreSalesReceptionQueryRetentionQrCodeScene.builder().receptionId(receptionCard.getId().toString()).build().visitor(visitor).execute();
+            commonConfig.setShopId(null).setRoleId(null);
+            Integer code = CustomerForClientSubmitScene.builder().receptionId(receptionCard.getId()).customerName("扫码留资" + dt.getHistoryDate(0)).intentionCarModelId(util.mcCarId())
+                    .sexId(1).estimateBuyCarTime("2030-08-08").build().modify(point, content).visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(Objects.equals(code.toString(), expect),description+"期待结果："+expect+"实际返回结果："+code);
+            commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId());
+        } catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户扫码留资修改资料");
+            commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId());
+        }
 
     }
 
