@@ -190,7 +190,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getAftSalesReceptor();
             String uid = receptorList.getUid();
             AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);
@@ -338,7 +338,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getAftSalesReceptor();
             String uid = receptorList.getUid();
             AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);
@@ -483,7 +483,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getPreSalesReceptorList();
+            AppReceptionReceptorList receptorList = util.getPreSalesReceptor();
             String uid = receptorList.getUid();
             AppReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);

@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
@@ -18,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentma
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.presalesreception.PreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -187,7 +183,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getAftSalesReceptor();
             String uid = receptorList.getUid();
             AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);
@@ -335,7 +331,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getAftSalesReceptor();
             String uid = receptorList.getUid();
             AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);
@@ -480,7 +476,8 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             Long receptionId = receptionPage.getId();
             util.loginApp(ACCOUNT);
-            AppReceptionReceptorList receptorList = util.getPreSalesReceptorList();
+            AppReceptionReceptorList receptorList = util.getPreSalesReceptor();
+            System.err.println(receptorList);
             String uid = receptorList.getUid();
             AppReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().visitor(visitor).execute();
             util.loginPc(ACCOUNT);

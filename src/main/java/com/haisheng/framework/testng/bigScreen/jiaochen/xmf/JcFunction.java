@@ -228,8 +228,7 @@ public class JcFunction extends BasicUtil {
     //pc接待管理总数
     public int pcReceptionPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
-        int num = jc.receptionManage("", "1", "10", null, null).getInteger("total");
-        return num;
+        return jc.receptionManage("", "1", "10", null, null).getInteger("total");
     }
 
     //app[任务-预约数]
@@ -244,8 +243,7 @@ public class JcFunction extends BasicUtil {
     public int appReceptionPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
         JSONObject data = jc.appreceptionPage(null, 10);
-        int total = data.getInteger("total");
-        return total;
+        return data.getInteger("total");
     }
 
     //app[任务-接待数]  3.0
@@ -309,7 +307,7 @@ public class JcFunction extends BasicUtil {
     //app今日任务数据
     public int[] appTask() {
         JSONObject data = jc.appTask();
-        int sum[] = new int[6];
+        int[] sum = new int[6];
         //预约
         sum[0] = data.getInteger("surplus_appointment");   //分子
         sum[1] = data.getInteger("all_appointment");     //分母

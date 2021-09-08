@@ -1577,9 +1577,10 @@ public class SceneUtil extends BasicUtil {
      *
      * @return 售后员工
      */
-    public AppReceptionReceptorList getReceptorList() {
+    public AppReceptionReceptorList getAftSalesReceptor() {
         IScene receptorListScene = AppReceptionReceptorListScene.builder().shopId(getShopId()).build();
-        return receptorListScene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
+        return receptorListScene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> toJavaObject(e, AppReceptionReceptorList.class))
+                .filter(e -> !e.getName().contains("休假")).findFirst().orElse(null);
     }
 
     /**
@@ -1587,9 +1588,10 @@ public class SceneUtil extends BasicUtil {
      *
      * @return 售后员工
      */
-    public AppReceptionReceptorList getPreSalesReceptorList() {
+    public AppReceptionReceptorList getPreSalesReceptor() {
         IScene receptorListScene = AppReceptorListScene.builder().shopId(getShopId()).build();
-        return receptorListScene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
+        return receptorListScene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> toJavaObject(e, AppReceptionReceptorList.class))
+                .filter(e -> !e.getName().contains("休假")).findFirst().orElse(null);
     }
 
     /**

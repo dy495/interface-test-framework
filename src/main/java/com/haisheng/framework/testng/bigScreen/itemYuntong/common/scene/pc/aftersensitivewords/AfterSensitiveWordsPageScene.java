@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.5. 敏感词分页（华成裕）
+ * 3.6. 敏感词分页（谢）
  *
  * @author wangmin
- * @date 2021-08-30 14:39:23
+ * @date 2021-05-31 16:28:11
  */
 @Builder
 public class AfterSensitiveWordsPageScene extends BaseScene {
@@ -18,14 +17,16 @@ public class AfterSensitiveWordsPageScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 敏感词类别 使用"获取指定枚举值列表"接口获取 enum_type为 SENSITIVE_WORDS_TYPES
@@ -71,5 +72,15 @@ public class AfterSensitiveWordsPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/intelligent-control/pc/after-sensitive-words/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

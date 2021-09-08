@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.mapper.EnumCustomerPage;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -46,7 +47,8 @@ import java.util.List;
 public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    //    private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
+    private static final EnumAccount account = EnumAccount.JC_DAILY_YS;
+    private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil util = new BusinessUtil(visitor);
     PublicParameter pp = new PublicParameter();
@@ -120,6 +122,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusPassed = util.getActivityStatus(activityId2);
             System.err.println(activityId2 + "---------" + statusPassed + "-------" + message);
+            //置顶
+            ActivityManageTopScene.builder().id(activityId2).build().visitor(visitor).execute();
             //获取此活动的名称
             String title = util.getRecruitActivityDetailDate1(activityId2).getString("title");
             System.err.println("----------title:" + title);
@@ -167,6 +171,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int status = util.getActivityStatus(activityId);
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            //置顶
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //获取活动的状态
             int statusPassed = util.getActivityStatus(activityId);
             System.err.println(activityId + "--------" + statusPassed);
@@ -241,6 +247,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 Long activityId = util.createRecruitActivity(voucherId, true, 0, true);
                 //审批通过
                 util.getApprovalPassed(activityId);
+                //置顶
+                Long[] ids = {id1, id2, activityId};
+                Arrays.stream(ids).forEach(id -> ActivityManageTopScene.builder().id(id).build().visitor(visitor).execute());
                 //登陆小程序
                 util.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 util.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
@@ -536,19 +545,26 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int registerNum = 0;
+            Long activityId;
             //获取进行中的活动存在待审批数量的ID
             ManagePageBean managePageBean = util.getRecruitActivityWorkingApproval();
-            Long id = managePageBean.getId();
+            if (managePageBean == null) {
+                activityId = util.getRecruitActivityWorkingApprovalList().get(0).getId();
+                util.loginApplet(APPLET_USER);
+                util.appletSignUpActivity(activityId);
+            } else {
+                activityId = managePageBean.getId();
+            }
             //审批通过之前报名成功的数量
-            int passedBefore = util.getRegisterData(id).getInteger("passed");
+            int passedBefore = util.getRegisterData(activityId).getInteger("passed");
             //报名待审批的ID合集
-            List<Long> idArray = util.registerApproval(id);
+            List<Long> idArray = util.registerApproval(activityId);
             //审批通过其中一条报名
-            util.getRegisterApprovalPassed(id, idArray.get(0));
+            util.getRegisterApprovalPassed(activityId, idArray.get(0));
             //审批通过的活动人数
-            int pages = util.getRegisterPage(id).getInteger("pages");
+            int pages = util.getRegisterPage(activityId).getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(id).build();
+                IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
                 JSONArray List = scene.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < List.size(); i++) {
                     Long idOne = List.getJSONObject(i).getLong("id");
@@ -561,7 +577,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //审批通过之后报名成功的数量
-            int passedAfter = util.getRegisterData(id).getInteger("passed");
+            int passedAfter = util.getRegisterData(activityId).getInteger("passed");
             Preconditions.checkArgument(passedAfter > 0 && passedAfter == (passedBefore + registerNum), "审批的通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
@@ -586,6 +602,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = scene1.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //登录小程序
             util.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
@@ -630,18 +647,28 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int registerNum = 0;
+            Long activityId;
             //获取进行中的活动存在待审批数量的ID
-            Long id = util.getRecruitActivityWorkingApproval().getId();
+            ManagePageBean managePageBean = util.getRecruitActivityWorkingApproval();
+            if (managePageBean == null) {
+                activityId = util.getRecruitActivityWorkingApprovalList().get(0).getId();
+                //报名
+                visitor.setToken(EnumAppletToken.JC_GLY_DAILY.getToken());
+                util.appletSignUpActivity(activityId);
+            } else {
+                activityId = managePageBean.getId();
+            }
+            util.loginPc(account);
             //审批通过之前报名成功的数量
-            int failedBefore = util.getRegisterData(id).getInteger("failed");
+            int failedBefore = util.getRegisterData(activityId).getInteger("failed");
             //报名待审批的ID合集
-            List<Long> idArray = util.registerApproval(id);
+            List<Long> idArray = util.registerApproval(activityId);
             //审批不通过其中一条报名
-            util.getRegisterApprovalReject(id, idArray.get(0));
+            util.getRegisterApprovalReject(activityId, idArray.get(0));
             //审批通过的活动人数
-            int pages = util.getRegisterPage(id).getInteger("pages");
+            int pages = util.getRegisterPage(activityId).getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(id).build();
+                IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
                 JSONArray List = scene.visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < List.size(); i++) {
                     Long idOne = List.getJSONObject(i).getLong("id");
@@ -653,7 +680,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //审批通过之后报名成功的数量
-            int failedAfter = util.getRegisterData(id).getInteger("failed");
+            int failedAfter = util.getRegisterData(activityId).getInteger("failed");
             Preconditions.checkArgument(failedAfter > 0 && failedAfter == (failedBefore + registerNum), "审批不通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
@@ -1144,14 +1171,12 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String address = object.getJSONObject("recruit_activity_info").getString("address");
             Long aLong = object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
             String approval = object.getJSONObject("recruit_activity_info").getString("is_need_approval");
-            String picName = object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
-            String content = util.changeRecordPage(aLong).getJSONArray("list").getJSONObject(0).getString("content");
+            String content = util.changeRecordPage(id).getJSONArray("list").getJSONObject(0).getString("content");
             Preconditions.checkArgument(message.equals("success") && title.equals(pp.editTitle) && rule.equals(pp.EditRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0") && quota.equals("2"), "已撤销的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(util.getStartDate()) && endDate.equals(util.getEndDate()), "已撤销的活动编辑失败3");
             Preconditions.checkArgument(applyStart.equals(util.getStartDate()) && applyEnd.equals(util.getEndDate()), "已撤销的活动编辑失败4");
             Preconditions.checkArgument(subjectType.equals(subject) && label.equals("CAR_WELFARE"), "已撤销的活动编辑失败5");
-//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址") && aLong.equals(voucherId) && approval.equals("true"), "已撤销的活动编辑失败6");
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
         } catch (AssertionError | Exception e) {
@@ -1315,7 +1340,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long aLong = object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
             String approval = object.getJSONObject("recruit_activity_info").getString("is_need_approval");
             String picName = object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
-            String content = util.changeRecordPage(aLong).getJSONArray("list").getJSONObject(0).getString("content");
+            String content = util.changeRecordPage(id).getJSONArray("list").getJSONObject(0).getString("content");
             System.out.println("---------" + picName);
             System.out.println(title + "--------" + rule + "--------" + participationLimitType + "--------" + startDate + "--------" + endDate + "--------" + applyStart + "--------" + applyEnd + "--------" + quota + "--------" + subjectType + "--------" + label + "--------" + address + "--------" + approval + "--------" + aLong + "--------" + voucherId);
             Preconditions.checkArgument(message.equals("success") && title.equals(pp.editTitle) && rule.equals(pp.EditRule), "审核未通过的活动编辑失败1");
@@ -2177,7 +2202,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = scene.visitor(visitor).getResponse().getMessage();
             logger.info(title + "-------" + message);
             //小程序中第一个为此活动
-            util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            util.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = util.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动标题为：" + title1);
@@ -3579,6 +3604,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //小程序报名活动(报名信息不填写)
             util.activityRegisterApplet(activityId, "", "", 1, "", "", "", "");
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息全为非必填项");
@@ -3645,10 +3671,10 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .isNeedApproval(true);
             builder.rewardVouchers(registerObject)
                     .voucherValid(voucherValid);
-            IScene scene = builder.build();
-            Long activityId = scene.visitor(visitor).execute().getLong("id");
+            Long activityId = builder.build().visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //小程序报名
             util.activityRegisterApplet(activityId);
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息为空");
@@ -3723,6 +3749,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //小程序报名活动(报名信息不填写)
             util.activityRegisterApplet(activityId, "", "", 1, "", "", "", "");
             jc.pcLogin(pp.phone1, pp.password);
@@ -3814,6 +3841,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //获取此活动的名称
             String title = util.getRecruitActivityDetailDate1(activityId).getString("title");
             System.err.println("-------" + title);
@@ -3922,6 +3950,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = scene.visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
+            ActivityManageTopScene.builder().id(activityId).build().visitor(visitor).execute();
             //小程序报名活动(报名信息不填写)
             util.activityRegisterApplet(activityId, "", "", 1, "", "", "", "");
             jc.pcLogin(pp.phone1, pp.password);
@@ -4012,8 +4041,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .isNeedApproval(true);
             builder.rewardVouchers(registerObject)
                     .voucherValid(voucherValid);
-            IScene scene = builder.build();
-            Long activityId = scene.visitor(visitor).execute().getLong("id");
+            Long activityId = builder.build().visitor(visitor).execute().getLong("id");
             //审批通过招募活动
             util.getApprovalPassed(activityId);
             //小程序报名活动(报名信息不填写)
@@ -4202,14 +4230,16 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取已撤销活动的ID
             ManagePageBean managePageBean = util.getContentMarketingRevoke();
-            Long id = managePageBean.getId();
-            //获取已撤销的活动名称
-            String title = managePageBean.getTitle();
-            //置顶【已撤销的活动】
-            IScene scene = ActivityManageTopScene.builder().id(id).build();
-            String message = scene.visitor(visitor).getResponse().getMessage();
-            System.out.println(title + "-------" + message);
-            Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
+            if (managePageBean != null) {
+                Long id = managePageBean.getId();
+                //获取已撤销的活动名称
+                String title = managePageBean.getTitle();
+                //置顶【已撤销的活动】
+                IScene scene = ActivityManageTopScene.builder().id(id).build();
+                String message = scene.visitor(visitor).getResponse().getMessage();
+                System.out.println(title + "-------" + message);
+                Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
+            }
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -4248,45 +4278,46 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取已撤销活动的ID
             ManagePageBean managePageBean = util.getContentMarketingRevoke();
-            Long id = managePageBean.getId();
-            System.err.println("----id:" + id);
-            //编辑已撤销的活动
-            List<String> picList = new ArrayList<>();
-            picList.add(0, util.getPicPath());
-            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
-            IScene scene = ManageContentMarketingEditScene.builder()
-                    .id(id)
-                    .type(3)
-                    .participationLimitType(0)
-                    .title(pp.contentMarketingNameEdit)
-                    .rule(pp.rule)
-                    .startDate(util.getStartDate())
-                    .endDate(util.getEndDate())
-                    .subjectType(util.getSubjectType())
-                    .label(label[1][0])
-                    .picList(picList)
-                    .actionPoint(2)
-                    .build();
-            String message = scene.visitor(visitor).getResponse().getMessage();
-            Preconditions.checkArgument(message.equals("success"), "编辑活动失败");
-            //获取活动详情
-            IScene scene1 = ManageDetailScene.builder().id(id).build();
-            JSONObject object = scene1.visitor(visitor).execute();
-            String title = object.getString("title");
-            String participationLimitType = object.getString("participation_limit_type");
-            String startDate = object.getString("start_date");
-            String endDate = object.getString("end_date");
-            String subjectType = object.getString("subject_type");
-            String label1 = object.getString("label");
-            String actionPoint = object.getJSONObject("content_marketing_info").getString("action_point");
-//            String picPath=object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
-            Preconditions.checkArgument(title.equals(pp.contentMarketingNameEdit), "活动详情中的活动为：" + title);
-            Preconditions.checkArgument(participationLimitType.equals("0"), "活动详情中的活动目标为：" + participationLimitType);
-            Preconditions.checkArgument(startDate.equals(util.getStartDate()), "活动详情中的开始时间为：" + startDate);
-            Preconditions.checkArgument(endDate.equals(util.getEndDate()), "活动详情中的结束时间为：" + endDate);
-            Preconditions.checkArgument(subjectType.equals(util.getSubjectType()), "活动详情中的活动类型为：" + subjectType);
-            Preconditions.checkArgument(label1.equals(label[1][0]), "活动详情中的活动标签为：" + label1);
-            Preconditions.checkArgument(actionPoint.equals("2"), "活动详情中的客户行动点为：" + actionPoint);
+            if (managePageBean != null) {
+                Long id = managePageBean.getId();
+                System.err.println("----id:" + id);
+                //编辑已撤销的活动
+                List<String> picList = new ArrayList<>();
+                picList.add(0, util.getPicPath());
+                String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
+                IScene scene = ManageContentMarketingEditScene.builder()
+                        .id(id)
+                        .type(3)
+                        .participationLimitType(0)
+                        .title(pp.contentMarketingNameEdit)
+                        .rule(pp.rule)
+                        .startDate(util.getStartDate())
+                        .endDate(util.getEndDate())
+                        .subjectType(util.getSubjectType())
+                        .label(label[1][0])
+                        .picList(picList)
+                        .actionPoint(2)
+                        .build();
+                String message = scene.visitor(visitor).getResponse().getMessage();
+                Preconditions.checkArgument(message.equals("success"), "编辑活动失败");
+                //获取活动详情
+                IScene scene1 = ManageDetailScene.builder().id(id).build();
+                JSONObject object = scene1.visitor(visitor).execute();
+                String title = object.getString("title");
+                String participationLimitType = object.getString("participation_limit_type");
+                String startDate = object.getString("start_date");
+                String endDate = object.getString("end_date");
+                String subjectType = object.getString("subject_type");
+                String label1 = object.getString("label");
+                String actionPoint = object.getJSONObject("content_marketing_info").getString("action_point");
+                Preconditions.checkArgument(title.equals(pp.contentMarketingNameEdit), "活动详情中的活动为：" + title);
+                Preconditions.checkArgument(participationLimitType.equals("0"), "活动详情中的活动目标为：" + participationLimitType);
+                Preconditions.checkArgument(startDate.equals(util.getStartDate()), "活动详情中的开始时间为：" + startDate);
+                Preconditions.checkArgument(endDate.equals(util.getEndDate()), "活动详情中的结束时间为：" + endDate);
+                Preconditions.checkArgument(subjectType.equals(util.getSubjectType()), "活动详情中的活动类型为：" + subjectType);
+                Preconditions.checkArgument(label1.equals(label[1][0]), "活动详情中的活动标签为：" + label1);
+                Preconditions.checkArgument(actionPoint.equals("2"), "活动详情中的客户行动点为：" + actionPoint);
+            }
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {

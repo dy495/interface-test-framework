@@ -193,8 +193,7 @@ public class BusinessUtil extends SceneUtil {
      * 配置可用库存
      */
     public int getVoucherAllowUseInventory(Long voucherId) {
-        SceneUtil su = new SceneUtil(visitor);
-        int allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
+        int allowUseInventory = getVoucherPage(voucherId).getAllowUseInventory();
         return (int) Math.min((allowUseInventory == 1 ? allowUseInventory : allowUseInventory - 1), 30L);
     }
 
@@ -202,8 +201,7 @@ public class BusinessUtil extends SceneUtil {
      * 判断可用库存
      */
     public Long getVoucherAllowUseInventoryNum(Long voucherId) {
-        SceneUtil su = new SceneUtil(visitor);
-        int allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
+        int allowUseInventory = getVoucherPage(voucherId).getAllowUseInventory();
         return (long) allowUseInventory;
     }
 
@@ -284,8 +282,7 @@ public class BusinessUtil extends SceneUtil {
      * 创建裂变活动
      */
     public Long createFissionActivity(Long voucherId) {
-        IScene scene = createFissionActivityScene(voucherId);
-        return scene.visitor(visitor).execute().getLong("id");
+        return createFissionActivityScene(voucherId).visitor(visitor).execute().getLong("id");
     }
 
     /**
@@ -345,7 +342,6 @@ public class BusinessUtil extends SceneUtil {
      */
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
-        SceneUtil supporterUtil = new SceneUtil(visitor);
         picList.add(0, getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -384,8 +380,8 @@ public class BusinessUtil extends SceneUtil {
                     .applyEnd(getEndDate())
                     .isLimitQuota(true)
                     .quota(10)
-                    .subjectType(supporterUtil.getSubjectType())
-                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .subjectType(getSubjectType())
+                    .subjectId(getSubjectDesc(getSubjectType()))
                     .label("CAR_WELFARE")
                     .picList(picList)
                     .rule(pp.rule)
@@ -399,11 +395,11 @@ public class BusinessUtil extends SceneUtil {
             }
         } else {
             //创建卡券
-            Long voucherId3 = supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
+            Long voucherId3 = createVoucherId(1000, VoucherTypeEnum.COUPON);
             //获取卡券的名字
-            String voucherName = supporterUtil.getVoucherName(voucherId3);
+            String voucherName = getVoucherName(voucherId3);
             //审批通过
-            supporterUtil.applyVoucher(voucherName, "1");
+            applyVoucher(voucherName, "1");
             //报名成功奖励
             JSONArray registerObject = getRewardVouchers(voucherId3, 1, getVoucherAllowUseInventory(voucherId));
             //卡券有效期
@@ -419,8 +415,8 @@ public class BusinessUtil extends SceneUtil {
                     .applyEnd(getEndDate())
                     .isLimitQuota(true)
                     .quota(10)
-                    .subjectType(supporterUtil.getSubjectType())
-                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .subjectType(getSubjectType())
+                    .subjectId(getSubjectDesc(getSubjectType()))
                     .label("CAR_WELFARE")
                     .picList(picList)
                     .rule(pp.rule)
@@ -801,20 +797,34 @@ public class BusinessUtil extends SceneUtil {
      * 招募活动-查询列表中的状态为【进行中】的活动-存在待审批的人数
      */
     public ManagePageBean getRecruitActivityWorkingApproval() {
+        List<ManagePageBean> list = getRecruitActivityWorkingApprovalList();
+        return list.stream().filter(e -> e.getWaitingAuditNum() >= 1).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取审核通过的招募活动
+     *
+     * @return 活动集合
+     */
+    public List<ManagePageBean> getRecruitActivityWorkingApprovalList() {
         IScene scene = ActivityManagePageScene.builder().status(ActivityStatusEnum.PASSED.getId()).build();
         List<ManagePageBean> managePageBeanList = toJavaObjectList(scene, ManagePageBean.class, "activity_type", 2);
-        ManagePageBean managePageBean = managePageBeanList.stream().filter(e -> e.getWaitingAuditNum() >= 1).findFirst().orElse(null);
-        if (managePageBean != null) {
-            return managePageBean;
+        if (managePageBeanList.size() != 0) {
+            return managePageBeanList;
         }
-        //创建活动
         Long id = createRecruitActivityApproval();
-        //审批活动
         getApprovalPassed(id);
-        //小程序报名
-        visitor.setToken(EnumAppletToken.JC_GLY_DAILY.getToken());
-        activityRegisterApplet(id, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
-        return getRecruitActivityWorkingApproval();
+        return getRecruitActivityWorkingApprovalList();
+    }
+
+
+    /**
+     * 小程序报名活动
+     *
+     * @param activityId 活动id
+     */
+    public void appletSignUpActivity(Long activityId) {
+        activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
     }
 
     /**
@@ -1271,24 +1281,21 @@ public class BusinessUtil extends SceneUtil {
      * 活动管理-撤回活动申请
      */
     public String getRevokeActivity(Long id) {
-        IScene scene = ManageRevokeScene.builder().id(id).build();
-        return scene.visitor(visitor).getResponse().getMessage();
+        return ManageRevokeScene.builder().id(id).build().visitor(visitor).getResponse().getMessage();
     }
 
     /**
      * 活动管理-取消活动
      */
     public String getCancelActivity(Long id) {
-        IScene scene = ManageCancelScene.builder().id(id).build();
-        return scene.visitor(visitor).getResponse().getMessage();
+        return ManageCancelScene.builder().id(id).build().visitor(visitor).getResponse().getMessage();
     }
 
     /**
      * 活动管理-推广活动
      */
     public String getPromotionActivity(Long id) {
-        IScene scene = ManagePromotionScene.builder().id(id).build();
-        return scene.visitor(visitor).execute().getString("applet_code_url");
+        return ManagePromotionScene.builder().id(id).build().visitor(visitor).execute().getString("applet_code_url");
     }
 
     /**
@@ -1297,8 +1304,7 @@ public class BusinessUtil extends SceneUtil {
     public String getApprovalPassed(Long... id) {
         List<Long> ids = Arrays.asList(id);
         System.err.println("---------" + ids);
-        IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
-        return scene.visitor(visitor).getResponse().getMessage();
+        return ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build().visitor(visitor).getResponse().getMessage();
     }
 
 
@@ -1307,8 +1313,7 @@ public class BusinessUtil extends SceneUtil {
      */
     public String getApprovalReject(Long... id) {
         List<Long> ids = Arrays.asList(id);
-        IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.REJECT.getId()).build();
-        return scene.visitor(visitor).getResponse().getMessage();
+        return ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.REJECT.getId()).build().visitor(visitor).getResponse().getMessage();
     }
 
     /**
@@ -1430,24 +1435,21 @@ public class BusinessUtil extends SceneUtil {
      * 招募活动详情页-获取返回值在【活动奖励】内部
      */
     public JSONArray getRecruitActivityDetail(Long activityId) {
-        IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return scene.visitor(visitor).execute().getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers");
+        return ManageDetailScene.builder().id(activityId).build().visitor(visitor).execute().getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers");
     }
 
     /**
      * 招募活动详情页返回值
      */
     public JSONObject getRecruitActivityDetailDate(Long activityId) {
-        IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return scene.visitor(visitor).execute().getJSONObject("recruit_activity_info");
+        return ManageDetailScene.builder().id(activityId).build().visitor(visitor).execute().getJSONObject("recruit_activity_info");
     }
 
     /**
      * 招募活动详情页返回值
      */
     public JSONObject getRecruitActivityDetailDate1(Long activityId) {
-        IScene scene = ManageDetailScene.builder().id(activityId).build();
-        return scene.visitor(visitor).execute();
+        return ManageDetailScene.builder().id(activityId).build().visitor(visitor).execute();
     }
 
     /**
@@ -1474,13 +1476,11 @@ public class BusinessUtil extends SceneUtil {
         return scene.visitor(visitor).execute().getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
     }
 
-
     /**
      * 报名数据-返回值（data）
      */
     public JSONObject getRegisterData(Long activityId) {
-        IScene scene = ManageRegisterDataScene.builder().activityId(activityId).build();
-        return scene.visitor(visitor).execute();
+        return ManageRegisterDataScene.builder().activityId(activityId).build().visitor(visitor).execute();
     }
 
     /**
@@ -1577,10 +1577,10 @@ public class BusinessUtil extends SceneUtil {
      * 小程序报名招募活动
      */
     public void activityRegisterApplet(Long id, String phone, String name, int registerCount, String eMail, String age, String gender, String others) {
-        JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //在活动详情中获得招募活动的报名信息
         loginPc(pp.phone1, pp.password);
+        JSONArray registerItems = new JSONArray();
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i < registerInformationList.size(); i++) {
@@ -1625,6 +1625,8 @@ public class BusinessUtil extends SceneUtil {
         //获取此活动的名称
         String title = getRecruitActivityDetailDate1(id).getString("title");
         System.err.println("----------title:" + title);
+        //置顶
+        ActivityManageTopScene.builder().id(id).build().visitor(visitor).execute();
         visitor.setToken(EnumAppletToken.JC_GLY_DAILY.getToken());
         //获取小程序推荐列表
         JSONObject lastValue = null;
@@ -1643,9 +1645,7 @@ public class BusinessUtil extends SceneUtil {
                 }
             }
         } while (list.size() == 10);
-        IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
-        scene.visitor(visitor).execute();
-
+        ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build().visitor(visitor).execute();
     }
 
     /**

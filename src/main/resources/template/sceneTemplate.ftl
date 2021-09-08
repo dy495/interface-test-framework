@@ -13,6 +13,8 @@ import lombok.Builder;
  */
 @Builder
 public class ${className} extends BaseScene {
+    <#assign page="page">
+    <#assign size="size">
     <#-- 循环类型及属性 -->
     <#list attrs as attr>
     /**
@@ -20,8 +22,18 @@ public class ${className} extends BaseScene {
      * 是否必填 ${attr.required}
      * 版本 ${attr.since}
      */
+        <#if page==attr.buildParam>
+    @Builder.Default
+    private ${attr.type} ${attr.buildParam} = 1;
+
+        <#elseif size==attr.buildParam>
+    @Builder.Default
+    private ${attr.type} ${attr.buildParam} = 10;
+
+        <#else>
     private final ${attr.type} ${attr.buildParam};
 
+        </#if>
     </#list>
 
     @Override
@@ -37,4 +49,20 @@ public class ${className} extends BaseScene {
     public String getPath() {
         return "${path}";
     }
+    <#list attrs as attr>
+        <#if size==attr.buildParam>
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+        <#elseif page==attr.buildParam>
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+        </#if>
+    </#list>
 }

@@ -8,8 +8,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationAddFavoriteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.SensitiveBehaviorApprovalScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.SensitiveBehaviorPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.AfterSensitiveBehaviorApprovalScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.AfterSensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.afterspecialaudio.AfterSpecialAudioPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioApprovalScene;
@@ -361,7 +361,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
             for (int j = 0; j < arrlist.size(); j++) {
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("words"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词");
@@ -385,10 +385,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = SensitiveBehaviorPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arr = AfterSensitiveBehaviorPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list");
             if (arr.size() > 0) {
                 String receptor_name = arr.getJSONObject(0).getString("receptor_name");
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
+                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
                 Preconditions.checkArgument(arrlist.size() >= 0, "搜索列表存在的顾问，无结果");
                 for (int i = 0; i < arrlist.size(); i++) {
                     String search = arrlist.getJSONObject(i).getString("receptor_name");
@@ -411,7 +411,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
             for (int i = 0; i < arrlist.size(); i++) {
                 String search = arrlist.getJSONObject(i).getString("receptor_name").toUpperCase();
                 Preconditions.checkArgument(search.toUpperCase().contains(receptor_name.toUpperCase()), "搜索" + receptor_name + " ,结果包含" + search);
@@ -436,7 +436,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
+                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arrlist.size(); j++) {
                     String search = arrlist.getJSONObject(j).getString("sensitive_words_type_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
@@ -462,7 +462,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
 
-                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
+                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
                 for (int j = 0; j < arrlist.size(); j++) {
                     String search = arrlist.getJSONObject(j).getString("approval_status_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
@@ -484,10 +484,10 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Response obj = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+            Response obj = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
             int code = obj.getCode();
             if (bool.equals("true")) {
-                JSONArray arr1 = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
+                JSONArray arr1 = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_start_time") + " 00:00:00:000";
@@ -517,18 +517,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
             //这个要去待审核的状态 100 随便写的 要改
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量 状态数要改
-                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
+                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过 10 随便写的 要改
-                Response obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
+                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
                 Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
+                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
 
             } else {
@@ -552,18 +552,18 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
             Long id;
 
-            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
             if (arrlist.size() > 0) {
                 id = arrlist.getJSONObject(0).getLong("id");
                 //审核前审核通过数量
-                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
+                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                Response obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
+                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
                 Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
-                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
+                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
 
             } else {

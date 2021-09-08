@@ -18,14 +18,15 @@ public class EvaluationPageScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    private Integer size = 100;
 
     /**
      * 描述 接待顾问姓名
@@ -111,5 +112,15 @@ public class EvaluationPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/intelligent-control/pc/after-manage/voice/evaluation/page";
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

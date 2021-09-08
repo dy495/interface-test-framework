@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-08-30 14:39:23
  */
 @Builder
-public class SensitiveBehaviorPageScene extends BaseScene {
+public class AfterSensitiveBehaviorPageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
