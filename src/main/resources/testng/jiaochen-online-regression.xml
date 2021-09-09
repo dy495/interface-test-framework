@@ -7,7 +7,7 @@
         <listener class-name="com.haisheng.framework.testng.service.RePrioritizingListener"/>
     </listeners>
 
-    <test name="daily-rgn" preserve-order="true">
+    <test name="online-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcApp3_1Online"/>
