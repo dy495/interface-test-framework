@@ -13,7 +13,6 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_DataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.PreSale_HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.AfterSale_HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppVoiceCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ShopDataCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemConfigCase"/>
@@ -22,13 +21,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SeverManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppReceptionCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemRecordCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.ReceiveDataCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.EvaluateConfigCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.ReceivingSystemCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.RecordCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.ReceiveDataCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.EvaluateConfigCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.ReceivingSystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.RecordCase"/>
         </classes>
     </test>
 </suite>
-
-
 
