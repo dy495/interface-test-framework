@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

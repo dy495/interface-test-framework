@@ -15,6 +15,7 @@ public class YtDataCenter {
                 {"校验联系方式：必填","customer_phone",null,"1001"},
                 {"校验购车车型：必填","intention_car_model_id",null,"1001"},
                 {"校验性别：必填","sex_id",null,"1001"},
+                //{"校验意向类型：必填","customer_source",null,"1001"},
                 //{"校验姓名：长度51字","customer_name",FastContent.NAME51,"1001"},//X    "message":"系统繁忙，请稍后再试！！"
                 //{"校验姓名：一个空格","customer_name"," ","1001"}, //X   success
                 {"校验姓名：空字符","customer_name","","1001"},
