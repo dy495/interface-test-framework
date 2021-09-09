@@ -4,15 +4,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppTodayDataDto;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppTodayTaskDto;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.homepagev4.AppTodayDataScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.homepagev4.AppTodayTaskScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateActile;
@@ -22,51 +26,44 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
-public class JcFunction extends BasicUtil {
+public class JcFunction extends SceneUtil {
     private final VisitorProxy visitor;
-    public final PublicParm pp;
+    public final PublicParam pp = new PublicParam();
     ScenarioUtil jc = new ScenarioUtil();
 
     Random random = new Random();
     DateTimeUtil dt = new DateTimeUtil();
     FileUtil file = new FileUtil();
 
-    public JcFunction(VisitorProxy visitor, PublicParm pp) {
+    public JcFunction(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
-        this.pp = pp;
     }
 
     public String genPhoneNum() {
-        String num = "177" + (random.nextInt(89999999) + 10000000);
-
-        return num;
+        return "177" + (random.nextInt(89999999) + 10000000);
     }
 
-    public String[] salereception(String phone) {
+    public String[] saleReception(String phone) {
         //注册过的手机号接待
-        IScene appAdmitScene = AppAdmitScene.builder().phone(phone).build();
-        JSONObject data = jc.invokeApi(appAdmitScene);
+        JSONObject data = AppAdmitScene.builder().phone(phone).build().visitor(visitor).execute();
         Long customerId = data.getLong("customer_id");
         //开始接待
-        IScene appstartReception = AppStartReceptionScene.builder()
+        IScene appStartReception = AppStartReceptionScene.builder()
                 .customerId(customerId)
                 .customerPhone(phone)
                 .build();
         String[] receptionId = new String[2];
-        receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
+        receptionId[0] = jc.invokeApi(appStartReception).getString("id");  //接待ID
         return receptionId;
     }
 
     public Integer importCheck(String name) {
         IScene importPageScene = ImportPageScene.builder().page(1).size(10).user(name).build();
-        JSONObject importReault = jc.invokeApi(importPageScene).getJSONArray("list").getJSONObject(0);
-        int sueecssNum = importReault.getInteger("success_num");
-        return sueecssNum;
+        JSONObject importResult = jc.invokeApi(importPageScene).getJSONArray("list").getJSONObject(0);
+        return importResult.getInteger("success_num");
     }
 
     //通过权限描述，返回权限id
@@ -88,7 +85,7 @@ public class JcFunction extends BasicUtil {
         return id;
     }
 
-    public Long getAccessId2(String labelParm) {
+    public Long getAccessId2(String labelParam) {
 
         JSONObject child = jc.roleTree();
         ReadContext readContext = JsonPath.parse(child);
@@ -103,7 +100,7 @@ public class JcFunction extends BasicUtil {
             access.put(String.valueOf(label.get(i)), String.valueOf(value.get(i)));
         }
 //        access.forEach((k,v)-> System.err.println(k+"-"+v));
-        Long id = Long.valueOf(access.get(labelParm));
+        Long id = Long.valueOf(access.get(labelParam));
         return id;
     }
 
@@ -304,21 +301,50 @@ public class JcFunction extends BasicUtil {
         return receptionID;
     }
 
-    //app今日任务数据
-    public int[] appTask() {
-        JSONObject data = jc.appTask();
-        int[] sum = new int[6];
-        //预约
-        sum[0] = data.getInteger("surplus_appointment");   //分子
-        sum[1] = data.getInteger("all_appointment");     //分母
-        //接待
-        sum[2] = data.getInteger("after_surplus_reception");  //分子
-        sum[3] = data.getInteger("after_all_reception");      //分母
-
-        sum[4] = data.getInteger("surplus_follow");  //分子
-        sum[5] = data.getInteger("all_follow");      //分母
-        return sum;
+    public int[] getAppTodayTaskInfo() {
+        AppTodayTaskDto appTodayTask = getAppTodayTask();
+        Integer[] preFollow = parseStrToInt(appTodayTask.getPreFollow());
+        Integer[] preAppointments = parseStrToInt(appTodayTask.getPreAppointment());
+        Integer[] afterReceptions = parseStrToInt(appTodayTask.getAfterReception());
+        Integer[] preReception = parseStrToInt(appTodayTask.getPreReception());
+        return new int[]{
+                afterReceptions[0], afterReceptions[1],
+                preFollow[0], preFollow[1],
+                preReception[0], preReception[1],
+                preAppointments[0], preAppointments[1],
+        };
     }
+
+    public AppTodayTaskDto getAppTodayTask() {
+        IScene scene = AppTodayTaskScene.builder().build();
+        return toJavaObject(scene, AppTodayTaskDto.class);
+    }
+
+
+    public AppTodayDataDto getAppTodayData() {
+        IScene scene = AppTodayDataScene.builder().type("home").size(3).build();
+        return toJavaObjectList(scene, AppTodayDataDto.class, "list").get(0);
+    }
+
+    //app今日任务数据
+    public int[] getAppTodayDataInfo() {
+        AppTodayDataDto appTodayData = getAppTodayData();
+        Integer[] afterPendingReceptions = parseStrToInt(appTodayData.getAfterPendingReception());
+        Integer[] prePendingFollows = parseStrToInt(appTodayData.getPrePendingFollow());
+        Integer[] prePendingReceptions = parseStrToInt(appTodayData.getPrePendingReception());
+        Integer[] prePendingAppointments = parseStrToInt(appTodayData.getPrePendingAppointment());
+        return new int[]{
+                afterPendingReceptions[0], afterPendingReceptions[1],
+                prePendingFollows[0], prePendingFollows[1],
+                prePendingReceptions[0], prePendingReceptions[1],
+                prePendingAppointments[0], prePendingAppointments[1],
+        };
+    }
+
+    public Integer[] parseStrToInt(String str) {
+        return Arrays.stream(str.split("/")).map(Integer::parseInt).toArray(Integer[]::new);
+    }
+
 
     //根据门店名称或接待顾问名称，获取今日数据中待处理数据
     public int[] apptodayDate(String type, String name) {

@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 13:03:23
  */
 @Builder
-public class AppTreeScene extends BaseScene {
+public class AppCarModelTreeScene extends BaseScene {
     /**
      * 描述 门店id
      * 是否必填 true

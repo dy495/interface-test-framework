@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -28,7 +28,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
     /**

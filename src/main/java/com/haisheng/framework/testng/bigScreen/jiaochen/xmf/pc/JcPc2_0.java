@@ -3,19 +3,17 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PoiUtils;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.LossCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateStoreCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateRemind;
@@ -42,12 +40,13 @@ import java.util.Random;
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumAccount account = EnumAccount.JC_DAILY_LXQ;
     private final VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
     Random random = new Random();
     private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
@@ -55,40 +54,18 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public String IpPort = product.getIp();
 
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-
-
-        //replace checklist app id and conf id
+        logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
+        commonConfig.checklistQaOwner = EnumChecklistUser.XMF.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
-
-
-        //replace ding push conf
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-//        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
-        //set shop id
-        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(account.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
-
         logger.debug("jc: " + jc);
         pcLogin(pp.gwname, pp.gwpassword, pp.roleidJdgw);
         qaDbUtil.openConnection();

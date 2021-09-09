@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.BusinessUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -29,7 +29,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     //    JsonPathUtil jpu = new JsonPathUtil();
     public String shopId = "-1";
     public String shopOne = "45973";//ALL-1-1门店

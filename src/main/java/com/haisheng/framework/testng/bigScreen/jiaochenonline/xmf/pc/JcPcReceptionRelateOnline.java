@@ -95,7 +95,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
-            dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
+            dataTemp.setAppReceptionPage(pf.appReceptionPage());            //app[任务-接待数]
             int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 
 
-public class PublicParm {
+public class PublicParam {
     //3.0
     public Long brandId=1L;  //TODO:
     public String user;

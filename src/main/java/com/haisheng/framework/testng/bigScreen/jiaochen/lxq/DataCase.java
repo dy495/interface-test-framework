@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -41,7 +41,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

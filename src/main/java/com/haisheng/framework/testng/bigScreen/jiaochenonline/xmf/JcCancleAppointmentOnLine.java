@@ -109,17 +109,17 @@ public class JcCancleAppointmentOnLine extends TestCaseCommon implements TestCas
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
-            dataTemp.setAppReceiptage(pf.appReceiptPage());
-            dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
+            dataTemp.setAppReceptionPage(pf.appReceiptPage());
+            dataTemp.setPcAppointmentNumber(pf.appointmentNUmber(num));
             int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
-            dataTemp.setPc_appointment_times(pf.pcAppointmentTimes());
+            dataTemp.setPcAppointmentTimes(pf.pcAppointmentTimes());
             int a = pf.appletmyAppointment();
             System.out.println("a:" + a);
-            dataTemp.setApplet_myappointment(a);
+            dataTemp.setAppletMyAppointment(a);
 
             Integer id = qaDbUtil.selectDataTempOne("appointmentId", "pc_appointmentPage");
             dataTemp.setAppointmentId(id.longValue());

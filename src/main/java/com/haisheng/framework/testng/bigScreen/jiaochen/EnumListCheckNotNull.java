@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -32,7 +32,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     ScenarioUtil jc = new ScenarioUtil();
     JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
 
 
     /**

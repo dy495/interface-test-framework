@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -33,8 +33,8 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
 
     String dataName = "pc_reception";
 
@@ -57,7 +57,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -109,8 +109,8 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
-            dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int[] appTodayTask = pf.appTask();
+            dataTemp.setAppReceptionPage(pf.appReceptionPage());            //app[任务-接待数]
+            int[] appTodayTask = pf.getAppTodayDataInfo();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -163,7 +163,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int[] appTask = pf.getAppTodayDataInfo();  //先调取函数可先验证此接口，在验证数据
 
             int app_surplus_reception = qaDbUtil.selectDataTempOne("app_surplus_reception", dataName);
             int app_all_reception = qaDbUtil.selectDataTempOne("app_all_reception", dataName);

@@ -31,8 +31,8 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
 
     int num = pp.num;   //预约天数控制
     String dataName = "pc_appointmentPage";
@@ -109,9 +109,9 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
-            dataTemp.setAppReceiptage(pf.appReceiptPage());
-            dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int[] appTodayTask = pf.appTask();
+            dataTemp.setAppReceptionPage(pf.appReceiptPage());
+            dataTemp.setPcAppointmentNumber(pf.appointmentNUmber(num));
+            int[] appTodayTask = pf.getAppTodayDataInfo();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -119,7 +119,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
 //            dataTemp.setPc_appointment_times(pf.pcAppointmentTimes());
             int a = pf.appletmyAppointment();
             System.out.println("a:" + a);
-            dataTemp.setApplet_myappointment(a);
+            dataTemp.setAppletMyAppointment(a);
 
             Integer id = qaDbUtil.selectDataTempOne("appointmentId", "pc_appointmentPage");
             dataTemp.setAppointmentId(id.longValue());
@@ -204,7 +204,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int appTask[] = pf.getAppTodayDataInfo();  //先调取函数可先验证此接口，在验证数据
 
             int appSurplusAppointment = qaDbUtil.selectDataTempOne("appSurplusAppointment", "pc_appointmentPage");
             int app_all_appointment = qaDbUtil.selectDataTempOne("app_all_appointment", "pc_appointmentPage");

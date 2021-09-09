@@ -23,7 +23,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.Evalu
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -48,7 +48,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     JiaoChenInfo info = new JiaoChenInfo();
     ScenarioUtil jc = ScenarioUtil.getInstance();
 
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     CommonConfig commonConfig = new CommonConfig();
 
 

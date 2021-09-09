@@ -17,6 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
@@ -39,10 +40,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.brand.Ap
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.style.AppletStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppCustomerDetailScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppCustomerEditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppPreSalesReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.carmodel.AppCarModelTreeScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.saleschedule.AppSaleScheduleDayListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
@@ -1057,6 +1056,18 @@ public class SceneUtil extends BasicUtil {
         return response.getLong("id");
     }
 
+    /**
+     * 获取车型id
+     *
+     * @param shopId 店铺id
+     * @return 车型id
+     */
+    public String getCarModelId(String shopId) {
+        IScene carModelTreeScene = AppCarModelTreeScene.builder().shopId(Long.parseLong(shopId)).build();
+        return carModelTreeScene.visitor(visitor).execute().getJSONArray("children").getJSONObject(0).getJSONArray("children")
+                .getJSONObject(0).getJSONArray("children").getJSONObject(0).getString("value");
+    }
+
     public String getTestDriverStaffId() {
         //uid_df9293ba JC_DAILY_LXQ
         return visitor.isDaily() ? EnumAccount.JC_DAILY_LXQ.getUid() : "uid_35a1d271";
@@ -1158,6 +1169,25 @@ public class SceneUtil extends BasicUtil {
                     .map(e -> JSONObject.toJavaObject(e, AppletVoucherInfo.class)).findFirst().orElse(null);
         } while (appletVoucherInfo == null && list.size() == 20);
         return appletVoucherInfo;
+    }
+
+    /**
+     * 获取app接待列表
+     *
+     * @return 接待列表
+     */
+    public List<AppPreSalesReceptionPageBean> getAppPreSalesReceptionPageList() {
+        List<AppPreSalesReceptionPageBean> list = new ArrayList<>();
+        Integer lastValue = null;
+        JSONArray array;
+        do {
+            IScene scene = AppPreSalesReceptionPageScene.builder().size(10).lastValue(lastValue).build();
+            JSONObject response = scene.visitor(visitor).execute();
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).forEach(list::add);
+        } while (array.size() == 10);
+        return list;
     }
 
     /**
@@ -1454,6 +1484,17 @@ public class SceneUtil extends BasicUtil {
     }
 
     //--------------------------------------------------app------------------------------------------------------------
+
+    /**
+     * 创建接待
+     *
+     * @param shopId 门店id
+     * @return AppPreSalesReceptionPageBean
+     */
+    public AppPreSalesReceptionPageBean createReception(String shopId) {
+        AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone(EnumAppletToken.JC_GLY_DAILY.getPhone()).sexId("1").intentionCarModelId(getCarModelId(shopId)).estimateBuyCarTime("2100-07-12").build().visitor(visitor).execute();
+        return getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
+    }
 
     /**
      * 跟进列表

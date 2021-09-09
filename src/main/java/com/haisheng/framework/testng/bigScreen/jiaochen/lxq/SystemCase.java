@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -38,7 +38,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     CommonConfig commonConfig = new CommonConfig();
 

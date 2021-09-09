@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -30,13 +30,13 @@ import java.lang.reflect.Method;
  **/
 
 public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd {
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunction pf = new JcFunction(visitor, pp);
+    JcFunction pf = new JcFunction(visitor);
     String dataName = "app_reception";
 
 
@@ -109,8 +109,8 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
-            dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int appTodayTask[] = pf.appTask();
+            dataTemp.setAppReceptionPage(pf.appReceptionPage());            //app[任务-接待数]
+            int appTodayTask[] = pf.getAppTodayDataInfo();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -162,7 +162,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     public void appAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int appTask[] = pf.getAppTodayDataInfo();  //先调取函数可先验证此接口，在验证数据
 
             int app_surplus_reception = qaDbUtil.selectDataTempOne("app_surplus_reception", dataName);
             int app_all_reception = qaDbUtil.selectDataTempOne("app_all_reception", dataName);
@@ -183,7 +183,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
             String name = pp.nameJdgw;
             String type = "all";   //home \all
             //获取今日任务数
-            int tasknum[] = pf.appTask();
+            int tasknum[] = pf.getAppTodayDataInfo();
 
             Integer appointmentcountZ = 0;  //预约
             Integer appointmentcountM = 0;

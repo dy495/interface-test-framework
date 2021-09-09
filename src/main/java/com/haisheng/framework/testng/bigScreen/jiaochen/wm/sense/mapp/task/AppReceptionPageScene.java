@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 接待列表
+ * 售后接待列表
  *
  * @author wangmin
  * @date 2021/1/29 15:11
