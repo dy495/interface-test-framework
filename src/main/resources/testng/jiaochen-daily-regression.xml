@@ -21,8 +21,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPcReceptionRelate"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPcAffirmReception"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.CreateReceptionData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.FinishReceptionData"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>

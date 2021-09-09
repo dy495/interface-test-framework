@@ -1497,6 +1497,19 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
+     * 完成接待
+     */
+    public void finishReception() {
+        JSONArray list = AppPreSalesReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getJSONArray("list");
+        JSONObject data = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("customer_name").equals("自动化创建的接待人")).findFirst().orElse(null);
+        if (data != null) {
+            Long id = data.getLong("id");
+            Long shopId = data.getLong("shop_id");
+            AppFinishReceptionScene.builder().id(id).shopId(shopId).build().visitor(visitor).execute();
+        }
+    }
+
+    /**
      * 跟进列表
      */
     public List<AppFollowUpPage> getFollowUpPageList() {
