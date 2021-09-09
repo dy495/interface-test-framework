@@ -796,11 +796,17 @@ public class PreSale_HuiTing_SystemCase extends TestCaseCommon implements TestCa
                 JSONArray arr1 = SpeechTechniquePageScene.builder().page(1).size(50).type(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
 
                 for (int j = 0; j < arr1.size(); j++) {
-                    String search = arr1.getJSONObject(j).getString("link_name");
+
+                String search = arr1.getJSONObject(j).getString("link_name");
+                if (!evaluate_status_name.equals("全部环节")){
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "接待环节=" + evaluate_status_name + " ,结果包含" + search);
                 }
+                else {
+                    Preconditions.checkArgument(arr1.size()>0,"搜索全部环节结果为空");
+                }
+            }
 
-                Preconditions.checkArgument(arr1.size() > 0, "搜索" + evaluate_status_name + "结果为空");
+            Preconditions.checkArgument(arr1.size() > 0, "搜索" + evaluate_status_name + "结果为空");
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());

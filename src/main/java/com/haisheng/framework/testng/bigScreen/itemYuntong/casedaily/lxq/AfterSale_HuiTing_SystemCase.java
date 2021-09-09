@@ -8,11 +8,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationAddFavoriteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.AfterSensitiveBehaviorApprovalScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftersensitivewords.AfterSensitiveBehaviorPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.afterspecialaudio.AfterSpecialAudioApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.afterspecialaudio.AfterSpecialAudioPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
@@ -352,232 +350,232 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
 
     /**
-     * --------------------------------- 敏感词风控 ---------------------------------
+     * ---------------------------------  售后没有 敏感词风控  先注销掉  ---------------------------------
      */
 
 
-    @Test
-    public void sensitiveShow() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
-            for (int j = 0; j < arrlist.size(); j++) {
-                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
-                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("words"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词");
-                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("sensitive_words_type_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词类型");
-                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("approval_status_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示审核状态");
-                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("reception_start_time"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示开始接待时间");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控列表展示项校验");
-        }
-    }
-
-
-    @Test
-    public void sensitiveFilter1() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arr = AfterSensitiveBehaviorPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list");
-            if (arr.size() > 0) {
-                String receptor_name = arr.getJSONObject(0).getString("receptor_name");
-                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
-                Preconditions.checkArgument(arrlist.size() >= 0, "搜索列表存在的顾问，无结果");
-                for (int i = 0; i < arrlist.size(); i++) {
-                    String search = arrlist.getJSONObject(i).getString("receptor_name");
-                    Preconditions.checkArgument(search.contains(receptor_name), "搜索" + receptor_name + " ,结果包含" + search);
-                }
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控文本框筛选");
-        }
-    }
-
-    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class)
-    public void sensitiveFilter2(String receptor_name) {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < arrlist.size(); i++) {
-                String search = arrlist.getJSONObject(i).getString("receptor_name").toUpperCase();
-                Preconditions.checkArgument(search.toUpperCase().contains(receptor_name.toUpperCase()), "搜索" + receptor_name + " ,结果包含" + search);
-            }
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控接待顾问文本框筛选");
-        }
-    }
-
-    @Test
-    public void sensitiveFilter3() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < arr.size(); i++) {
-                int evaluate_status = arr.getJSONObject(i).getInteger("key");
-                String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
-                for (int j = 0; j < arrlist.size(); j++) {
-                    String search = arrlist.getJSONObject(j).getString("sensitive_words_type_name");
-                    Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
-                }
-
-            }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控敏感词类别下拉框筛选");
-        }
-    }
-
-    @Test
-    public void sensitiveFilter4() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < arr.size(); i++) {
-                int evaluate_status = arr.getJSONObject(i).getInteger("key");
-                String evaluate_status_name = arr.getJSONObject(i).getString("value");
-
-                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
-                for (int j = 0; j < arrlist.size(); j++) {
-                    String search = arrlist.getJSONObject(j).getString("approval_status_name");
-                    Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
-                }
-
-            }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控审核状态下拉框筛选");
-        }
-    }
-
-    @Test(dataProvider = "TIME", dataProviderClass = YunTongInfo.class)
-    public void sensitiveFilter5(String start, String end, String mess, String bool) {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Response obj = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
-            int code = obj.getCode();
-            if (bool.equals("true")) {
-                JSONArray arr1 = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
-                for (int i = 0; i < arr1.size(); i++) {
-                    JSONObject obj1 = arr1.getJSONObject(i);
-                    String search_reception_time = obj1.getString("reception_start_time") + " 00:00:00:000";
-                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start + " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
-                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end + " 23:59:59:999")),
-                            "搜索开始时间=" + start + ", 结束时间=" + end + " , 结果包含" + search_reception_time);
-                }
-            } else {
-                Preconditions.checkArgument(code == 1001, mess + "状态码期待1001，实际" + code);
-            }
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词风控时间框筛选");
-        }
-    }
-
-    @Test
-    public void sensitiveBehaviorApproval1() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Long id;
-            //这个要去待审核的状态 100 随便写的 要改
-            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
-            if (arrlist.size() > 0) {
-                id = arrlist.getJSONObject(0).getLong("id");
-                //审核前审核通过数量 状态数要改
-                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
-
-                //审核通过 10 随便写的 要改
-                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
-                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
-
-                //审核后审核通过数量
-                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
-                Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
-
-            } else {
-                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词行为审核通过");
-        }
-    }
-
-    @Test
-    public void sensitiveBehaviorApproval2() {
-
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Long id;
-
-            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
-            if (arrlist.size() > 0) {
-                id = arrlist.getJSONObject(0).getLong("id");
-                //审核前审核通过数量
-                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
-
-                //审核通过
-                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
-                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
-
-                //审核后审核通过数量
-                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
-                Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
-
-            } else {
-                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("敏感词行为审核不通过");
-        }
-    }
+//    @Test
+//    public void sensitiveShow() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).build().visitor(visitor).execute().getJSONArray("list");
+//            for (int j = 0; j < arrlist.size(); j++) {
+//                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
+//                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("words"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词");
+//                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("sensitive_words_type_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示敏感词类型");
+//                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("approval_status_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示审核状态");
+//                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("reception_start_time"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示开始接待时间");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控列表展示项校验");
+//        }
+//    }
+//
+//
+//    @Test
+//    public void sensitiveFilter1() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arr = AfterSensitiveBehaviorPageScene.builder().page(1).size(1).build().visitor(visitor).execute().getJSONArray("list");
+//            if (arr.size() > 0) {
+//                String receptor_name = arr.getJSONObject(0).getString("receptor_name");
+//                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
+//                Preconditions.checkArgument(arrlist.size() >= 0, "搜索列表存在的顾问，无结果");
+//                for (int i = 0; i < arrlist.size(); i++) {
+//                    String search = arrlist.getJSONObject(i).getString("receptor_name");
+//                    Preconditions.checkArgument(search.contains(receptor_name), "搜索" + receptor_name + " ,结果包含" + search);
+//                }
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控文本框筛选");
+//        }
+//    }
+//
+//    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class)
+//    public void sensitiveFilter2(String receptor_name) {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().visitor(visitor).execute().getJSONArray("list");
+//            for (int i = 0; i < arrlist.size(); i++) {
+//                String search = arrlist.getJSONObject(i).getString("receptor_name").toUpperCase();
+//                Preconditions.checkArgument(search.toUpperCase().contains(receptor_name.toUpperCase()), "搜索" + receptor_name + " ,结果包含" + search);
+//            }
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控接待顾问文本框筛选");
+//        }
+//    }
+//
+//    @Test
+//    public void sensitiveFilter3() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().visitor(visitor).execute().getJSONArray("list");
+//            for (int i = 0; i < arr.size(); i++) {
+//                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+//                String evaluate_status_name = arr.getJSONObject(i).getString("value");
+//                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
+//                for (int j = 0; j < arrlist.size(); j++) {
+//                    String search = arrlist.getJSONObject(j).getString("sensitive_words_type_name");
+//                    Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
+//                }
+//
+//            }
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控敏感词类别下拉框筛选");
+//        }
+//    }
+//
+//    @Test
+//    public void sensitiveFilter4() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().visitor(visitor).execute().getJSONArray("list");
+//            for (int i = 0; i < arr.size(); i++) {
+//                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+//                String evaluate_status_name = arr.getJSONObject(i).getString("value");
+//
+//                JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().visitor(visitor).execute().getJSONArray("list");
+//                for (int j = 0; j < arrlist.size(); j++) {
+//                    String search = arrlist.getJSONObject(j).getString("approval_status_name");
+//                    Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索" + evaluate_status_name + " ,结果包含" + search);
+//                }
+//
+//            }
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控审核状态下拉框筛选");
+//        }
+//    }
+//
+//    @Test(dataProvider = "TIME", dataProviderClass = YunTongInfo.class)
+//    public void sensitiveFilter5(String start, String end, String mess, String bool) {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            Response obj = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).getResponse();
+//            int code = obj.getCode();
+//            if (bool.equals("true")) {
+//                JSONArray arr1 = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().visitor(visitor).execute().getJSONArray("list");
+//                for (int i = 0; i < arr1.size(); i++) {
+//                    JSONObject obj1 = arr1.getJSONObject(i);
+//                    String search_reception_time = obj1.getString("reception_start_time") + " 00:00:00:000";
+//                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start + " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+//                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end + " 23:59:59:999")),
+//                            "搜索开始时间=" + start + ", 结束时间=" + end + " , 结果包含" + search_reception_time);
+//                }
+//            } else {
+//                Preconditions.checkArgument(code == 1001, mess + "状态码期待1001，实际" + code);
+//            }
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词风控时间框筛选");
+//        }
+//    }
+//
+//    @Test
+//    public void sensitiveBehaviorApproval1() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            Long id;
+//            //这个要去待审核的状态 100 随便写的 要改
+//            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
+//            if (arrlist.size() > 0) {
+//                id = arrlist.getJSONObject(0).getLong("id");
+//                //审核前审核通过数量 状态数要改
+//                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
+//
+//                //审核通过 10 随便写的 要改
+//                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
+//                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
+//
+//                //审核后审核通过数量
+//                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
+//                Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
+//
+//            } else {
+//                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词行为审核通过");
+//        }
+//    }
+//
+//    @Test
+//    public void sensitiveBehaviorApproval2() {
+//
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            Long id;
+//
+//            JSONArray arrlist = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().visitor(visitor).execute().getJSONArray("list");
+//            if (arrlist.size() > 0) {
+//                id = arrlist.getJSONObject(0).getLong("id");
+//                //审核前审核通过数量
+//                int bef = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
+//
+//                //审核通过
+//                Response obj = AfterSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
+//                Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
+//
+//                //审核后审核通过数量
+//                int after = AfterSensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
+//                Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
+//
+//            } else {
+//                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("敏感词行为审核不通过");
+//        }
+//    }
 
     /**
      * --------------------------------- 特殊音频审核 ---------------------------------
@@ -751,7 +749,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
                 int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                Response obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
+                Response obj = AfterSpecialAudioApprovalScene.builder().id(id).approvalStatus(200).build().visitor(visitor).getResponse();
                 Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
@@ -786,7 +784,7 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
                 int bef = AfterSpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().visitor(visitor).execute().getInteger("total");
 
                 //审核通过
-                Response obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
+                Response obj = AfterSpecialAudioApprovalScene.builder().id(id).approvalStatus(300).build().visitor(visitor).getResponse();
                 Preconditions.checkArgument(obj.getCode() == 1000, "审核失败,提示" + obj.getMessage());
 
                 //审核后审核通过数量
@@ -820,8 +818,13 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
 
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("link_name");
-                    Preconditions.checkArgument(search.equals(evaluate_status_name), "接待环节=" + evaluate_status_name + " ,结果包含" + search);
-                }
+                    if (!evaluate_status_name.equals("全部环节")){
+                        Preconditions.checkArgument(search.equals(evaluate_status_name), "接待环节=" + evaluate_status_name + " ,结果包含" + search);
+                    }
+                    else {
+                        Preconditions.checkArgument(arr1.size()>0,"搜索全部环节结果为空");
+                    }
+                        }
 
                 Preconditions.checkArgument(arr1.size() > 0, "搜索" + evaluate_status_name + "结果为空");
             }
