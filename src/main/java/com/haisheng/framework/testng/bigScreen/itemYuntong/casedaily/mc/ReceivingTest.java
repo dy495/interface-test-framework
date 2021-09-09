@@ -25,7 +25,7 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class AppReceivingDataCase extends TestCaseCommon implements TestCaseStd {
+public class ReceivingTest extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_DAILY_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）

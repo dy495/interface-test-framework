@@ -5,23 +5,22 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class GetQRCode extends BaseScene {
-    /**
-     * 请求源域名
-     * Required : false
-     **/
-    private final String apiDomain;
+public class PhoneGetVerificationCodeScene extends BaseScene {
+
+    private final long receptionId;
+    private final String phone;
 
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject obj = new JSONObject();
-        obj.put("apiDomain",apiDomain);
+        obj.put("receptionId",receptionId);
+        obj.put("phone",phone);
         return obj;
     }
 
     @Override
     public String getPath() {
-        return "/car-platform/m-app/pre-sales-reception/query_retention_qr_code";
+        return "/car-platform/h5/pre-sales-reception/verification-code";
     }
 }

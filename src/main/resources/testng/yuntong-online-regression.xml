@@ -23,7 +23,6 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.RecordCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.AppTaskReceiveDataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.EvaluateConfigCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.ReceivingLineSystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.ReceivingSystemCase"/>
 
         </classes>

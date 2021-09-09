@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.CustomerForClientSubmitScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.PhoneGetVerificationCodeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.customermanager.AppCustomerManagerPreCustomerAddPlateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.followup.AppFollowUpPageV4Scene;
@@ -138,10 +139,10 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             AppReceptionBean reception = util.getReception();
             Integer code = AppCustomerRemarkV4Scene.builder().id(reception.getId()).shopId(reception.getShopId()).remark(remark).build().visitor(visitor).getResponse().getCode();
-            String addedRemark = PreSaleCustomerInfoRemarkRecordScene.builder().shopId(reception.getShopId()).customerId(reception.getCustomerId().toString()).build().visitor(visitor).execute()
-                    .getJSONArray("list").getJSONObject(0).getString("remark_content");
             Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
             if (Objects.equals("1000", String.valueOf(code))) {
+                String addedRemark = PreSaleCustomerInfoRemarkRecordScene.builder().shopId(reception.getShopId()).customerId(reception.getCustomerId().toString()).build().visitor(visitor).execute()
+                        .getJSONArray("list").getJSONObject(0).getString("remark_content");
             Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，app输入的备注内容" + remark + ",pc客户详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError | Exception e) {
