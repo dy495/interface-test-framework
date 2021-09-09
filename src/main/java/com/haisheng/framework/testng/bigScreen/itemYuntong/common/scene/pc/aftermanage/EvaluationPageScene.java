@@ -76,6 +76,7 @@ public class EvaluationPageScene extends BaseScene {
      * 版本 v1.0
      */
     private final String receptionEnd;
+    private final String repairType;
 
     /**
      * 描述 是否收藏， 不选传null
@@ -106,6 +107,7 @@ public class EvaluationPageScene extends BaseScene {
         object.put("reception_end", receptionEnd);
         object.put("is_favorite", isFavorite);
         object.put("sort_info_list", sortInfoList);
+        object.put("repair_type", repairType);
         return object;
     }
 

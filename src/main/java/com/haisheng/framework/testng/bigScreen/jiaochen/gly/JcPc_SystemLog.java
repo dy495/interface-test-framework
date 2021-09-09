@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -31,7 +31,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = new ScenarioUtil();
-    PublicParm pp = new PublicParm();
+    PublicParam pp = new PublicParam();
     public String shopId = "-1";
     public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
     public VisitorProxy visitor = new VisitorProxy(product);

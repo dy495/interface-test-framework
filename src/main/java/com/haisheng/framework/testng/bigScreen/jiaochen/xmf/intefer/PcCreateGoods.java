@@ -3,14 +3,14 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.ImageUtil;
 
 public class PcCreateGoods {
     public static DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
+    PublicParam pp=new PublicParam();
     FileUtil file = new FileUtil();
     JiaoChenInfo info = new JiaoChenInfo();
     ScenarioUtil jc = new ScenarioUtil();

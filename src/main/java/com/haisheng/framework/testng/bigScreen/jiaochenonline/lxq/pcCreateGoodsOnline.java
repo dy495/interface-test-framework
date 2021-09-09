@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
@@ -9,7 +9,7 @@ import com.haisheng.framework.util.ImageUtil;
 
 public class pcCreateGoodsOnline {
     public static DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp=new PublicParm();
+    PublicParam pp=new PublicParam();
     FileUtil file = new FileUtil();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
     ScenarioUtilOnline jc = new ScenarioUtilOnline();

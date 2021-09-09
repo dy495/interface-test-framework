@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.RoleList;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -39,8 +39,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     private final VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = new ScenarioUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
@@ -107,7 +107,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     public void startReception() {
-        int receptionId = Integer.valueOf(pf.salereception(pp.customerPhone)[0]);
+        int receptionId = Integer.valueOf(pf.saleReception(pp.customerPhone)[0]);
         qaDbUtil.updateDataNum("app_sale_receptionId", receptionId);
     }
 

@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -33,8 +33,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
 
@@ -136,7 +136,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appLogin(name, code, roleId);
             String type = "all";   //home \all
             //获取今日任务数
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             int appointmentcountZ = 0;  //预约
             int appointmentcountM = 0;
@@ -200,7 +200,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             //app今日任务数
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             int appointmentTotal = jc.appointmentPage(null, 100).getInteger("total");
             int receptionTotal = jc.appreceptionPage(null, 100).getInteger("total");
@@ -221,7 +221,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
             //app今日任务数
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
@@ -274,7 +274,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
             //app今日任务数
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
@@ -325,7 +325,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             commonConfig.setShopId("-1");
             appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             //app今日任务数
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
@@ -513,22 +513,22 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Long[] id = pf.startReception(pp.carplate8);
             //变更接待前
             int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
             int totalDz = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknumDZ = pf.appTask();
+            int[] tasknumDZ = pf.getAppTodayDataInfo();
 
             jc.receptorChange(id[0], id[1], pp.userid2);    //变更接待
 
             //变更接待后
             int total2Dz = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknumADz = pf.appTask();
+            int[] tasknumADz = pf.getAppTodayDataInfo();
 
 
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             int total2 = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknumA = pf.appTask();
+            int[] tasknumA = pf.getAppTodayDataInfo();
 
             appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
             jc.receptorChange(id[0], id[1], pp.userid);    //变更接待，变回来
@@ -570,12 +570,12 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             id[1] = dd.getLong("shop_id");
 
             int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
 
             //取消接待
             jc.cancleReception(id[0], id[1]);
             int totalA = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknumA = pf.appTask();
+            int[] tasknumA = pf.getAppTodayDataInfo();
 
             Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
             Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
@@ -702,13 +702,13 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //接待前，今日任务
-            int[] tasknum = pf.appTask();
+            int[] tasknum = pf.getAppTodayDataInfo();
             //开始接待
             Long[] id = pf.startReception(pp.carplate);
-            int[] tasknumA = pf.appTask();
+            int[] tasknumA = pf.getAppTodayDataInfo();
             //完成接待
             jc.finishReception(id[0], id[1]);
-            int[] tasknumB = pf.appTask();
+            int[] tasknumB = pf.getAppTodayDataInfo();
 
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
             Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");

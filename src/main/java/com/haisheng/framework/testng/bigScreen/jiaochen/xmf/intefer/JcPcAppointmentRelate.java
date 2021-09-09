@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParam;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -34,8 +34,8 @@ public class JcPcAppointmentRelate extends TestCaseCommon implements TestCaseStd
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    PublicParam pp = new PublicParam();
+    JcFunction pf = new JcFunction(visitor);
 
     int num = 0;   //预约天数控制
 
@@ -108,20 +108,20 @@ public class JcPcAppointmentRelate extends TestCaseCommon implements TestCaseStd
         try {
             DataTemp dataTemp = new DataTemp();
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
-            dataTemp.setAppReceiptage(pf.appReceiptPage());
-            dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int appTodayTask[] = pf.appTask();
+            dataTemp.setAppReceptionPage(pf.appReceiptPage());
+            dataTemp.setPcAppointmentNumber(pf.appointmentNUmber(num));
+            int appTodayTask[] = pf.getAppTodayDataInfo();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
-            dataTemp.setPc_appointment_times(pf.pcAppointmentTimes());
-            dataTemp.setApplet_myappointment(pf.appletmyAppointment());
+            dataTemp.setPcAppointmentTimes(pf.pcAppointmentTimes());
+            dataTemp.setAppletMyAppointment(pf.appletmyAppointment());
 
             //预约
             dataTemp.setAppointmentId(pf.appletAppointment(num));
 
-            System.out.println("PcNUm:" + dataTemp.getPcAppointmentNUmber());
+            System.out.println("PcNUm:" + dataTemp.getPcAppointmentNumber());
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
@@ -198,7 +198,7 @@ public class JcPcAppointmentRelate extends TestCaseCommon implements TestCaseStd
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int appTask[] = pf.getAppTodayDataInfo();  //先调取函数可先验证此接口，在验证数据
 
             int appSurplusAppointment = qaDbUtil.selectDataTempOne("appSurplusAppointment", "pc_appointmentPage");
             int app_all_appointment = qaDbUtil.selectDataTempOne("app_all_appointment", "pc_appointmentPage");

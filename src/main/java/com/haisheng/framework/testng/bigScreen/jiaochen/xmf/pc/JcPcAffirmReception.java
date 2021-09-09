@@ -1,20 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppTodayDataDto;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppTodayTaskDto;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.presalesreception.AppPreSalesReceptionPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.pojo.DataStore;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.QADbProxy;
-import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -23,155 +24,111 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 /**
- * @description :pc完成接待,数据一致性 运行单个test时，需将inintal中的存储操作函数注释掉
+ * @description :销售创建接待
  * @date :2020/12/18 16:45
  **/
 
 public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumAccount account = EnumAccount.JC_DAILY_LXQ;
     private final VisitorProxy visitor = new VisitorProxy(product);
-    ScenarioUtil jc = new ScenarioUtil();
-    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
-    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor, pp);
+    public JcFunction util = new JcFunction(visitor);
+    public AppPreSalesReceptionPageBean preSalesReceptionPage;
+    public DataStore dataStore = new DataStore();
 
-    String dataName = "pc_reception";  //数据存储的行名称
-
-
-    public void initial1() {
-        logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
-
-
-        //replace checklist app id and conf id
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product + commonConfig.checklistQaOwner);
-
-        //replace ding f
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
-        beforeClassInit(commonConfig);
-
-        logger.debug("jc: " + jc);
-        jc.appLogin(pp.jdgw, pp.jdgwpassword);
-
-    }
-
-
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
-        initial1();
-        qaDbUtil.openConnection();
-        BeforeStart();               //调试单个case时注释此行
+        logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = EnumChecklistUser.XMF.getName();
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.setShopId(account.getReceptionShopId()).setReferer(product.getReferer()).setRoleId(account.getRoleId()).setProduct(product.getAbbreviation());
+        beforeClassInit(commonConfig);
+        initDataStore();
     }
 
     @AfterClass
     @Override
     public void clean() {
         afterClassClean();
-        qaDbUtil.closeConnection();
     }
 
-    /**
-     * @description: get a fresh case ds to save case result, such as result/response
-     */
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
-
-    //操作
-    public void BeforeStart() {
-        try {
-            DataTemp dataTemp = new DataTemp();
-            dataTemp.setDataName(dataName);
-            dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
-            dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int appTodayTask[] = pf.appTask();
-            dataTemp.setAppSurplusAppointment(appTodayTask[0]);
-            dataTemp.setApp_all_appointment(appTodayTask[1]);
-            dataTemp.setApp_surplus_reception(appTodayTask[2]);
-            dataTemp.setApp_all_reception(appTodayTask[3]);
-            //pc 完成接待
-            Integer receptionId = qaDbUtil.selectDataTempOne("appointmentId", dataName);
-            jc.pcFinishReception((long) receptionId, pp.shopIdZ);
-            dataTemp.setAppointmentId((long) receptionId);
-            qaDbUtil.updateDataAll(dataTemp);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            logger.info("start:");
-        }
-
-    }
-
-    @Test()  //接待后pc接待列表+1
-    public void Pc_appointmentMessage() {
         logger.logCaseStart(caseResult.getCaseName());
+        util.loginPc(account);
+    }
+
+    /**
+     * 获取数据信息
+     */
+    public void initDataStore() {
+        logger.info("查询数据:{}", "---start");
+        //pc接待管理数
+        util.loginPc(account);
+        Integer pcReceptionTotal = ReceptionPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+        dataStore.setPcReceptionTotal(pcReceptionTotal);
+        //app任务-接待数
+        util.loginApp(account);
+        Integer appReceptionTotal = AppPreSalesReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
+        dataStore.setAppPreReceptionTotal(appReceptionTotal);
+        //今日数据
+        AppTodayDataDto appTodayData = util.getAppTodayData();
+        AppTodayTaskDto appTodayTask = util.getAppTodayTask();
+        dataStore.setAppTodayDataDto(appTodayData);
+        dataStore.setAppTodayTaskDto(appTodayTask);
+        util.loginPc(account);
+        logger.info("查询数据:{}", "---end");
+    }
+
+    @Test(description = "接待后pc接待列表+1")
+    public void pcAppointmentTotal() {
         try {
-            int result2 = pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
-            System.out.println(result1 + ":" + result2);
-            Preconditions.checkArgument(result2 - result1 == 0, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
+            Integer pcReceptionTotal = dataStore.getPcReceptionTotal();
+            Integer pcReceptionTotal1 = ReceptionPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(pcReceptionTotal1 == (pcReceptionTotal + 1), "接待前pc接待列表数据为：" + pcReceptionTotal + " 接待后pc接待列表数据为：" + pcReceptionTotal1);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后pc接待列表+1");
         }
     }
 
-    @Test()  //app任务列数
-    public void AppTask() {
-        logger.logCaseStart(caseResult.getCaseName());
+    @Test(description = "接待后，app接待任务列数+1")
+    public void appAppointmentTotal() {
         try {
-            int result2 = pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selectDataTempOne("appReceiptage", dataName);
-            System.out.println(result1 + ":" + result2);
-            Preconditions.checkArgument(result2 - result1 == -1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
+            util.loginApp(account);
+            Integer appPreReceptionTotal = dataStore.getAppPreReceptionTotal();
+            Integer appPreReceptionTotal1 = AppPreSalesReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(appPreReceptionTotal1 == (appPreReceptionTotal + 1), "接待前app接待列表数据为：" + appPreReceptionTotal + " 接待后pc接待列表数据为：" + appPreReceptionTotal1);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后，app接待任务列数+1");
         }
     }
 
-    @Test()  //接待后，app今日任务分子分母+1
-    public void AppAppointmentTodayTask() {
-        logger.logCaseStart(caseResult.getCaseName());
+    @Test(description = "接待后，app今日任务分子分母+1")
+    public void appTodayData() {
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
-
-            int app_surplus_reception = qaDbUtil.selectDataTempOne("app_surplus_reception", dataName);
-            int app_all_reception = qaDbUtil.selectDataTempOne("app_all_reception", dataName);
-            Preconditions.checkArgument(appTask[2] - app_surplus_reception == -1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
-            Preconditions.checkArgument(appTask[3] - app_all_reception == 0, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
+            Integer[] integers = util.parseStrToInt(dataStore.getAppTodayDataDto().getPrePendingReception());
+            Integer[] integers1 = util.parseStrToInt(util.getAppTodayData().getPrePendingReception());
+            CommonUtil.valueView(integers, integers1);
+            Preconditions.checkArgument(integers[0].equals(integers1[0] + 1), "接待前今日任务销售接待分子为：" + integers[0] + " 接待后今日任务销售接待分子为：" + (integers1[0] + 1));
+            Preconditions.checkArgument(integers[1].equals(integers1[1] + 1), "接待前今日任务销售接待分母为：" + integers[1] + " 接待后今日任务销售接待分母为：" + (integers1[1] + 1));
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后，app今日任务分子分母+1");
         }
     }
-
-
 }

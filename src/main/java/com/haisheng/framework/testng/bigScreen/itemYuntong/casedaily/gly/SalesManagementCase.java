@@ -90,9 +90,9 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
     public void preSaleCustomerPage1(String pram, String output) {
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
-            JSONObject rsp = scene.visitor(visitor).execute();
-            if (rsp.getJSONArray("list").size() > 0) {
-                String outPutResult = rsp.getJSONArray("list").getJSONObject(0).getString(output);
+            JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
+            if (list.size() > 0) {
+                String outPutResult =list.getJSONObject(0).getString(output);
                 scene = scene.modify(pram, outPutResult);
                 List<JSONObject> searchResultList = util.toJavaObjectList(scene, JSONObject.class);
                 searchResultList.forEach(e -> {
