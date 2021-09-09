@@ -233,21 +233,25 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
         }
     }
 
-    @Test // 接口文档有问题
+    @Test
     public void voiceEvaluationFilter4() {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = GeneralEnumValueListScene.builder().enumType("ENTER_STORE_STATUS_LIST").build().visitor(visitor).execute().getJSONArray("list");
-            for (int i = 0; i < arr.size(); i++) {
-                int enter_status = arr.getJSONObject(i).getInteger("key");
-                String repair_type_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).enterStatus(enter_status).build().visitor(visitor).execute().getJSONArray("list");
-                for (int j = 0; j < arr1.size(); j++) {
-                    String search = arr1.getJSONObject(j).getString("repair_type_name");
-                    Preconditions.checkArgument(search.equals(repair_type_name), "搜索服务内容=" + repair_type_name + " ,结果包含" + search);
-                }
+
+
+            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(50).repairType("MAINTENANCE").build().visitor(visitor).execute().getJSONArray("list");
+            for (int j = 0; j < arr1.size(); j++) {
+                String search = arr1.getJSONObject(j).getString("repair_type_name");
+                Preconditions.checkArgument(search.equals("机修"), "搜索服务内容=机修 ,结果包含" + search);
             }
+
+            JSONArray arr2 = EvaluationPageScene.builder().page(1).size(50).repairType("CLAIMS").build().visitor(visitor).execute().getJSONArray("list");
+            for (int j = 0; j < arr2.size(); j++) {
+                String search = arr2.getJSONObject(j).getString("repair_type_name");
+                Preconditions.checkArgument(search.equals("理赔"), "搜索服务内容=理赔 ,结果包含" + search);
+            }
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

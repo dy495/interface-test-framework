@@ -13,6 +13,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_DataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.PreSale_HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.AfterSale_HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppVoiceCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ShopDataCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemConfigCase"/>
