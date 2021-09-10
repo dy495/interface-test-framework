@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import lombok.Builder;
 
 /**
@@ -82,5 +83,10 @@ public class StaffPageScene extends BaseScene {
     @Override
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    @Override
+    public String getIpPort() {
+        return getVisitor().isDaily() ? EnumTestProduct.JC_DAILY_ZH.getIp() : EnumTestProduct.JC_ONLINE_ZH.getIp();
     }
 }

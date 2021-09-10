@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemo
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import lombok.Builder;
 
 /**
@@ -54,5 +55,10 @@ public class ManageModelEditScene extends BaseScene {
     @Override
     public String getPath() {
         return "/car-platform/pc/shop-style-model/manage/model/edit";
+    }
+
+    @Override
+    public String getIpPort() {
+        return getVisitor().isDaily() ? EnumTestProduct.JC_DAILY_JD.getIp() : EnumTestProduct.JC_ONLINE_JD.getIp();
     }
 }

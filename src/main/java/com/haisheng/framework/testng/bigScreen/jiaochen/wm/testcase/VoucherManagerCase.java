@@ -785,7 +785,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.toJavaObjectList(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -816,7 +816,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.toJavaObjectList(scene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -848,7 +848,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.toJavaObjectList(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -927,7 +927,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.toJavaObjectList(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + 10 + "张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状态=已通过
             JSONObject newResponse = additionalRecordScene.visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
@@ -979,7 +979,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String changeItem = voucherChangeRecord.getChangeItem();
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "1张", changeItem);
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = additionalRecordScene.visitor(visitor).execute();
@@ -1029,7 +1029,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.toJavaObjectList(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "10张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ACCOUNT.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ACCOUNT.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ACCOUNT.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = additionalRecordScene.visitor(visitor).execute();

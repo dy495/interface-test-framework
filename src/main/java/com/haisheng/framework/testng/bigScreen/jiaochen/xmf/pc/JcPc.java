@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -12,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.role.RolePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.staff.StaffPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletAppointmentTimeListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletEvaluateSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginApp;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginPc;
@@ -20,8 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StatusChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
@@ -38,6 +39,7 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +47,7 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcPc extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_DAILY_ZH;
     private static final EnumAccount ADMIN = EnumAccount.JC_DAILY_YS;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_LXQ_DAILY;
@@ -68,7 +70,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(ACCOUNT.getShopId()).setReferer(PRODUCT.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getReceptionShopId()).setReferer(PRODUCT.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -190,45 +192,36 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Test(description = "新增1个账号，列表+1；删除1个账号，列表-1；修改账号名称后与列表是否一致")    //ok
     public void accountInfoData() {
         try {
+            util.loginPc(ADMIN);
+            commonConfig.setRoleId(PRODUCT.getRoleId());
             IScene scene = StaffPageScene.builder().build();
             Integer total = scene.visitor(visitor).execute().getInteger("total");
-            JSONArray r_dList = util.getroleLlist();
-            JSONArray shop_list = new JSONArray();
+            JSONArray roleList = util.getroleLlist();
+            JSONArray shopList = new JSONArray();
             String phone = util.genPhoneNum();
             //用EMAIL新增一个账号
-            jc.organizationAccountAdd(name, phone, r_dList, shop_list);
+            StaffAddScene.builder().name(name).roleList(roleList).shopList(shopList).phone(phone).build().visitor(visitor).execute();
             JSONArray accountList = scene.modify("name", name).visitor(visitor).execute().getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("id");
-
+            String staffId = accountList.getJSONObject(0).getString("id");
             //新增账号以后，再查询列表
-
-            Integer total1 = scene.visitor(visitor).execute().getInteger("total");
-            int result = total1 - total;
-            Preconditions.checkArgument(result == 1, "新增1个账号，账号列表的数量却加了：" + result);
-
-
+            Integer addTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(addTotal - total == 1, "新增账号前账号数量：" + total + " 新增账号后账号数量：" + addTotal);
             //编辑账号的名称，是否与列表该账号的一致
             String reName = "自动化测编辑";
-            jc.organizationAccountEdit(account, reName, phone, r_dList, shop_list);
-
+            StaffEditScene.builder().id(staffId).name(reName).phone(phone).roleList(roleList).shopList(shopList).build().visitor(visitor).execute();
             JSONArray accountsList = scene.modify("name", reName).visitor(visitor).execute().getJSONArray("list");
-            String name_1 = accountsList.getJSONObject(0).getString("name");
-            Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
-
-
+            String modifyName = accountsList.getJSONObject(0).getString("name");
+            Preconditions.checkArgument(modifyName.equals(reName), "修改账号：" + staffId + "的名称为：" + reName + " 修改后，该账号的名称为：" + modifyName);
             //删除账号以后，再查询列表
-            jc.organizationAccountDelete(account);
-
-            Integer total2 = scene.visitor(visitor).execute().getInteger("total");
-            Preconditions.checkArgument(total1 - total2 == 1, "删除1个账号，账号列表的数量却减了：" + (total1 - total2));
-
+            StaffDeleteScene.builder().id(staffId).build().visitor(visitor).execute();
+            Integer deleteTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(addTotal - deleteTotal == 1, "删除账号前账号数量：" + addTotal + " 删除账号后账号数量：" + deleteTotal);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-
+            commonConfig.setRoleId(ACCOUNT.getRoleId());
             saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
-
     }
 
     @Test(description = "新增姓名异常")
@@ -456,6 +449,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         String id = null;
         try {
             util.loginPc(ADMIN);
+            commonConfig.setRoleId(PRODUCT.getRoleId());
             IScene scene = StaffPageScene.builder().name("自动化专用账号").build();
             StaffPageBean staffPageBean = util.toFirstJavaObject(scene, StaffPageBean.class);
             String phone = staffPageBean.getPhone();
@@ -471,6 +465,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } finally {
             //开启
             StatusChangeScene.builder().id(id).status("ENABLE").build().visitor(visitor).execute();
+            commonConfig.setRoleId(ACCOUNT.getRoleId());
             saveData("轿辰-禁用账户登录失败，开启登录成功");
         }
     }
@@ -702,26 +697,25 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "APPOINTMENTTYPE")  //pc开关【保养配置】-预约按钮，小程序对应变更
-    public void pcappointmentButton(String type) {
+    public void pcAppointmentButton(String type) {
+        Long id = null;
         try {
-            JSONObject response = ManageModelPageScene.builder().page(1).size(10).type(type).carModel(pp.carModel).build().visitor(visitor).execute();
-            JSONObject data = response.getJSONArray("list").getJSONObject(0);
+            JSONObject data = ManageModelPageScene.builder().type(type).carModel(pp.carModel).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             String status = data.getString("status");
+            id = data.getLong("id");
             if (!status.equals("ENABLE")) {
-                throw new Exception("车型,预约配置被关闭");
+                ManageModelEditScene.builder().id(id).status("ENABLE").type(type).build().visitor(visitor).execute();
             }
-            //  public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "DISABLE", true, type);
-            jc.appletLoginToken(pp.appletTocken);
-            JSONObject isAble = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(1), type, false);
-            int code = isAble.getInteger("code");
-            String message = isAble.getString("message");
-            util.loginPc(ADMIN);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "ENABLE", true, type);
-            Preconditions.checkArgument(code != 1000, "预约配置关闭小程序预约保养页返回" + message);
+            ManageModelEditScene.builder().id(id).status("DISABLE").type(type).build().visitor(visitor).execute();
+            util.loginApplet(APPLET_USER);
+            Response response = AppletAppointmentTimeListScene.builder().shopId(Long.parseLong(ACCOUNT.getReceptionShopId()))
+                    .carId(pp.car_idA).day(DateTimeUtil.addDayFormat(new Date(), 1)).type(type).build().visitor(visitor).getResponse();
+            Preconditions.checkArgument(response.getCode() != 1000, "预约配置关闭小程序预约保养页返回" + response.getMessage());
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
+            util.loginPc(ACCOUNT);
+            ManageModelEditScene.builder().id(id).status("ENABLE").type(type).build().visitor(visitor).execute();
             saveData("pc修改预约配置验证");
         }
     }
@@ -1042,31 +1036,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData(type1 + "评价配置修改验证");
-        }
-    }
-
-    @Test()
-    public void delete() {
-        try {
-            util.loginPc(ADMIN);
-            for (int j = 13; j < 16; j++) {
-                JSONArray list = jc.organizationRolePage(j, 10).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String id = list.getJSONObject(i).getString("id");
-                    String name = list.getJSONObject(i).getString("name");
-                    Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
-                    Matcher m = p.matcher(name);
-                    if (m.find()) {
-                        continue;
-                    }
-                    jc.organizationidRoleDelete(id);
-                }
-            }
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("角色删除");
         }
     }
 }

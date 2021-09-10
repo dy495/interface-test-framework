@@ -55,7 +55,7 @@ public class TestCaseCommon {
     public static String authorization;
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
-    private final String DEBUG = System.getProperty("DEBUG", "true");
+    private final String DEBUG = System.getProperty("DEBUG", "false");
     private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
