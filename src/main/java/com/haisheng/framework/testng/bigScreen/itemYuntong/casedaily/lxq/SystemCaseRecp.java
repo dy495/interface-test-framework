@@ -222,4 +222,12 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    // todo 审核参数配置+特殊音频记录
+    // 时间= 100min, 分数=1
+    // 时间 =1min 分数=100
+
+    //todo 配置合格值， 计算总分
+
+
+
 }

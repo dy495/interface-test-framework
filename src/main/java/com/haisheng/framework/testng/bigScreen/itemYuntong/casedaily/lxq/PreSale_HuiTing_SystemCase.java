@@ -5,12 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluationAddFavoriteScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.PreRecordDownloadScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.PreVoiceTranslateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
@@ -19,7 +18,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speci
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -307,13 +305,13 @@ public class PreSale_HuiTing_SystemCase extends TestCaseCommon implements TestCa
     }
 
 
-    @Test(dataProvider = "BOOLEAN", dataProviderClass = YunTongInfo.class,enabled = false)
+    @Test(dataProvider = "BOOLEAN", dataProviderClass = YunTongInfo.class)
     public void voiceEvaluationFilter7(String isfavorite) {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(30).isFavorite(Boolean.getBoolean(isfavorite)).build().visitor(visitor).execute().getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(30).isFavorite(Boolean.getBoolean(isfavorite)).build().visitor(visitor).execute().getJSONArray("list");
             for (int j = 0; j < arr1.size(); j++) {
                 Boolean search = arr1.getJSONObject(j).getBoolean("is_favorite");
                 Preconditions.checkArgument(search == Boolean.getBoolean(isfavorite), "搜索收藏状态为"+Boolean.getBoolean(isfavorite)+"结果不正确");
@@ -327,6 +325,72 @@ public class PreSale_HuiTing_SystemCase extends TestCaseCommon implements TestCa
             saveData("语音评鉴列表根据是否收藏筛选");
         }
     }
+
+
+    @Test
+    public void voiceEvaluationFavorite() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id= VoiceEvaluationPageScene.builder().page(1).size(30).isFavorite(false).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
+            //收藏
+            int code = EvaluationAddFavoriteScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code==1000,"收藏，状态码为"+code);
+
+            //取消收藏
+            int code1 = EvaluationAddFavoriteScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code1==1000,"取消收藏，状态码为"+code);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴列表收藏/取消收藏语音");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationTranslate() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id= VoiceEvaluationPageScene.builder().page(1).size(10).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
+            //翻译
+            int code = PreVoiceTranslateScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code==1000,"收藏，状态码为"+code);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("销售语音评鉴详情 查看翻译");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationDownLoad() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String id= VoiceEvaluationPageScene.builder().page(1).size(10).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("id");
+            //下载语音
+            int code = PreRecordDownloadScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code==1000,"下载单个语音，状态码为"+code);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("销售语音评鉴详情 下载语音");
+        }
+    }
+
 
     /**
      * --------------------------------- 敏感词风控 ---------------------------------
@@ -816,6 +880,13 @@ public class PreSale_HuiTing_SystemCase extends TestCaseCommon implements TestCa
             saveData("话术考核设置根据接待环节进行筛选");
         }
     }
+
+
+    // 审核参数配置， 录音时长
+
+    /**
+     * --------------------------------- 会听参数设置 ---------------------------------
+     */
 
     //todo 合格值设置
 

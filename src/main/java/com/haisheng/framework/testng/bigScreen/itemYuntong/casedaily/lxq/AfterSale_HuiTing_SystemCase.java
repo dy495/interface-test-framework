@@ -8,9 +8,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationAddFavoriteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.RecordDownloadScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.VoiceTranslateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.afterspecialaudio.AfterSpecialAudioApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.afterspecialaudio.AfterSpecialAudioPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
@@ -339,9 +342,12 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
             Long id= EvaluationPageScene.builder().page(1).size(30).isFavorite(false).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
             //收藏
             int code = EvaluationAddFavoriteScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
-            Preconditions.checkArgument(code==1000,"收藏语音，状态码为"+code);
+            Preconditions.checkArgument(code==1000,"收藏，状态码为"+code);
 
-            //todo 取消收藏
+            //取消收藏
+            int code1 = EvaluationAddFavoriteScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code1==1000,"取消收藏，状态码为"+code);
+
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -349,6 +355,46 @@ public class AfterSale_HuiTing_SystemCase extends TestCaseCommon implements Test
             appendFailReason(e.toString());
         } finally {
             saveData("语音评鉴列表收藏/取消收藏语音");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationTranslate() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id= EvaluationPageScene.builder().page(1).size(10).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getLong("id");
+            //翻译
+            int code = VoiceTranslateScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code==1000,"收藏，状态码为"+code);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("售后语音评鉴详情 查看翻译");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationDownLoad() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String id= VoiceEvaluationPageScene.builder().page(1).size(10).evaluateStatus(500).build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getString("id");
+            //下载语音
+            int code = RecordDownloadScene.builder().id(id).build().visitor(visitor).getResponse().getCode();
+            Preconditions.checkArgument(code==1000,"下载单个语音，状态码为"+code);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("售后语音评鉴详情 下载语音");
         }
     }
 

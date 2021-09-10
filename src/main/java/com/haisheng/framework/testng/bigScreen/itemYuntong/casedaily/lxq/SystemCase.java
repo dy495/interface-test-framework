@@ -419,13 +419,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * -------------------------------销售业务管理 - 销售客户管理 - 成交记录 ------------------------------------
+     * -------------------------------销售业务管理 - 销售客户管理 - 成交记录 不要这个功能了 ------------------------------------
      */
 
     /**
      * 成交记录-创建 正常&异常
      */
-    @Test(dataProvider = "CSTMINFO")
+    @Test(dataProvider = "CSTMINFO",enabled = false)
     public void newCstmRecord(String name, String phone, String type, String sex, String mess, String chk) {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -483,7 +483,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void newCstmRecordErr() {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -531,7 +531,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      * 成交记录-筛选
      */
 
-    @Test
+    @Test(enabled = false)
     public void buyCarPage_Filter1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -596,7 +596,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void buyCarPage_Filter2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -631,7 +631,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class)
+    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class ,enabled = false)
     public void buyCarPage_Filter3(String content) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

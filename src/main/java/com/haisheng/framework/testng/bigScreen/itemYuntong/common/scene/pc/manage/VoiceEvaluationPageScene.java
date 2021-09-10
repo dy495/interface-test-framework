@@ -76,6 +76,7 @@ public class VoiceEvaluationPageScene extends BaseScene {
      * 版本 v1.0
      */
     private final String receptionEnd;
+    private final Boolean isFavorite;
 
 
     @Override
@@ -90,6 +91,7 @@ public class VoiceEvaluationPageScene extends BaseScene {
         object.put("customer_phone", customerPhone);
         object.put("reception_start", receptionStart);
         object.put("reception_end", receptionEnd);
+        object.put("is_favorite", isFavorite);
         return object;
     }
 
