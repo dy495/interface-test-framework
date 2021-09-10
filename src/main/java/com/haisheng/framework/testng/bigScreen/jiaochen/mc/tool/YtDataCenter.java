@@ -106,4 +106,27 @@ public class YtDataCenter {
     }
 
 
+    @DataProvider(name = "AfterErrorInfo")
+    public Object[] afterEditErrorInfo(){
+        return new Object[][]{
+                {"校验姓名：必填","customer_name",null,"1001"},
+                {"校验联系方式：必填","customer_phone",null,"1001"},
+                //{"校验性别：必填","sex_id",null,"1001"}, //前端有默认值
+                //{"校验姓名：长度51字","customer_name",FastContent.NAME51,"1001"},//X    "message":"系统繁忙，请稍后再试！！"
+                //{"校验姓名：一个空格","customer_name"," ","1001"}, //X   success
+                {"校验姓名：空字符","customer_name","","1001"},
+                {"校验联系方式：长度10","customer_phone","15"+ CommonUtil.getRandom(8),"1001"},
+                {"校验联系方式：长度12","customer_phone","15"+CommonUtil.getRandom(10),"1001"},
+                {"校验联系方式：11位非手机号","customer_phone","00"+CommonUtil.getRandom(10),"1001"},
+                {"校验联系方式：11位中文","customer_phone","阿坝县的风格解开了破了","1001"},
+                {"校验联系方式：11位英文","customer_phone","AbCdEfGhiJk","1001"},
+                {"校验联系方式：11位符号","customer_phone",")(_{[';@$% `","1001"},
+                {"校验性别：格式", "sex_id", "3", "1001"},
+                {"车牌号格式：7位,汉字+纯数字","plate_number","京"+CommonUtil.getRandom(6),"1001"},
+                {"车牌号格式：9位,汉字+大写字母+纯数字","plate_number","浙A"+CommonUtil.getRandom(7),"1001"},
+                {"车牌号格式：6位,汉字+大写字母+纯数字","plate_number","浙B"+CommonUtil.getRandom(4),"1001"},
+                {"修改正常情况", "", "", "1000"}
+        };
+    }
+
 }

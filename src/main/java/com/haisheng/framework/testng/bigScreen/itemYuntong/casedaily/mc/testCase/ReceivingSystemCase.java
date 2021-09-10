@@ -20,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manag
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.bean.PreReceptionBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.YtDataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -83,7 +83,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     public void QRCodeCreat(String description, String point, String content, String expect){
         try {
             commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId());
-            AppReceptionBean receptionCard = util.getReceptionCard();
+            PreReceptionBean receptionCard = util.getReceptionCard();
             AppPreSalesReceptionQueryRetentionQrCodeScene.builder().receptionId(receptionCard.getId().toString()).build().visitor(visitor).execute();
             commonConfig.setShopId(null).setRoleId(null);
             Integer code = CustomerForClientSubmitScene.builder().receptionId(receptionCard.getId()).customerName("扫码留资" + dt.getHistoryDate(0)).intentionCarModelId(util.mcCarId())
@@ -102,7 +102,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "editErrorInfo", dataProviderClass = YtDataCenter.class)
     public void test02ChangeUserInfo(String description, String point, String content, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             Integer code = AppCustomerEditV4Scene.builder().id(reception.getId()).customerId(reception.getCustomerId()).shopId(reception.getShopId())
                     .customerName("name").customerPhone("18"+CommonUtil.getRandom(9)).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId()))
                     .estimateBuyCarDate("2035-12-20").customerSource("NATURE_VISIT").build().modify(point,content).visitor(visitor).getResponse().getCode();
@@ -119,7 +119,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "remark", dataProviderClass = YtDataCenter.class)
     public void test03PcRemark(String description, String remark, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             Integer code = CustomerRemarkScene.builder().id(reception.getId()).shopId(reception.getShopId()).remark(remark).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
             if (Objects.equals("1000", String.valueOf(code))) {
@@ -138,7 +138,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "remark", dataProviderClass = YtDataCenter.class)
     public void test03AppRemark(String description, String remark, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             Integer code = AppCustomerRemarkV4Scene.builder().id(reception.getId()).shopId(reception.getShopId()).remark(remark).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
             if (Objects.equals("1000", String.valueOf(code))) {
@@ -156,7 +156,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "用户添加车牌号,异常", dataProvider = "addPlate", dataProviderClass = YtDataCenter.class)
     public void test04AddPlateNumber(String description, String content, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             String message = AppCustomerManagerPreCustomerAddPlateScene.builder().customerId(reception.getCustomerId()).shopId(reception.getShopId()).plateNumber(content).build().visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(Objects.equals(expect, message), "接待中添加车牌号" + description + "，预期结果：" + expect + "，实际：" + message);
         } catch (AssertionError | Exception e) {
@@ -170,7 +170,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void test05PcComplete() {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             String message = FinishReceptionScene.builder().id(reception.getId()).shopId(reception.getShopId()).build().visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(Objects.equals(message, "success"),"完成接待失败："+message);
             Boolean isFinish = PreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
@@ -191,7 +191,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             if (follow != null){
                 firstFlow = follow;
             }else {
-                AppReceptionBean customer = util.getReception();
+                PreReceptionBean customer = util.getReception();
                 AppFinishReceptionScene.builder().id(customer.getId()).shopId(customer.getShopId()).build().visitor(visitor).execute();
                 commonConfig.setShopId(null);
                 commonConfig.setRoleId(null);

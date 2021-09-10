@@ -25,6 +25,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.EvaluateConfigCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.ReceivingSystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.RecordCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.testCase.AfterReceivingSystemCase"/>
         </classes>
     </test>
 </suite>

@@ -12,10 +12,12 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homep
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.afterreception.AppAfterSalesReceptionCreate;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppPreSalesReceptionCreateV7;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.task.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerBuyCarPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
@@ -46,7 +48,8 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffEditScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.bean.AfterReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.bean.PreReceptionBean;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -499,7 +502,7 @@ public class SceneUtil extends BasicUtil {
 
     /**
      * @return :{"id":接待id, "shopId": shopId, "customerId":customerId}
-     * @description :创建一个接待，
+     * @description :创建一个接待，这没用了
      **/
     public Map<String, String> createCustomerCommon(String name, String sex, String phone, String carId, String buyTime) {
         Map<String, String> customer = new HashMap<>();
@@ -523,36 +526,36 @@ public class SceneUtil extends BasicUtil {
      * @param card: 虚拟卡片AppReceptionBean
      * @return : 接待的AppReceptionBean
      **/
-    public AppReceptionBean cardToReception(AppReceptionBean card){
+    public PreReceptionBean cardToReception(PreReceptionBean card){
         String message = AppCustomerEditV4Scene.builder().id(card.getId()).customerId(card.getCustomerId())
                 .shopId(card.getShopId()).customerName("自动创建"+new DateTimeUtil().getHistoryDate(0)).customerPhone("13"+CommonUtil.getRandom(9)).customerSource("NATURE_VISIT")
                 .sexId(1).intentionCarModelId(Long.parseLong(mcCarId())).estimateBuyCarDate("2035-12-20").build().visitor(visitor).getResponse().getMessage();
         Preconditions.checkArgument(Objects.equals("success", message),"修改资料失败:"+message);
         return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
-                .filter(e ->Objects.equals(e.getString("id"), card.getId().toString())).findFirst().get().toJavaObject(AppReceptionBean.class);
+                .filter(e ->Objects.equals(e.getString("id"), card.getId().toString())).findFirst().get().toJavaObject(PreReceptionBean.class);
     }
     /**
      * @description: 创建一个接待卡片
      * @param : null
      * @return : 接待卡片AppReceptionBean
      **/
-    public AppReceptionBean createCard(){
+    public PreReceptionBean createPreCard(){
         AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse();
         return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
-                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(PreReceptionBean.class);
     }
     /**
      * @description: 获取一个接待卡片
      * @param : null
      * @return : 接待卡片AppReceptionBean
      **/
-    public AppReceptionBean getReceptionCard(){
+    public PreReceptionBean getReceptionCard(){
         JSONObject receptionCard = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
                 .filter(e -> !e.containsKey("customer_id")).findFirst().orElse(null);
         if (receptionCard != null){
-            return receptionCard.toJavaObject(AppReceptionBean.class);
+            return receptionCard.toJavaObject(PreReceptionBean.class);
         } else {
-            return createCard();
+            return createPreCard();
         }
     }
 
@@ -561,14 +564,40 @@ public class SceneUtil extends BasicUtil {
      * @param : null
      * @return : AppReceptionBean
      **/
-    public AppReceptionBean getReception(){
+    public PreReceptionBean getReception(){
         JSONObject findReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).findAny().orElse(null);
         if (findReception == null){
-            return cardToReception(createCard());
+            return cardToReception(createPreCard());
         }else if (findReception.containsKey("customer_id")){
-            return findReception.toJavaObject(AppReceptionBean.class);
+            return findReception.toJavaObject(PreReceptionBean.class);
         }else {
-            return cardToReception(findReception.toJavaObject(AppReceptionBean.class));
+            return cardToReception(findReception.toJavaObject(PreReceptionBean.class));
         }
     }
+    /**
+     * @Description: 创建一个虚拟卡片
+     * @return:
+     **/
+    public AfterReceptionBean createAfterCard(){
+        AppAfterSalesReceptionCreate.builder().build().visitor(visitor).getResponse().getMessage();
+        return AppReceptionPageScene.builder().size(10).build().visitor(visitor).execute().getJSONArray("list")
+                .getJSONObject(0).toJavaObject(AfterReceptionBean.class);
+    }
+
+    /**
+     * @Description: 获取到一个售后的接待，没有则创建
+     * @return: AfterReceptionBean
+     **/
+    public AfterReceptionBean getAfterReception(){
+        AfterReceptionBean getReception = AppReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .map(e -> e.toJavaObject(AfterReceptionBean.class)).findAny().orElse(null);
+        if (getReception == null){
+            return createAfterCard();
+        }else {
+            return getReception;
+        }
+    }
+
+
+
 }

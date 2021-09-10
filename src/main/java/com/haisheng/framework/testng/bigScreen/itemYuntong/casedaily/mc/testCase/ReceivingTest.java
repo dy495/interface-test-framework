@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.pre
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.bean.PreReceptionBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -69,25 +69,25 @@ public class ReceivingTest extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    public AppReceptionBean createCustomerCommon(String name, Integer sex, String phone, Long carId, String buyTime) {
+    public PreReceptionBean createCustomerCommon(String name, Integer sex, String phone, Long carId, String buyTime) {
         AppPreSalesReceptionCreateV7.builder().build().visitor(visitor).getResponse();
-        AppReceptionBean beforeReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
-                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+        PreReceptionBean beforeReception = AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build()
+                .visitor(visitor).execute().getJSONArray("list").getJSONObject(0).toJavaObject(PreReceptionBean.class);
         String message = AppCustomerEditV4Scene.builder().id(beforeReception.getId()).customerId(beforeReception.getCustomerId())
                 .shopId(beforeReception.getShopId()).customerName(name).customerPhone(phone).customerSource("NATURE_VISIT")
                 .sexId(sex).intentionCarModelId(carId).estimateBuyCarDate(buyTime).build().visitor(visitor).getResponse().getMessage();
         Preconditions.checkArgument(Objects.equals("success", message),"修改资料失败:"+message);
         return AppPreSalesReceptionPageScene.builder().size(10).lastValue(null).build().visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
-                .filter(e ->Objects.equals(e.getString("id"), beforeReception.getId().toString())).findFirst().get().toJavaObject(AppReceptionBean.class);
+                .filter(e ->Objects.equals(e.getString("id"), beforeReception.getId().toString())).findFirst().get().toJavaObject(PreReceptionBean.class);
     }
 
     //@Test
     public void test02samePhone() {
         try {
             String phone = "15" + CommonUtil.getRandom(9);
-            AppReceptionBean first = createCustomerCommon("一次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
+            PreReceptionBean first = createCustomerCommon("一次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
             AppFinishReceptionScene.builder().id(first.getId()).shopId(first.getShopId()).build().visitor(visitor).execute();
-            AppReceptionBean second = createCustomerCommon("二次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
+            PreReceptionBean second = createCustomerCommon("二次接待", 1, phone, Long.parseLong(util.mcCarId()), "2066-12-21");
             AppFinishReceptionScene.builder().id(second.getId()).shopId(second.getShopId()).build().visitor(visitor).execute();
             String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId())).estimateBuyCarTime("2035-12-20").build().visitor(visitor).getResponse().getMessage();
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");

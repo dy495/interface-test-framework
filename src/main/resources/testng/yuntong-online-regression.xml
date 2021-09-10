@@ -24,6 +24,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.AppTaskReceiveDataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.EvaluateConfigCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.ReceivingSystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.AfterReceivingSystemCase"/>
 
         </classes>
     </test>

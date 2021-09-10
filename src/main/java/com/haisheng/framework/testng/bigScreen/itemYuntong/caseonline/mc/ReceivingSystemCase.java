@@ -4,17 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.CustomerForClientSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerDetailV4Scene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.customermanager.AppCustomerManagerPreCustomerAddPlateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.followup.AppFollowUpPageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
@@ -25,10 +19,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manag
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.JcDataCenter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.bean.PreReceptionBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.YtDataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -36,11 +27,13 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
@@ -89,7 +82,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     public void QRCodeCreat(String description, String point, String content, String expect){
         try {
             commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getReceptionShopId()).setRoleId(YT_RECEPTION_ACCOUNT.getRoleId());
-            AppReceptionBean receptionCard = util.getReceptionCard();
+            PreReceptionBean receptionCard = util.getReceptionCard();
             AppPreSalesReceptionQueryRetentionQrCodeScene.builder().receptionId(receptionCard.getId().toString()).build().visitor(visitor).execute();
             commonConfig.setShopId(null).setRoleId(null);
             Integer code = CustomerForClientSubmitScene.builder().receptionId(receptionCard.getId()).customerName("扫码留资" + dt.getHistoryDate(0)).intentionCarModelId(util.mcCarId())
@@ -108,11 +101,12 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "editErrorInfo", dataProviderClass = YtDataCenter.class)
     public void test02ChangeUserInfo(String description, String point, String content, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
-            Integer code = AppCustomerEditV4Scene.builder().id(reception.getId()).customerId(reception.getCustomerId()).shopId(reception.getShopId()).customerName("name").customerPhone("18"+CommonUtil.getRandom(9)).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId())).estimateBuyCarDate("2035-12-20").build().modify(point,content).visitor(visitor).getResponse().getCode();
+            PreReceptionBean reception = util.getReception();
+            Integer code = AppCustomerEditV4Scene.builder().id(reception.getId()).customerId(reception.getCustomerId()).shopId(reception.getShopId()).customerName("name")
+                    .customerPhone("18"+CommonUtil.getRandom(9)).sexId(1).intentionCarModelId(Long.parseLong(util.mcCarId())).estimateBuyCarDate("2035-12-20")
+                    .customerSource("NATURE_VISIT").build().modify(point,content).visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(code.toString(), expect), description + "，期待结果=" + expect + "实际结果code=" + code);
             sleep(3);
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -123,7 +117,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "remark", dataProviderClass = YtDataCenter.class)
     public void test03PcRemark(String description, String remark, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             Integer code = CustomerRemarkScene.builder().id(reception.getId()).shopId(reception.getShopId()).remark(remark).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
             if (Objects.equals("1000", String.valueOf(code))) {
@@ -142,7 +136,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "remark", dataProviderClass = YtDataCenter.class)
     public void test03AppRemark(String description, String remark, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             Integer code = AppCustomerRemarkV4Scene.builder().id(reception.getId()).shopId(reception.getShopId()).remark(remark).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(Objects.equals(String.valueOf(code), expect), description + ",预期:" + expect + ",实际结果:" + code);
             if (Objects.equals("1000", String.valueOf(code))) {
@@ -160,7 +154,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "用户添加车牌号,异常", dataProvider = "addPlate", dataProviderClass = YtDataCenter.class)
     public void test04AddPlateNumber(String description, String content, String expect) {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             String message = AppCustomerManagerPreCustomerAddPlateScene.builder().customerId(reception.getCustomerId()).shopId(reception.getShopId()).plateNumber(content).build().visitor(visitor).getResponse().getMessage();
             Preconditions.checkArgument(Objects.equals(expect, message), "接待中添加车牌号" + description + "，预期结果：" + expect + "，实际：" + message);
         } catch (AssertionError | Exception e) {
@@ -174,7 +168,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     @Test
     public void test05PcComplete() {
         try {
-            AppReceptionBean reception = util.getReception();
+            PreReceptionBean reception = util.getReception();
             FinishReceptionScene.builder().id(reception.getId()).shopId(reception.getShopId()).build().visitor(visitor).execute();
             Boolean isFinish = PreSalesReceptionPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
             Preconditions.checkArgument(isFinish, "完成接待操作失败，接待手机=" + reception.getCustomerPhone());
@@ -194,7 +188,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             if (follow != null){
                 firstFlow = follow;
             }else {
-                AppReceptionBean customer = util.getReception();
+                PreReceptionBean customer = util.getReception();
                 AppFinishReceptionScene.builder().id(customer.getId()).shopId(customer.getShopId()).build().visitor(visitor).execute();
                 commonConfig.setShopId(null);
                 commonConfig.setRoleId(null);
